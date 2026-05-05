@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import FiltersBar from '@/pages/experts/Partials/FiltersBar';
@@ -11,12 +11,26 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
     const [query, setQuery] = useState('');
     const [sort, setSort] = useState('relevance');
     const [view, setView] = useState('grid');
+    const [currentPage, setCurrentPage] = useState(1);
     const [filters, setFilters] = useState({
         industry: 'all',
         country: 'all',
+        location: 'all',
         language: 'all',
         availability: 'all',
     });
+
+    const locationOptions = useMemo(
+        () =>
+            Array.from(
+                new Set(
+                    (expertsProp ?? [])
+                        .map((item) => item.location)
+                        .filter(Boolean),
+                ),
+            ).sort((a, b) => a.localeCompare(b)),
+        [expertsProp],
+    );
 
     const filterLabels = useMemo(
         () => ({
@@ -30,6 +44,10 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                 ma: t('experts.filters.morocco'),
                 sn: t('experts.filters.senegal'),
             },
+            location: locationOptions.reduce((accumulator, value) => {
+                accumulator[value] = value;
+                return accumulator;
+            }, {}),
             language: {
                 ar: t('experts.filters.arabic'),
                 fr: t('experts.filters.french'),
@@ -39,7 +57,7 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                 available: t('experts.filters.available'),
             },
         }),
-        [t],
+        [locationOptions, t],
     );
 
     const activeFilters = useMemo(() => {
@@ -57,6 +75,14 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
             items.push({
                 key: 'country',
                 label: filterLabels.country[filters.country] ?? filters.country,
+            });
+        }
+
+        if (filters.location !== 'all') {
+            items.push({
+                key: 'location',
+                label:
+                    filterLabels.location[filters.location] ?? filters.location,
             });
         }
 
@@ -85,33 +111,42 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
         let list = expertsProp;
 
         if (filters.industry !== 'all') {
-            list = list.filter((e) =>
-                (e.industries ?? []).includes(filters.industry),
+            list = list.filter((expert) =>
+                (expert.industries ?? []).includes(filters.industry),
             );
         }
 
         if (filters.country !== 'all') {
-            list = list.filter((e) => e.country === filters.country);
+            list = list.filter((expert) => expert.country === filters.country);
+        }
+
+        if (filters.location !== 'all') {
+            const selectedLocation = filters.location.trim().toLowerCase();
+            list = list.filter(
+                (expert) =>
+                    String(expert.location ?? '').trim().toLowerCase() ===
+                    selectedLocation,
+            );
         }
 
         if (filters.language !== 'all') {
-            list = list.filter((e) =>
-                (e.languages ?? []).includes(filters.language),
+            list = list.filter((expert) =>
+                (expert.languages ?? []).includes(filters.language),
             );
         }
 
         if (q) {
             const withScore = list
-                .map((e, idx) => {
-                    const nameEn = (e.name?.en ?? '').toLowerCase();
-                    const nameFr = (e.name?.fr ?? '').toLowerCase();
-                    const nameAr = (e.name?.ar ?? '').toLowerCase();
-                    const title = (e.title?.en ?? '').toLowerCase();
-                    const tags = (e.tags ?? [])
-                        .map((x) => x.en)
+                .map((expert, index) => {
+                    const nameEn = (expert.name?.en ?? '').toLowerCase();
+                    const nameFr = (expert.name?.fr ?? '').toLowerCase();
+                    const nameAr = (expert.name?.ar ?? '').toLowerCase();
+                    const title = (expert.title?.en ?? '').toLowerCase();
+                    const tags = (expert.tags ?? [])
+                        .map((tag) => tag.en)
                         .join(' ')
                         .toLowerCase();
-                    const location = (e.location ?? '').toLowerCase();
+                    const location = (expert.location ?? '').toLowerCase();
                     const haystack = [
                         nameEn,
                         nameFr,
@@ -121,7 +156,9 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                         location,
                     ].join(' ');
 
-                    if (!haystack.includes(q)) return null;
+                    if (!haystack.includes(q)) {
+                        return null;
+                    }
 
                     let score = 0;
                     if (nameEn.startsWith(q)) score += 100;
@@ -129,23 +166,23 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                     if (title.includes(q)) score += 25;
                     if (tags.includes(q)) score += 15;
                     if (location.includes(q)) score += 10;
-                    score -= idx / 1000; // stable tie-breaker
+                    score -= index / 1000;
 
-                    return { e, score };
+                    return { expert, score };
                 })
                 .filter(Boolean);
 
-            list = withScore.map((x) => x.e);
+            list = withScore.map((item) => item.expert);
 
             if (sort === 'relevance') {
                 list = [...withScore]
                     .sort((a, b) => b.score - a.score)
-                    .map((x) => x.e);
+                    .map((item) => item.expert);
             }
         }
 
         if (filters.availability === 'available') {
-            list = list.filter((e) => e.badge);
+            list = list.filter((expert) => expert.badge);
         }
 
         if (sort === 'name_asc') {
@@ -188,11 +225,54 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
         filters.country,
         filters.industry,
         filters.language,
+        filters.location,
         locale,
         query,
         sort,
         expertsProp,
     ]);
+
+    const itemsPerPage = 8;
+    const totalPages = Math.max(1, Math.ceil(experts.length / itemsPerPage));
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [query, sort, filters]);
+
+    useEffect(() => {
+        setCurrentPage((page) => Math.min(page, totalPages));
+    }, [totalPages]);
+
+    const paginatedExperts = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return experts.slice(startIndex, startIndex + itemsPerPage);
+    }, [currentPage, experts]);
+
+    const paginationButtons = useMemo(() => {
+        if (totalPages <= 7) {
+            return Array.from({ length: totalPages }, (_, index) => index + 1);
+        }
+
+        const buttons = [1];
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+
+        if (start > 2) {
+            buttons.push('ellipsis-start');
+        }
+
+        for (let page = start; page <= end; page += 1) {
+            buttons.push(page);
+        }
+
+        if (end < totalPages - 1) {
+            buttons.push('ellipsis-end');
+        }
+
+        buttons.push(totalPages);
+
+        return buttons;
+    }, [currentPage, totalPages]);
 
     const countriesCount = useMemo(
         () =>
@@ -239,28 +319,6 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                             </div>
                         </header>
 
-                        <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-3">
-                            <div className="rounded-xl border border-border/70 bg-card/70 p-4 text-center shadow-sm">
-                                <p className="text-2xl font-bold text-tblack">
-                                    {expertsProp.length}
-                                </p>
-                                <p className="text-xs text-tgray">Experts</p>
-                            </div>
-                            <div className="rounded-xl border border-border/70 bg-card/70 p-4 text-center shadow-sm">
-                                <p className="text-2xl font-bold text-tblack">
-                                    {countriesCount}
-                                </p>
-                                <p className="text-xs text-tgray">Countries</p>
-                            </div>
-                            <div className="rounded-xl border border-border/70 bg-card/70 p-4 text-center shadow-sm">
-                                <p className="text-2xl font-bold text-tblack">
-                                    {activeFilters.length}
-                                </p>
-                                <p className="text-xs text-tgray">
-                                    Active filters
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -268,6 +326,8 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto max-w-5xl">
                             <FiltersBar
+                                advancedOnly
+                                locationOptions={locationOptions}
                                 query={query}
                                 setQuery={setQuery}
                                 filters={filters}
@@ -314,9 +374,9 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                             <div className="mt-10 flex items-center justify-between text-sm">
                                 <div className="text-muted-foreground">
                                     <TransText
-                                        en={`Showing ${experts.length} experts`}
-                                        fr={`Affichage de ${experts.length} expertes`}
-                                        ar={`عرض ${experts.length} خبيرات`}
+                                        en={`Showing ${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, experts.length)} of ${experts.length} experts`}
+                                        fr={`Affichage de ${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, experts.length)} sur ${experts.length} expertes`}
+                                        ar={`عرض ${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, experts.length)} من ${experts.length} خبيرات`}
                                     />
                                 </div>
                             </div>
@@ -328,8 +388,7 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                                             No experts match your filters.
                                         </p>
                                         <p className="mt-2 text-sm text-tgray">
-                                            Try removing a filter or changing
-                                            your search query.
+                                            Try removing a filter or changing your search query.
                                         </p>
                                     </div>
                                 ) : (
@@ -340,7 +399,7 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                                                 : 'grid grid-cols-1 gap-4'
                                         }
                                     >
-                                        {experts.map((expert) => (
+                                        {paginatedExperts.map((expert) => (
                                             <ExpertCard
                                                 key={expert.id}
                                                 expert={expert}
@@ -351,35 +410,49 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                                 )}
                             </div>
 
-                            <div className="mt-10 flex items-center justify-center gap-2 text-xs">
-                                <button
-                                    type="button"
-                                    className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground"
-                                >
-                                    1
-                                </button>
-                                <button
-                                    type="button"
-                                    className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground"
-                                >
-                                    2
-                                </button>
-                                <button
-                                    type="button"
-                                    className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground"
-                                >
-                                    3
-                                </button>
-                                <span className="px-2 text-muted-foreground">
-                                    …
-                                </span>
-                                <button
-                                    type="button"
-                                    className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground"
-                                >
-                                    12
-                                </button>
-                            </div>
+                            {totalPages > 1 ? (
+                                <div className="mt-10 flex flex-wrap items-center justify-center gap-2 text-xs">
+                                    <button
+                                        type="button"
+                                        onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                                        disabled={currentPage === 1}
+                                        className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        Previous
+                                    </button>
+
+                                    {paginationButtons.map((item) =>
+                                        typeof item === 'number' ? (
+                                            <button
+                                                key={item}
+                                                type="button"
+                                                onClick={() => setCurrentPage(item)}
+                                                className={[
+                                                    'rounded-md border px-3 py-2 font-semibold shadow-sm',
+                                                    item === currentPage
+                                                        ? 'border-beta-blue bg-beta-blue text-twhite'
+                                                        : 'border-border bg-card text-muted-foreground hover:text-foreground',
+                                                ].join(' ')}
+                                            >
+                                                {item}
+                                            </button>
+                                        ) : (
+                                            <span key={item} className="px-2 text-muted-foreground">
+                                                …
+                                            </span>
+                                        ),
+                                    )}
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="rounded-md border border-border bg-card px-3 py-2 font-semibold text-muted-foreground shadow-sm hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                 </div>

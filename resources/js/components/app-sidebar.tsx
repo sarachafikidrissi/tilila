@@ -27,7 +27,7 @@ import type { NavItem } from '@/types';
 
 const adminModuleItems: NavItem[] = [
     {
-        title: 'Expert Requests',
+        title: 'Expertes',
         href: '/admin/expert-applications',
         icon: Users,
     },
@@ -145,9 +145,7 @@ export function AppSidebar() {
         icon: LayoutGrid,
     };
     const moduleItems = isExpert ? expertModuleItems : adminModuleItems;
-    const strategicItems = isExpert
-        ? expertStrategicItems
-        : adminStrategicItems;
+    const strategicItems = isExpert ? expertStrategicItems : adminStrategicItems;
     const DashboardIcon = dashboardItem.icon;
 
     return (
@@ -170,9 +168,7 @@ export function AppSidebar() {
                             {isExpert ? 'Expert Back Office' : 'TILILA Impact'}
                         </span>
                         <span className="mt-0.5 truncate text-xs font-medium text-sidebar-foreground/60">
-                            {isExpert
-                                ? 'Manage your profile'
-                                : 'Strategic Pilotage'}
+                            {isExpert ? 'Manage your profile' : 'Strategic Pilotage'}
                         </span>
                     </span>
                 </Link>

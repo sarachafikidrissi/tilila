@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { CheckCircle2, FileText, XCircle } from 'lucide-react';
+import { CheckCircle2, FileText, Globe2, MapPin, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +25,63 @@ function Row({ label, value }) {
     );
 }
 
+function SectionCard({ title, description, children }) {
+    return (
+        <section className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
+            <div className="mb-4">
+                <h2 className="text-base font-semibold text-tblack">{title}</h2>
+                {description ? (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                        {description}
+                    </p>
+                ) : null}
+            </div>
+            <div className="space-y-4">{children}</div>
+        </section>
+    );
+}
+
+function LangCard({ lang, items }) {
+    return (
+        <div className="rounded-xl border border-border/70 bg-background p-4 shadow-sm">
+            <div className="mb-3 inline-flex items-center rounded-full border border-border/70 bg-card px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+                {lang}
+            </div>
+            <div className="space-y-3">
+                {items.map((item) => (
+                    <div key={`${lang}-${item.label}`}>
+                        <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                            {item.label}
+                        </p>
+                        <p className="mt-1 text-sm wrap-break-word text-foreground">
+                            {item.value || '—'}
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function TagList({ items }) {
+    if (!items?.length) {
+        return <span className="text-sm text-muted-foreground">—</span>;
+    }
+
+    return (
+        <div className="flex flex-wrap gap-2">
+            {items.map((item) => (
+                <span
+                    key={item}
+                    className="inline-flex items-center rounded-full border border-border/70 bg-background px-2.5 py-0.5 text-xs font-medium text-foreground"
+                >
+                    {item}
+                </span>
+            ))}
+        </div>
+    );
+}
+
 function statusClass(status) {
     switch (status) {
         case 'accepted':
@@ -40,6 +97,14 @@ export default function AdminExpertApplicationShow({ application }) {
     const a = application ?? {};
     const [denyOpen, setDenyOpen] = useState(false);
     const [denyNote, setDenyNote] = useState('');
+    const industries = Array.isArray(a.industries) ? a.industries : [];
+    const languages = Array.isArray(a.languages) ? a.languages : [];
+    const submittedAt = a.created_at
+        ? new Date(a.created_at).toLocaleString()
+        : '—';
+    const reviewedAt = a.reviewed_at
+        ? new Date(a.reviewed_at).toLocaleString()
+        : '—';
 
     const review = (decision) => {
         if (decision === 'denied') {
@@ -72,33 +137,47 @@ export default function AdminExpertApplicationShow({ application }) {
         <>
             <Head title={`Expert Request #${a.id ?? ''}`} />
 
-            <div className="mx-auto flex w-full max-w-[min(100%,70rem)] flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-                <div className="flex flex-col gap-3 border-b border-border/60 pb-5 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-tgray">
-                            Experts Directory
-                        </p>
-                        <h1 className="text-2xl font-bold tracking-tight text-tblack">
-                            {a.full_name || 'Application details'}
-                        </h1>
-                        <p className="mt-1 text-sm text-tgray">
-                            Submitted{' '}
-                            {a.created_at
-                                ? new Date(a.created_at).toLocaleString()
-                                : '—'}
-                        </p>
+            <div className="mx-auto flex w-full max-w-[min(100%,72rem)] flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+                <div className="rounded-2xl border border-border/70 bg-card px-5 py-5 shadow-sm sm:px-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <p className="text-xs font-semibold tracking-[0.3em] text-tgray uppercase">
+                                Experts Directory
+                            </p>
+                            <h1 className="mt-2 text-2xl font-bold tracking-tight text-tblack sm:text-3xl">
+                                {a.full_name || 'Application details'}
+                            </h1>
+                            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                                <span className="inline-flex items-center gap-1">
+                                    <MapPin className="size-4" />
+                                    {a.city || '—'}
+                                    {a.country ? `, ${a.country}` : ''}
+                                </span>
+                                <span className="inline-flex items-center gap-1">
+                                    <Globe2 className="size-4" />
+                                    {a.locale || '—'}
+                                </span>
+                                <span className="text-muted-foreground">
+                                    Submitted {submittedAt}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span
+                                className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${statusClass(a.status)}`}
+                            >
+                                {a.status || 'pending'}
+                            </span>
+                            {a.expert_id ? (
+                                <span className="text-xs font-medium text-alpha-green">
+                                    Published
+                                </span>
+                            ) : null}
+                        </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <span
-                            className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${statusClass(a.status)}`}
-                        >
-                            {a.status || 'pending'}
-                        </span>
-                        <Button asChild variant="outline">
-                            <Link href="/admin/expert-applications">Back</Link>
-                        </Button>
-
+                    <div className="mt-5 flex flex-wrap items-center gap-2">
                         {a.cv_url ? (
                             <Button
                                 type="button"
@@ -138,81 +217,178 @@ export default function AdminExpertApplicationShow({ application }) {
                                 </Button>
                             </>
                         ) : null}
-
-                        {a.expert_id ? (
-                            <span className="text-xs font-medium text-alpha-green">
-                                Published
-                            </span>
-                        ) : null}
                     </div>
                 </div>
 
-                <div className="space-y-4 rounded-xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
-                    <Row label="Email" value={a.email} />
-                    <Row label="Phone" value={a.phone} />
-                    <Row
-                        label="Name (EN)"
-                        value={a.name_i18n?.en || a.full_name}
-                    />
-                    <Row label="Name (FR)" value={a.name_i18n?.fr} />
-                    <Row label="Name (AR)" value={a.name_i18n?.ar} />
-                    <Row
-                        label="Current title (EN)"
-                        value={a.title_i18n?.en || a.current_title}
-                    />
-                    <Row label="Current title (FR)" value={a.title_i18n?.fr} />
-                    <Row label="Current title (AR)" value={a.title_i18n?.ar} />
-                    <Row label="Country" value={a.country} />
-                    <Row label="City" value={a.city} />
-                    <Row
-                        label="Industries"
-                        value={
-                            Array.isArray(a.industries)
-                                ? a.industries.join(', ')
-                                : ''
-                        }
-                    />
-                    <Row
-                        label="Languages"
-                        value={
-                            Array.isArray(a.languages)
-                                ? a.languages.join(', ')
-                                : ''
-                        }
-                    />
-                    <Row
-                        label="Expertise (EN)"
-                        value={a.expertise_i18n?.en || a.expertise}
-                    />
-                    <Row label="Expertise (FR)" value={a.expertise_i18n?.fr} />
-                    <Row label="Expertise (AR)" value={a.expertise_i18n?.ar} />
-                    <Row label="Bio (EN)" value={a.bio_i18n?.en || a.bio} />
-                    <Row label="Bio (FR)" value={a.bio_i18n?.fr} />
-                    <Row label="Bio (AR)" value={a.bio_i18n?.ar} />
-                    <Row label="LinkedIn" value={a.linkedin_url} />
-                    <Row label="Twitter / X" value={a.socials?.twitter} />
-                    <Row label="Instagram" value={a.socials?.instagram} />
-                    <Row label="Portfolio" value={a.portfolio_url} />
-                    <Row label="Locale" value={a.locale} />
-                    <Row label="IP" value={a.ip} />
-                    <Row label="User agent" value={a.user_agent} />
-                    <Row
-                        label="Reviewed at"
-                        value={
-                            a.reviewed_at
-                                ? new Date(a.reviewed_at).toLocaleString()
-                                : ''
-                        }
-                    />
-                    <Row label="Admin notes" value={a.admin_notes} />
-                    <Row
-                        label="Reviewed by"
-                        value={
-                            a.reviewed_by
-                                ? `${a.reviewed_by.name ?? ''} (${a.reviewed_by.email ?? ''})`
-                                : ''
-                        }
-                    />
+                <div className="grid gap-6">
+                    <div className="flex flex-col gap-6">
+                        <SectionCard
+                            title="Review"
+                            description="Decision and reviewer metadata."
+                        >
+                            <Row label="Status" value={a.status || 'pending'} />
+                            <Row label="Reviewed at" value={reviewedAt} />
+                            <Row
+                                label="Reviewed by"
+                                value={
+                                    a.reviewed_by
+                                        ? `${a.reviewed_by.name ?? ''} (${a.reviewed_by.email ?? ''})`
+                                        : ''
+                                }
+                            />
+                            <Row label="Admin notes" value={a.admin_notes} />
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Identity"
+                            description="Primary contact details and localization."
+                        >
+                            <Row label="Email" value={a.email} />
+                            <Row label="Phone" value={a.phone} />
+                            <Row label="Locale" value={a.locale} />
+                            <Row label="Country" value={a.country} />
+                            <Row label="City" value={a.city} />
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Names and Titles"
+                            description="Multilingual names and professional titles."
+                        >
+                            <div className="grid gap-4 lg:grid-cols-3">
+                                <LangCard
+                                    lang="EN"
+                                    items={[
+                                        {
+                                            label: 'Name',
+                                            value:
+                                                a.name_i18n?.en || a.full_name,
+                                        },
+                                        {
+                                            label: 'Current title',
+                                            value:
+                                                a.title_i18n?.en ||
+                                                a.current_title,
+                                        },
+                                    ]}
+                                />
+                                <LangCard
+                                    lang="FR"
+                                    items={[
+                                        {
+                                            label: 'Name',
+                                            value: a.name_i18n?.fr,
+                                        },
+                                        {
+                                            label: 'Current title',
+                                            value: a.title_i18n?.fr,
+                                        },
+                                    ]}
+                                />
+                                <LangCard
+                                    lang="AR"
+                                    items={[
+                                        {
+                                            label: 'Name',
+                                            value: a.name_i18n?.ar,
+                                        },
+                                        {
+                                            label: 'Current title',
+                                            value: a.title_i18n?.ar,
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Expertise and Bio"
+                            description="Areas of expertise and personal bio in three languages."
+                        >
+                            <div className="grid gap-4 lg:grid-cols-3">
+                                <LangCard
+                                    lang="EN"
+                                    items={[
+                                        {
+                                            label: 'Expertise',
+                                            value:
+                                                a.expertise_i18n?.en ||
+                                                a.expertise,
+                                        },
+                                        {
+                                            label: 'Bio',
+                                            value: a.bio_i18n?.en || a.bio,
+                                        },
+                                    ]}
+                                />
+                                <LangCard
+                                    lang="FR"
+                                    items={[
+                                        {
+                                            label: 'Expertise',
+                                            value: a.expertise_i18n?.fr,
+                                        },
+                                        {
+                                            label: 'Bio',
+                                            value: a.bio_i18n?.fr,
+                                        },
+                                    ]}
+                                />
+                                <LangCard
+                                    lang="AR"
+                                    items={[
+                                        {
+                                            label: 'Expertise',
+                                            value: a.expertise_i18n?.ar,
+                                        },
+                                        {
+                                            label: 'Bio',
+                                            value: a.bio_i18n?.ar,
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Industries and Languages"
+                            description="Focus industries and spoken languages."
+                        >
+                            <div>
+                                <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                    Industries
+                                </p>
+                                <div className="mt-2">
+                                    <TagList items={industries} />
+                                </div>
+                            </div>
+                            <div>
+                                <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                    Languages
+                                </p>
+                                <div className="mt-2">
+                                    <TagList items={languages} />
+                                </div>
+                            </div>
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Social Links"
+                            description="Optional public profiles."
+                        >
+                            <Row label="LinkedIn" value={a.linkedin_url} />
+                            <Row
+                                label="Twitter / X"
+                                value={a.socials?.twitter}
+                            />
+                            <Row
+                                label="Instagram"
+                                value={a.socials?.instagram}
+                            />
+                            <Row label="Portfolio" value={a.portfolio_url} />
+                        </SectionCard>
+                    </div>
+
+                    <div className="flex flex-col gap-6"></div>
                 </div>
             </div>
 

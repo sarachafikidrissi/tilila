@@ -1,113 +1,12 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { useTranslation } from '@/contexts/TranslationContext';
+import { useState } from 'react';
+import TransText from '@/components/TransText';
 
 export default function BecomeExpert() {
-    const { locale } = useTranslation();
-    const ui = {
-        en: {
-            head: 'Become an Expert',
-            network: 'Experts Network',
-            title: 'Become an Expert',
-            subtitle:
-                'Submit your multilingual profile once. On approval, your expert account and public profile are created from this application.',
-            step1: 'Submit profile',
-            step2: 'Admin review',
-            step3: 'Account + publication',
-            success:
-                'Your request has been submitted. We will contact you after review.',
-            identity: 'Identity',
-            email: 'Email *',
-            phone: 'Phone',
-            fullName: 'Full name',
-            professional: 'Professional Position',
-            currentTitle: 'Current title',
-            country: 'Country',
-            city: 'City',
-            industries: 'Industries (comma separated)',
-            languages: 'Languages (comma separated)',
-            expertiseBio: 'Expertise and Bio',
-            expertise: 'Expertise areas',
-            bio: 'Short bio',
-            social: 'Social Links',
-            linkedin: 'LinkedIn URL',
-            twitter: 'Twitter / X URL',
-            instagram: 'Instagram URL',
-            portfolio: 'Portfolio URL',
-            cv: 'CV (PDF/DOC, max 5MB)',
-            cancel: 'Cancel',
-            submitting: 'Submitting...',
-            submit: 'Submit Request',
-        },
-        fr: {
-            head: 'Devenir experte',
-            network: 'Réseau des expertes',
-            title: 'Devenir experte',
-            subtitle:
-                'Soumettez votre profil multilingue une seule fois. Après validation, votre compte et profil public seront créés à partir de cette candidature.',
-            step1: 'Soumettre le profil',
-            step2: 'Revue admin',
-            step3: 'Compte + publication',
-            success:
-                'Votre demande a été soumise. Nous vous contacterons après la revue.',
-            identity: 'Identité',
-            email: 'Email *',
-            phone: 'Téléphone',
-            fullName: 'Nom complet',
-            professional: 'Position professionnelle',
-            currentTitle: 'Poste actuel',
-            country: 'Pays',
-            city: 'Ville',
-            industries: 'Secteurs (séparés par des virgules)',
-            languages: 'Langues (séparées par des virgules)',
-            expertiseBio: 'Expertise et biographie',
-            expertise: 'Domaines d’expertise',
-            bio: 'Courte biographie',
-            social: 'Liens sociaux',
-            linkedin: 'URL LinkedIn',
-            twitter: 'URL Twitter / X',
-            instagram: 'URL Instagram',
-            portfolio: 'URL Portfolio',
-            cv: 'CV (PDF/DOC, max 5MB)',
-            cancel: 'Annuler',
-            submitting: 'Envoi...',
-            submit: 'Envoyer la demande',
-        },
-        ar: {
-            head: 'أصبحي خبيرة',
-            network: 'شبكة الخبيرات',
-            title: 'أصبحي خبيرة',
-            subtitle:
-                'أرسلي ملفك متعدد اللغات مرة واحدة. بعد القبول، سيتم إنشاء حسابك وملفك العام من هذا الطلب.',
-            step1: 'إرسال الملف',
-            step2: 'مراجعة الإدارة',
-            step3: 'الحساب + النشر',
-            success: 'تم إرسال طلبك بنجاح. سنتواصل معك بعد المراجعة.',
-            identity: 'الهوية',
-            email: 'البريد الإلكتروني *',
-            phone: 'الهاتف',
-            fullName: 'الاسم الكامل',
-            professional: 'الوضع المهني',
-            currentTitle: 'الصفة الحالية',
-            country: 'البلد',
-            city: 'المدينة',
-            industries: 'القطاعات (مفصولة بفواصل)',
-            languages: 'اللغات (مفصولة بفواصل)',
-            expertiseBio: 'الخبرة والسيرة',
-            expertise: 'مجالات الخبرة',
-            bio: 'نبذة قصيرة',
-            social: 'روابط التواصل',
-            linkedin: 'رابط لينكدإن',
-            twitter: 'رابط تويتر / X',
-            instagram: 'رابط إنستغرام',
-            portfolio: 'رابط الأعمال',
-            cv: 'السيرة الذاتية (PDF/DOC بحد أقصى 5MB)',
-            cancel: 'إلغاء',
-            submitting: 'جارٍ الإرسال...',
-            submit: 'إرسال الطلب',
-        },
-    };
-    const c = ui[locale] ?? ui.en;
+    const { t } = useTranslation();
+    const maxCvSizeBytes = 5 * 1024 * 1024;
 
     const {
         data,
@@ -136,6 +35,7 @@ export default function BecomeExpert() {
         cv: null,
         locale: 'en',
     });
+    const [cvSizeError, setCvSizeError] = useState('');
 
     const splitCsv = (value) =>
         String(value ?? '')
@@ -143,8 +43,21 @@ export default function BecomeExpert() {
             .map((item) => item.trim())
             .filter(Boolean);
 
+    const cvHasError = Boolean(errors.cv || cvSizeError);
+    const hasErrors = Object.keys(errors).length > 0 || cvSizeError !== '';
+    const requiredMark = <span className="text-alpha-danger">*</span>;
+    const getFirstArrayError = (prefix) =>
+        Object.entries(errors).find(([key]) => key.startsWith(prefix))?.[1];
+
     const submit = (e) => {
         e.preventDefault();
+
+        if (data.cv instanceof File && data.cv.size > maxCvSizeBytes) {
+            setCvSizeError('The CV must be 5 MB or smaller.');
+            return;
+        }
+
+        setCvSizeError('');
 
         transform((current) => {
             const { industries_text, languages_text, ...rest } = current;
@@ -176,6 +89,7 @@ export default function BecomeExpert() {
                     'portfolio_url',
                     'cv',
                 );
+                setCvSizeError('');
             },
         });
     };
@@ -189,46 +103,83 @@ export default function BecomeExpert() {
 
     const inputClass =
         'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+    const helperClass = 'mt-1 text-xs text-muted-foreground';
 
     return (
         <>
-            <Head title={c.head} />
+            <Head title={t('experts.become.headTitle')} />
 
             <section className="bg-[radial-gradient(circle_at_top_left,#dff2ff_0%,#ffffff_45%,#f5fbff_100%)] py-10 sm:py-14">
                 <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-6 rounded-2xl border border-beta-blue/20 bg-card/80 p-6 shadow-sm backdrop-blur sm:p-8">
                         <p className="text-xs font-semibold tracking-[0.3em] text-tgray uppercase">
-                            {c.network}
+                            <TransText
+                                en="Experts Network"
+                                fr="Réseau des expertes"
+                                ar="شبكة الخبيرات"
+                            />
                         </p>
                         <h1 className="mt-2 text-3xl font-bold tracking-tight text-tblack sm:text-4xl">
-                            {c.title}
+                            <TransText
+                                en="Become an Expert"
+                                fr="Devenir experte"
+                                ar="أصبحي خبيرة"
+                            />
                         </h1>
                         <p className="mt-3 max-w-3xl text-sm leading-6 text-tgray sm:text-base">
-                            {c.subtitle}
+                            <TransText
+                                en="Submit your multilingual profile once. On approval, your expert account and public profile are created from this application."
+                                fr="Soumettez votre profil multilingue une seule fois. Après validation, votre compte et profil public seront créés à partir de cette candidature."
+                                ar="أرسلي ملفك متعدد اللغات مرة واحدة. بعد القبول، سيتم إنشاء حسابك وملفك العام من هذا الطلب."
+                            />
                         </p>
                         <div className="mt-4 grid gap-3 sm:grid-cols-3">
                             <div className="rounded-xl border border-border/70 bg-background p-4">
                                 <p className="text-xs font-semibold text-muted-foreground uppercase">
-                                    Step 1
+                                    <TransText
+                                        en="Step 1"
+                                        fr="Etape 1"
+                                        ar="الخطوة 1"
+                                    />
                                 </p>
                                 <p className="mt-1 text-sm font-semibold text-tblack">
-                                    {c.step1}
+                                    <TransText
+                                        en="Submit profile"
+                                        fr="Soumettre le profil"
+                                        ar="إرسال الملف"
+                                    />
                                 </p>
                             </div>
                             <div className="rounded-xl border border-border/70 bg-background p-4">
                                 <p className="text-xs font-semibold text-muted-foreground uppercase">
-                                    Step 2
+                                    <TransText
+                                        en="Step 2"
+                                        fr="Etape 2"
+                                        ar="الخطوة 2"
+                                    />
                                 </p>
                                 <p className="mt-1 text-sm font-semibold text-tblack">
-                                    {c.step2}
+                                    <TransText
+                                        en="Admin review"
+                                        fr="Revue admin"
+                                        ar="مراجعة الإدارة"
+                                    />
                                 </p>
                             </div>
                             <div className="rounded-xl border border-border/70 bg-background p-4">
                                 <p className="text-xs font-semibold text-muted-foreground uppercase">
-                                    Step 3
+                                    <TransText
+                                        en="Step 3"
+                                        fr="Etape 3"
+                                        ar="الخطوة 3"
+                                    />
                                 </p>
                                 <p className="mt-1 text-sm font-semibold text-tblack">
-                                    {c.step3}
+                                    <TransText
+                                        en="Account + publication"
+                                        fr="Compte + publication"
+                                        ar="الحساب + النشر"
+                                    />
                                 </p>
                             </div>
                         </div>
@@ -237,19 +188,38 @@ export default function BecomeExpert() {
                     <div className="rounded-2xl border border-border/70 bg-card p-6 shadow-sm sm:p-8">
                         {recentlySuccessful ? (
                             <div className="mb-6 rounded-lg border border-alpha-green/30 bg-beta-green px-4 py-3 text-sm text-alpha-green">
-                                {c.success}
+                                <TransText
+                                    en="Your request has been submitted. We will contact you after review."
+                                    fr="Votre demande a été soumise. Nous vous contacterons après la revue."
+                                    ar="تم إرسال طلبك بنجاح. سنتواصل معك بعد المراجعة."
+                                />
+                            </div>
+                        ) : null}
+                        {hasErrors ? (
+                            <div className="mb-6 rounded-lg border border-alpha-danger/30 bg-beta-danger/10 px-4 py-3 text-sm text-alpha-danger">
+                                Please fix the highlighted fields and submit
+                                again.
                             </div>
                         ) : null}
 
                         <form onSubmit={submit} className="space-y-8">
                             <h3 className="mb-3 text-base font-semibold text-tblack">
-                                {c.identity}
+                                <TransText
+                                    en="Identity"
+                                    fr="Identité"
+                                    ar="الهوية"
+                                />
                             </h3>
                             <div className="rounded-xl border border-border/70 p-4 sm:p-5">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.email}
+                                            <TransText
+                                                en="Email"
+                                                fr="Email"
+                                                ar="البريد الإلكتروني"
+                                            />{' '}
+                                            {requiredMark}
                                         </label>
                                         <input
                                             type="email"
@@ -269,7 +239,11 @@ export default function BecomeExpert() {
 
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.phone}
+                                            <TransText
+                                                en="Phone"
+                                                fr="Téléphone"
+                                                ar="الهاتف"
+                                            />
                                         </label>
                                         <input
                                             value={data.phone}
@@ -289,9 +263,13 @@ export default function BecomeExpert() {
                                     {['en', 'fr', 'ar'].map((lang) => (
                                         <div key={`name-${lang}`}>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.fullName} (
-                                                {lang.toUpperCase()}){' '}
-                                                {lang === 'en' ? '*' : ''}
+                                                <TransText
+                                                    en="Full name"
+                                                    fr="Nom complet"
+                                                    ar="الاسم الكامل"
+                                                />{' '}
+                                                ({lang.toUpperCase()}){' '}
+                                                {requiredMark}
                                             </label>
                                             <input
                                                 value={
@@ -322,16 +300,24 @@ export default function BecomeExpert() {
                             </div>
 
                             <h3 className="mb-3 text-base font-semibold text-tblack">
-                                {c.professional}
+                                <TransText
+                                    en="Professional Position"
+                                    fr="Position professionnelle"
+                                    ar="الوضع المهني"
+                                />
                             </h3>
                             <div className="rounded-xl border border-border/70 p-4 sm:p-5">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     {['en', 'fr', 'ar'].map((lang) => (
                                         <div key={`title-${lang}`}>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.currentTitle} (
-                                                {lang.toUpperCase()}){' '}
-                                                {lang === 'en' ? '*' : ''}
+                                                <TransText
+                                                    en="Current title"
+                                                    fr="Poste actuel"
+                                                    ar="الصفة الحالية"
+                                                />{' '}
+                                                ({lang.toUpperCase()}){' '}
+                                                {requiredMark}
                                             </label>
                                             <input
                                                 value={
@@ -362,7 +348,11 @@ export default function BecomeExpert() {
 
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.country}
+                                            <TransText
+                                                en="Country"
+                                                fr="Pays"
+                                                ar="البلد"
+                                            />
                                         </label>
                                         <input
                                             value={data.country}
@@ -384,7 +374,11 @@ export default function BecomeExpert() {
 
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.city}
+                                            <TransText
+                                                en="City"
+                                                fr="Ville"
+                                                ar="المدينة"
+                                            />
                                         </label>
                                         <input
                                             value={data.city}
@@ -403,7 +397,11 @@ export default function BecomeExpert() {
 
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.industries}
+                                            <TransText
+                                                en="Industries (comma separated)"
+                                                fr="Secteurs (séparés par des virgules)"
+                                                ar="القطاعات (مفصولة بفواصل)"
+                                            />
                                         </label>
                                         <input
                                             value={data.industries_text}
@@ -420,12 +418,24 @@ export default function BecomeExpert() {
                                             <p className="mt-1 text-xs text-alpha-danger">
                                                 {errors.industries}
                                             </p>
+                                        ) : getFirstArrayError(
+                                              'industries.',
+                                          ) ? (
+                                            <p className="mt-1 text-xs text-alpha-danger">
+                                                {getFirstArrayError(
+                                                    'industries.',
+                                                )}
+                                            </p>
                                         ) : null}
                                     </div>
 
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-tblack">
-                                            {c.languages}
+                                            <TransText
+                                                en="Languages (comma separated)"
+                                                fr="Langues (séparées par des virgules)"
+                                                ar="اللغات (مفصولة بفواصل)"
+                                            />
                                         </label>
                                         <input
                                             value={data.languages_text}
@@ -442,6 +452,12 @@ export default function BecomeExpert() {
                                             <p className="mt-1 text-xs text-alpha-danger">
                                                 {errors.languages}
                                             </p>
+                                        ) : getFirstArrayError('languages.') ? (
+                                            <p className="mt-1 text-xs text-alpha-danger">
+                                                {getFirstArrayError(
+                                                    'languages.',
+                                                )}
+                                            </p>
                                         ) : null}
                                     </div>
                                 </div>
@@ -449,15 +465,23 @@ export default function BecomeExpert() {
 
                             <div>
                                 <h3 className="mb-3 text-base font-semibold text-tblack">
-                                    {c.expertiseBio}
+                                    <TransText
+                                        en="Expertise and Bio"
+                                        fr="Expertise et biographie"
+                                        ar="الخبرة والسيرة"
+                                    />
                                 </h3>
                                 <div className="rounded-xl border border-border/70 p-4 sm:p-5">
                                     {['en', 'fr', 'ar'].map((lang) => (
                                         <div key={`expertise-${lang}`}>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.expertise} (
-                                                {lang.toUpperCase()}){' '}
-                                                {lang === 'en' ? '*' : ''}
+                                                <TransText
+                                                    en="Expertise areas"
+                                                    fr="Domaines d’expertise"
+                                                    ar="مجالات الخبرة"
+                                                />{' '}
+                                                ({lang.toUpperCase()}){' '}
+                                                {requiredMark}
                                             </label>
                                             <textarea
                                                 value={
@@ -492,8 +516,13 @@ export default function BecomeExpert() {
                                     {['en', 'fr', 'ar'].map((lang) => (
                                         <div key={`bio-${lang}`}>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.bio} ({lang.toUpperCase()}){' '}
-                                                {lang === 'en' ? '*' : ''}
+                                                <TransText
+                                                    en="Short bio"
+                                                    fr="Courte biographie"
+                                                    ar="نبذة قصيرة"
+                                                />{' '}
+                                                ({lang.toUpperCase()}){' '}
+                                                {requiredMark}
                                             </label>
                                             <textarea
                                                 value={
@@ -521,13 +550,21 @@ export default function BecomeExpert() {
 
                             <div>
                                 <h3 className="mb-3 text-base font-semibold text-tblack">
-                                    {c.social}
+                                    <TransText
+                                        en="Social Links"
+                                        fr="Liens sociaux"
+                                        ar="روابط التواصل"
+                                    />
                                 </h3>
                                 <div className="rounded-xl border border-border/70 p-4 sm:p-5">
                                     <div className="grid gap-5 sm:grid-cols-2">
                                         <div>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.linkedin}
+                                                <TransText
+                                                    en="LinkedIn URL"
+                                                    fr="URL LinkedIn"
+                                                    ar="رابط لينكدإن"
+                                                />
                                             </label>
                                             <input
                                                 value={data.linkedin_url}
@@ -549,7 +586,11 @@ export default function BecomeExpert() {
 
                                         <div>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.twitter}
+                                                <TransText
+                                                    en="Twitter / X URL"
+                                                    fr="URL Twitter / X"
+                                                    ar="رابط تويتر / X"
+                                                />
                                             </label>
                                             <input
                                                 value={data.twitter_url}
@@ -571,7 +612,11 @@ export default function BecomeExpert() {
 
                                         <div>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.instagram}
+                                                <TransText
+                                                    en="Instagram URL"
+                                                    fr="URL Instagram"
+                                                    ar="رابط إنستغرام"
+                                                />
                                             </label>
                                             <input
                                                 value={data.instagram_url}
@@ -593,7 +638,11 @@ export default function BecomeExpert() {
 
                                         <div>
                                             <label className="mb-2 block text-sm font-semibold text-tblack">
-                                                {c.portfolio}
+                                                <TransText
+                                                    en="Portfolio URL"
+                                                    fr="URL Portfolio"
+                                                    ar="رابط الأعمال"
+                                                />
                                             </label>
                                             <input
                                                 value={data.portfolio_url}
@@ -618,24 +667,55 @@ export default function BecomeExpert() {
 
                             <div>
                                 <label className="mb-2 block text-sm font-semibold text-tblack">
-                                    {c.cv}
+                                    <TransText
+                                        en="CV (PDF/DOC, max 5MB)"
+                                        fr="CV (PDF/DOC, max 5MB)"
+                                        ar="السيرة الذاتية (PDF/DOC بحد أقصى 5MB)"
+                                    />
                                 </label>
                                 <input
                                     type="file"
                                     accept=".pdf,.doc,.docx"
-                                    onChange={(e) =>
-                                        setData(
-                                            'cv',
-                                            e.target.files?.[0] ?? null,
-                                        )
-                                    }
-                                    className={inputClass}
+                                    onChange={(e) => {
+                                        const file =
+                                            e.target.files?.[0] ?? null;
+
+                                        if (
+                                            file &&
+                                            file.size > maxCvSizeBytes
+                                        ) {
+                                            setCvSizeError(
+                                                'The CV must be 5 MB or smaller.',
+                                            );
+                                            setData('cv', null);
+                                            e.target.value = '';
+                                            return;
+                                        }
+
+                                        setCvSizeError('');
+                                        setData('cv', file);
+                                    }}
+                                    aria-invalid={cvHasError}
+                                    className={[
+                                        inputClass,
+                                        cvHasError
+                                            ? 'border-alpha-danger bg-beta-danger/10 focus-visible:border-alpha-danger focus-visible:ring-alpha-danger'
+                                            : '',
+                                    ].join(' ')}
                                 />
-                                {errors.cv ? (
+                                {cvSizeError ? (
+                                    <p className="mt-1 text-xs text-alpha-danger">
+                                        {cvSizeError}
+                                    </p>
+                                ) : errors.cv ? (
                                     <p className="mt-1 text-xs text-alpha-danger">
                                         {errors.cv}
                                     </p>
                                 ) : null}
+                                <p className={helperClass}>
+                                    Optional. Accepted formats: PDF, DOC, DOCX.
+                                    Max size: 5 MB.
+                                </p>
                             </div>
 
                             <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-4">
@@ -643,14 +723,30 @@ export default function BecomeExpert() {
                                     href="/experts"
                                     className="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 text-sm font-semibold text-tgray hover:text-tblack"
                                 >
-                                    {c.cancel}
+                                    <TransText
+                                        en="Cancel"
+                                        fr="Annuler"
+                                        ar="إلغاء"
+                                    />
                                 </Link>
                                 <button
                                     type="submit"
                                     disabled={processing}
                                     className="inline-flex items-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-twhite transition hover:bg-beta-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
-                                    {processing ? c.submitting : c.submit}
+                                    {processing ? (
+                                        <TransText
+                                            en="Submitting..."
+                                            fr="Envoi..."
+                                            ar="جارٍ الإرسال..."
+                                        />
+                                    ) : (
+                                        <TransText
+                                            en="Submit Request"
+                                            fr="Envoyer la demande"
+                                            ar="إرسال الطلب"
+                                        />
+                                    )}
                                 </button>
                             </div>
                         </form>

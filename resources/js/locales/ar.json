@@ -70,6 +70,9 @@
     },
     "experts": {
         "headTitle": "الخبيرات",
+        "become": {
+            "headTitle": "أصبحي خبيرة"
+        },
         "searchPlaceholder": "ابحث بالاسم أو الخبرة أو كلمة مفتاحية...",
         "actions": {
             "addToFavoritesAria": "إضافة إلى المفضلة",

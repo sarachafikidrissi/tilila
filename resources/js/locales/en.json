@@ -70,6 +70,9 @@
     },
     "experts": {
         "headTitle": "Experts",
+        "become": {
+            "headTitle": "Become an Expert"
+        },
         "searchPlaceholder": "Search by name, expertise, or keyword...",
         "actions": {
             "addToFavoritesAria": "Add to favorites",
