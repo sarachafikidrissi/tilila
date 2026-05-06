@@ -14,8 +14,6 @@ class TililabParticipant extends Model
         'last_name',
         'email',
         'phone',
-        'job_title',
-        'organization',
         'city',
         'country',
         'bio',

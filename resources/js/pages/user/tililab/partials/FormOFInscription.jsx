@@ -191,8 +191,6 @@ export default function FormOFInscription() {
             last_name: '',
             email: '',
             phone: '',
-            job_title: '',
-            organization: '',
             city: '',
             country: 'ma',
             bio: '',
@@ -206,8 +204,6 @@ export default function FormOFInscription() {
         data.first_name.trim() !== '' &&
         data.last_name.trim() !== '' &&
         data.email.trim() !== '' &&
-        data.job_title.trim() !== '' &&
-        data.organization.trim() !== '' &&
         (data.city ?? '') !== '' &&
         (data.country ?? '') !== '';
 
@@ -232,6 +228,121 @@ export default function FormOFInscription() {
                         ar="كوني جزءًا من شبكة رائدة للخبيرات تدفع التنوع في الإعلام المغربي والإفريقي."
                     />
                 </p>
+            </div>
+
+            <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+                <div className="px-6 pt-7 pb-6 sm:px-10">
+                    <div className="text-xs font-semibold tracking-widest text-beta-blue uppercase">
+                        <TransText en="Tililab contest" fr="Concours Tililab" ar="مسابقة Tililab" />
+                    </div>
+                    <div className="mt-2 text-2xl font-extrabold tracking-tight text-tblack">
+                        <TransText
+                            en="Creation contest (under 30)"
+                            fr="Concours de création (moins de 30 ans)"
+                            ar="مسابقة إبداع (أقل من 30 سنة)"
+                        />
+                    </div>
+                    <div className="mt-3 space-y-2 text-sm leading-6 text-tgray">
+                        <p>
+                            <TransText
+                                en="Organized as part of the Trophée Tilila, Tililab is a creation contest for young talents under 30."
+                                fr="Organisé en marge du Trophée Tilila, Tililab est un concours de création destiné aux jeunes talents de moins de 30 ans."
+                                ar="ينظم على هامش جائزة تيليلا، Tililab هي مسابقة إبداع موجهة للمواهب الشابة أقل من 30 سنة."
+                            />
+                        </p>
+                        <p>
+                            <TransText
+                                en="It aims to nurture a new generation of engaged creators and promote inclusion and diversity."
+                                fr="Il vise à faire émerger une nouvelle génération de créateurs engagés, tout en les sensibilisant aux enjeux d’égalité femmes-hommes et en valorisant les principes d’inclusion et de diversité."
+                                ar="تهدف لإبراز جيل جديد من المبدعين الملتزمين، وتعزيز مبادئ المساواة والشمول والتنوع."
+                            />
+                        </p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-0 border-t border-border sm:grid-cols-2">
+                    <div className="px-6 py-6 sm:px-10">
+                        <div className="text-lg font-extrabold tracking-tight text-tblack">
+                            <TransText
+                                en="Participation steps"
+                                fr="Étapes de participation"
+                                ar="خطوات المشاركة"
+                            />
+                        </div>
+                        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-tgray">
+                            <li>
+                                <TransText
+                                    en="Fill in the participation form."
+                                    fr="Remplir le formulaire de participation."
+                                    ar="املأ استمارة المشاركة."
+                                />
+                            </li>
+                            <li>
+                                <TransText
+                                    en="Upload an original video made by the candidate."
+                                    fr="Uploader une vidéo originale réalisée par le/la candidat(e)."
+                                    ar="ارفعي فيديو أصلي من إعداد المرشح/ة."
+                                />
+                            </li>
+                            <li>
+                                <TransText
+                                    en="Accept the contest rules."
+                                    fr="Accepter le règlement du concours."
+                                    ar="اقبل نظام المسابقة."
+                                />
+                                <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6 text-tgray">
+                                    <li>
+                                        <TransText
+                                            en="Selected candidates will join a Bootcamp in Marrakech with Masterclasses led by advertising professionals."
+                                            fr="Les candidat(e)s de « TILILAB » retenus participeront à un Bootcamp à Marrakech où ils bénéficieront d’une série de Masterclass dispensées par des professionnel(le)s de la publicité."
+                                            ar="سيشارك المرشحون المختارون في معسكر تدريبي بمراكش مع دروس يقدمها محترفون في مجال الإعلانات."
+                                        />
+                                    </li>
+                                    <li>
+                                        <TransText
+                                            en="They will be supported by 2M in the elaboration and production of their fictional ads."
+                                            fr="Ils/elles seront ensuite accompagné(e)s par 2M dans l’élaboration et la production de leurs publicités fictives."
+                                            ar="وسيتم دعمهم من طرف 2M في إعداد وإنتاج إعلاناتهم التخيّلية."
+                                        />
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <div className="mt-4 rounded-2xl bg-beta-white px-4 py-3 text-sm font-semibold text-tblack ring-1 ring-border">
+                            <TransText
+                                en="The winning video will be chosen by the Trophée Tilila jury and announced during the ceremony."
+                                fr="La vidéo gagnante sera choisie par le jury du « Trophée Tilila ». Elle sera annoncée lors de la cérémonie du Trophée Tilila."
+                                ar="سيختار لجنة تحكيم جائزة تيليلا الفيديو الفائز، وسيتم الإعلان عنه خلال الحفل."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="border-t border-border px-6 py-6 sm:border-t-0 sm:border-l sm:px-10">
+                        <div className="text-lg font-extrabold tracking-tight text-tblack">
+                            <TransText
+                                en="Reward"
+                                fr="La récompense"
+                                ar="المكافأة"
+                            />
+                        </div>
+                        <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-6 text-tgray">
+                            <li>
+                                <TransText
+                                    en="The creator of the winning original work will receive a trophy and a prize (a professional tool offered by 2M) plus an incubation in a « Joo » for a project."
+                                    fr="Le/La créateur(trice) de l’œuvre originale ayant remporté le concours se verra récompensé(e) par la remise d’un trophée commémorant cette victoire, ainsi que par un prix consistant en un outil de travail offert par 2M et une incubation dans « Joo » pour la réalisation d’un projet."
+                                    ar="سيحصل صاحب/صاحبة العمل الأصلي الفائز على كأس وجائزة (أداة عمل مقدمة من 2M) إضافة إلى احتضان ضمن «Joo» لإنجاز مشروع."
+                                />
+                            </li>
+                            <li>
+                                <TransText
+                                    en="The winning video will be broadcast on 2M.ma, My2M, and 2M + Comité Parité et Diversité social channels."
+                                    fr="La création vidéo victorieuse sera diffusée sur 2M.ma, My2M, et sur les réseaux sociaux de 2M et du Comité Parité et Diversité 2M."
+                                    ar="سيتم بث الفيديو الفائز على 2M.ma وMy2M وعلى منصات التواصل الخاصة بـ2M ولجنة المناصفة والتنوع."
+                                />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <Stepper activeStepId={activeStepId} />
@@ -393,69 +504,6 @@ export default function FormOFInscription() {
                                             {errors.phone ? (
                                                 <div className="text-xs text-alpha-danger">
                                                     {errors.phone}
-                                                </div>
-                                            ) : null}
-                                        </Field>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-2">
-                                        <Field
-                                            label={
-                                                <TransText
-                                                    en="Current Job Title"
-                                                    fr="Poste actuel"
-                                                    ar="المسمى الوظيفي الحالي"
-                                                />
-                                            }
-                                            required
-                                        >
-                                            <Input
-                                                id={`${formId}-job-title`}
-                                                value={data.job_title}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'job_title',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder={t(
-                                                    'jobTitlePlaceholder',
-                                                )}
-                                                autoComplete="organization-title"
-                                            />
-                                            {errors.job_title ? (
-                                                <div className="text-xs text-alpha-danger">
-                                                    {errors.job_title}
-                                                </div>
-                                            ) : null}
-                                        </Field>
-                                        <Field
-                                            label={
-                                                <TransText
-                                                    en="Organization / Company"
-                                                    fr="Organisation / Entreprise"
-                                                    ar="المنظمة / الشركة"
-                                                />
-                                            }
-                                            required
-                                        >
-                                            <Input
-                                                id={`${formId}-org`}
-                                                value={data.organization}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'organization',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder={t(
-                                                    'organizationPlaceholder',
-                                                )}
-                                                autoComplete="organization"
-                                            />
-                                            {errors.organization ? (
-                                                <div className="text-xs text-alpha-danger">
-                                                    {errors.organization}
                                                 </div>
                                             ) : null}
                                         </Field>
@@ -670,7 +718,7 @@ export default function FormOFInscription() {
                                                     )
                                                 }
                                             />
-                                            <Input
+                                            {/* <Input
                                                 id={`${formId}-original-video-link`}
                                                 value={data.original_video_link}
                                                 onChange={(e) =>
@@ -683,7 +731,7 @@ export default function FormOFInscription() {
                                                 type="url"
                                                 inputMode="url"
                                                 autoComplete="url"
-                                            />
+                                            /> */}
                                             <div className="mt-2 text-xs text-muted-foreground">
                                                 <TransText
                                                     en="Upload your video (recommended). If needed, you can also paste a link (SwissTransfer, Google Drive, WeTransfer, Dropbox, etc.)."
@@ -801,16 +849,6 @@ export default function FormOFInscription() {
                                             />
                                             <div className="mt-1 font-extrabold text-foreground">
                                                 {data.email}
-                                            </div>
-                                        </div>
-                                        <div className="font-semibold text-muted-foreground">
-                                            <TransText
-                                                en="Organization"
-                                                fr="Organisation"
-                                                ar="المنظمة"
-                                            />
-                                            <div className="mt-1 font-extrabold text-foreground">
-                                                {data.organization}
                                             </div>
                                         </div>
                                         <div className="font-semibold text-muted-foreground">

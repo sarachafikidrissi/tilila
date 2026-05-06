@@ -22,8 +22,6 @@ class TililabParticipantController extends Controller
                 $q->where('first_name', 'like', $like)
                     ->orWhere('last_name', 'like', $like)
                     ->orWhere('email', 'like', $like)
-                    ->orWhere('organization', 'like', $like)
-                    ->orWhere('job_title', 'like', $like)
                     ->orWhere('city', 'like', $like)
                     ->orWhere('country', 'like', $like);
             });
@@ -71,8 +69,6 @@ class TililabParticipantController extends Controller
                 $q->where('first_name', 'like', $like)
                     ->orWhere('last_name', 'like', $like)
                     ->orWhere('email', 'like', $like)
-                    ->orWhere('organization', 'like', $like)
-                    ->orWhere('job_title', 'like', $like)
                     ->orWhere('city', 'like', $like)
                     ->orWhere('country', 'like', $like);
             });
@@ -95,8 +91,6 @@ class TililabParticipantController extends Controller
                 'last_name',
                 'email',
                 'phone',
-                'job_title',
-                'organization',
                 'city',
                 'country',
                 'bio',
@@ -114,8 +108,6 @@ class TililabParticipantController extends Controller
                         (string) ($p->last_name ?? ''),
                         (string) ($p->email ?? ''),
                         (string) ($p->phone ?? ''),
-                        (string) ($p->job_title ?? ''),
-                        (string) ($p->organization ?? ''),
                         (string) ($p->city ?? ''),
                         (string) ($p->country ?? ''),
                         (string) ($p->bio ?? ''),
