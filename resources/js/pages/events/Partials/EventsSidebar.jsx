@@ -287,27 +287,39 @@ export default function EventsSidebar({
 
                 <div className="mt-4 space-y-3">
                     <CategoryCheckbox
-                        id="cat-talk"
-                        label={t('events.categories.talk')}
-                        checked={Boolean(categories?.talk)}
+                        id="cat-awards"
+                        label={
+                            <TransText
+                                en="Tilila Awards"
+                                fr="Tilila Awards"
+                                ar="جوائز تيليلا"
+                            />
+                        }
+                        checked={Boolean(categories?.awards)}
                         onChange={(checked) =>
-                            setCategories((c) => ({ ...c, talk: checked }))
+                            setCategories((c) => ({ ...c, awards: checked }))
                         }
                     />
                     <CategoryCheckbox
-                        id="cat-webinar"
-                        label={t('events.categories.webinar')}
-                        checked={Boolean(categories?.webinar)}
+                        id="cat-tililab"
+                        label={<TransText en="Tililab" fr="Tililab" ar="تيليلاب" />}
+                        checked={Boolean(categories?.tililab)}
                         onChange={(checked) =>
-                            setCategories((c) => ({ ...c, webinar: checked }))
+                            setCategories((c) => ({ ...c, tililab: checked }))
                         }
                     />
                     <CategoryCheckbox
-                        id="cat-workshop"
-                        label={t('events.categories.workshop')}
-                        checked={Boolean(categories?.workshop)}
+                        id="cat-tilitalks"
+                        label={
+                            <TransText
+                                en="TiliTalks"
+                                fr="TiliTalks"
+                                ar="تيلي توكس"
+                            />
+                        }
+                        checked={Boolean(categories?.tilitalks)}
                         onChange={(checked) =>
-                            setCategories((c) => ({ ...c, workshop: checked }))
+                            setCategories((c) => ({ ...c, tilitalks: checked }))
                         }
                     />
                 </div>

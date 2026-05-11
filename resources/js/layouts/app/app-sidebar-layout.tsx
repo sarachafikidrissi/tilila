@@ -17,18 +17,26 @@ export default function AppSidebarLayout({
     const currentPath = (usePage().url || '/').split('?')[0] || '/';
 
     const normalizePath = (path: string) => {
-        if (!path) return '/';
-        if (path.length > 1 && path.endsWith('/')) return path.slice(0, -1);
+        if (!path) {
+            return '/';
+        }
+
+        if (path.length > 1 && path.endsWith('/')) {
+            return path.slice(0, -1);
+        }
+
         return path;
     };
 
     const formatSegment = (segment: string) => {
         const cleaned = segment.replace(/[-_]/g, ' ');
+
         return cleaned.replace(/\b\w/g, (char) => char.toUpperCase());
     };
 
     const buildBreadcrumbs = (path: string): BreadcrumbItem[] => {
         const segments = normalizePath(path).split('/').filter(Boolean);
+
         return segments.map((segment, index) => ({
             title: formatSegment(segment),
             href: `/${segments.slice(0, index + 1).join('/')}`,

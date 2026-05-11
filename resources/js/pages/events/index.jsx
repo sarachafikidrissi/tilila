@@ -5,6 +5,7 @@ import EventsHub from '@/pages/events/Partials/EventsHub';
 import EventsTabs from '@/pages/events/Partials/EventsTabs';
 import EventsSidebar from '@/pages/events/Partials/EventsSidebar';
 import EventCard from '@/pages/events/Partials/EventCard';
+import TiliTalksLanding from '@/pages/events/Partials/TiliTalksLanding';
 import { useTranslation } from '@/contexts/TranslationContext';
 import TransText from '@/components/TransText';
 
@@ -14,13 +15,20 @@ function isPastEvent(event) {
     return ts < Date.now();
 }
 
-/** Map DB types (e.g. tilitalk) to sidebar category keys (talk | webinar | workshop). */
+/** Map DB types to top-level IA categories (Awards | Tililab | TiliTalks). */
 function categoryKeyForFilter(type) {
-    const t = type ?? 'talk';
-    if (t === 'webinar') return 'webinar';
-    if (t === 'workshop') return 'workshop';
-    if (t === 'tilitalk' || t === 'trophy' || t === 'other') return 'talk';
-    return t;
+    const t = String(type ?? '').toLowerCase();
+
+    if (t === 'tililab') return 'tililab';
+
+    // Awards (historically stored as "trophy" in our DB).
+    if (t === 'trophy' || t === 'awards' || t === 'tilila-awards') {
+        return 'awards';
+    }
+
+    // Everything else is treated as a public conversation / session.
+    // Includes: tilitalk, talk, webinar, workshop, other...
+    return 'tilitalks';
 }
 
 function panelFromUrl(url, fallback) {
@@ -28,6 +36,9 @@ function panelFromUrl(url, fallback) {
     const v = new URLSearchParams(q).get('view');
     if (v === 'calendar') {
         return 'calendar';
+    }
+    if (v === 'tilitalks') {
+        return 'tilitalks';
     }
     if (v === 'hub') {
         return 'hub';
@@ -47,9 +58,9 @@ export default function EventsIndex({
     const [activeTab, setActiveTab] = useState('upcoming'); // upcoming | past
     const [selectedDayIso, setSelectedDayIso] = useState(null);
     const [categories, setCategories] = useState({
-        talk: true,
-        webinar: true,
-        workshop: true,
+        awards: true,
+        tililab: true,
+        tilitalks: true,
     });
 
     const [statusFilters, setStatusFilters] = useState(() =>
@@ -122,8 +133,8 @@ export default function EventsIndex({
                             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                                 <TransText
                                     en="Awards, Tililab, and the public events calendar."
-                                    fr="Awards, Tililab et l’agenda des événements."
-                                    ar="الجوائز وتيليلاب وأجندة الفعاليات."
+                                    fr="Awards, Tililab, TiliTalks et le calendrier annuel."
+                                    ar="الجوائز وتيليلاب وتيلي توكس والتقويم السنوي."
                                 />
                             </p>
 
@@ -132,12 +143,27 @@ export default function EventsIndex({
                                     href="/events"
                                     className={[
                                         'rounded-full px-5 py-2 text-sm font-semibold transition',
-                                        topPanel !== 'calendar'
+                                        topPanel === 'hub'
                                             ? 'bg-beta-blue text-white'
                                             : 'text-muted-foreground hover:text-foreground',
                                     ].join(' ')}
                                 >
                                     <TransText en="Hub" fr="Hub" ar="البوابة" />
+                                </Link>
+                                <Link
+                                    href="/events?view=tilitalks"
+                                    className={[
+                                        'rounded-full px-5 py-2 text-sm font-semibold transition',
+                                        topPanel === 'tilitalks'
+                                            ? 'bg-beta-blue text-white'
+                                            : 'text-muted-foreground hover:text-foreground',
+                                    ].join(' ')}
+                                >
+                                    <TransText
+                                        en="TiliTalks"
+                                        fr="TiliTalks"
+                                        ar="تيلي توكس"
+                                    />
                                 </Link>
                                 <Link
                                     href="/events?view=calendar"
@@ -169,11 +195,17 @@ export default function EventsIndex({
                     </div>
                 </div>
 
-                {topPanel !== 'calendar' ? (
+                {topPanel === 'hub' ? (
                     <div className="bg-twhite py-12">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <EventsHub eventsByYear={eventsByYear} />
                         </div>
+                    </div>
+                ) : null}
+
+                {topPanel === 'tilitalks' ? (
+                    <div className="bg-twhite py-12">
+                        <TiliTalksLanding />
                     </div>
                 ) : null}
 

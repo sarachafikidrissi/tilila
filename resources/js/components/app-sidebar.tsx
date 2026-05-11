@@ -2,9 +2,9 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Calendar,
     LayoutGrid,
+    Mail,
     Megaphone,
-    Shield,
-    Settings,
+    Newspaper,
     Trophy,
     Users,
 } from 'lucide-react';
@@ -45,7 +45,7 @@ const adminModuleItems: NavItem[] = [
         href: '/admin/tilila/participants',
         icon: Users,
     },
-    {
+    {   
         title: 'Tililab Participants',
         href: '/admin/tililab/participants',
         icon: Users,

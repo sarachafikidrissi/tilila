@@ -101,6 +101,8 @@ export default function Navbar() {
 
     const authButtonClass =
         'inline-flex items-center justify-center rounded-full bg-alpha-blue px-5 py-2 text-sm font-semibold text-beta-blue transition-colors hover:bg-beta-blue hover:text-twhite';
+    const registerButtonClass =
+        'inline-flex items-center justify-center rounded-full border border-beta-blue/30 bg-transparent px-5 py-2 text-sm font-semibold text-beta-blue transition-colors hover:bg-beta-blue hover:text-twhite';
     const dashboardHref =
         auth?.user?.role === 'expert' ? '/expert/dashboard' : '/admin/dashboard';
 

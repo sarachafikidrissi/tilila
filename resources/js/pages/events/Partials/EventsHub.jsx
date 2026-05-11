@@ -28,13 +28,13 @@ const MODULES = [
             'عرض · جوائز · معايير · لجنة التحكيم · ترشح · أسئلة · رعاة · فائزات',
     },
     {
-        href: '/events?view=calendar',
-        enTitle: 'TiliTalks & calendar',
-        frTitle: 'TiliTalks & agenda',
-        arTitle: 'TiliTalks والأجندة',
-        enBody: 'Concept · Next sessions · Speakers · Replays · Photos · Register',
-        frBody: 'Concept · Prochaines dates · Speakers · Replays · Photos · Inscription',
-        arBody: 'المفهوم · المواعيد · المتحدثون · الإعادات · الصور · التسجيل',
+        href: '/events?view=tilitalks',
+        enTitle: 'TiliTalks',
+        frTitle: 'TiliTalks',
+        arTitle: 'تيلي توكس',
+        enBody: 'Concept · Agenda · Speakers · Replays · Photos · Register',
+        frBody: 'Concept · Agenda · Speakers · Replays · Photos · Inscription',
+        arBody: 'المفهوم · الأجندة · المتحدثون · الإعادات · الصور · التسجيل',
     },
 ];
 
@@ -68,9 +68,9 @@ export default function EventsHub({ eventsByYear = {} }) {
                         className="inline-flex items-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-white transition hover:bg-beta-blue/90"
                     >
                         <TransText
-                            en="Open the calendar"
-                            fr="Ouvrir l’agenda"
-                            ar="افتح الأجندة"
+                            en="View annual calendar"
+                            fr="Voir le calendrier annuel"
+                            ar="عرض التقويم السنوي"
                         />
                     </Link>
                     <Link
@@ -78,9 +78,9 @@ export default function EventsHub({ eventsByYear = {} }) {
                         className="inline-flex items-center rounded-full border border-border bg-card px-5 py-2 text-sm font-semibold text-foreground transition hover:bg-muted"
                     >
                         <TransText
-                            en="Programme agenda (Learn)"
-                            fr="Agenda du programme (Learn)"
-                            ar="أجندة البرنامج (Learn)"
+                            en="Tilila Learn agenda"
+                            fr="Agenda Tilila Learn"
+                            ar="أجندة تيليلا ليرن"
                         />
                     </Link>
                 </div>
@@ -197,13 +197,13 @@ export default function EventsHub({ eventsByYear = {} }) {
                 </div>
             </div>
 
-            {/* {years.length > 0 ? (
+            {years.length > 0 ? (
                 <div className="rounded-2xl border border-border bg-muted/30 p-6">
                     <h3 className="text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
                         <TransText
-                            en="Annual overview (public events)"
-                            fr="Vue annuelle (événements publics)"
-                            ar="نظرة سنوية (فعاليات عامة)"
+                            en="Annual overview"
+                            fr="Vue d’ensemble annuelle"
+                            ar="نظرة عامة سنوية"
                         />
                     </h3>
                     <div className="mt-4 flex flex-wrap gap-3">
@@ -222,7 +222,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                         ))}
                     </div>
                 </div>
-            ) : null} */}
+            ) : null}
         </div>
     );
 }
