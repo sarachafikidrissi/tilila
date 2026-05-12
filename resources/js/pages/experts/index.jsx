@@ -5,6 +5,10 @@ import FiltersBar from '@/pages/experts/Partials/FiltersBar';
 import ExpertCard from '@/pages/experts/Partials/ExpertCard';
 import { useTranslation } from '@/contexts/TranslationContext';
 import TransText from '@/components/TransText';
+import {
+    buildCountryOptions,
+    buildLanguageOptions,
+} from '@/components/helpers/expert-form-options';
 
 export default function ExpertsIndex({ experts: expertsProp = [] }) {
     const { locale, t } = useTranslation();
@@ -13,12 +17,19 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
     const [view, setView] = useState('grid');
     const [currentPage, setCurrentPage] = useState(1);
     const [filters, setFilters] = useState({
-        industry: 'all',
         country: 'all',
         location: 'all',
         language: 'all',
-        availability: 'all',
     });
+
+    const countryOptions = useMemo(
+        () => buildCountryOptions(locale),
+        [locale],
+    );
+    const languageOptions = useMemo(
+        () => buildLanguageOptions(locale),
+        [locale],
+    );
 
     const getCityLabel = (expert) => {
         if (!expert) {
@@ -37,7 +48,6 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
             expert.city_i18n?.en ||
             expert.city_i18n?.fr ||
             expert.city_i18n?.ar ||
-            expert.location ||
             ''
         );
     };
@@ -56,42 +66,24 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
 
     const filterLabels = useMemo(
         () => ({
-            industry: {
-                economics: t('experts.filters.economics'),
-                technology: t('experts.filters.technology'),
-                health: t('experts.filters.health'),
-                legal: t('experts.filters.legal'),
-            },
-            country: {
-                ma: t('experts.filters.morocco'),
-                sn: t('experts.filters.senegal'),
-            },
+            country: countryOptions.reduce((accumulator, option) => {
+                accumulator[option.value] = option.label;
+                return accumulator;
+            }, {}),
             location: locationOptions.reduce((accumulator, value) => {
                 accumulator[value] = value;
                 return accumulator;
             }, {}),
-            language: {
-                ar: t('experts.filters.arabic'),
-                fr: t('experts.filters.french'),
-                en: t('experts.filters.english'),
-            },
-            availability: {
-                available: t('experts.filters.available'),
-            },
+            language: languageOptions.reduce((accumulator, option) => {
+                accumulator[option.value] = option.label;
+                return accumulator;
+            }, {}),
         }),
-        [locationOptions, t],
+        [countryOptions, languageOptions, locationOptions],
     );
 
     const activeFilters = useMemo(() => {
         const items = [];
-
-        if (filters.industry !== 'all') {
-            items.push({
-                key: 'industry',
-                label:
-                    filterLabels.industry[filters.industry] ?? filters.industry,
-            });
-        }
 
         if (filters.country !== 'all') {
             items.push({
@@ -116,27 +108,12 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
             });
         }
 
-        if (filters.availability !== 'all') {
-            items.push({
-                key: 'availability',
-                label:
-                    filterLabels.availability[filters.availability] ??
-                    filters.availability,
-            });
-        }
-
         return items;
     }, [filterLabels, filters]);
 
     const experts = useMemo(() => {
         const q = query.trim().toLowerCase();
         let list = expertsProp;
-
-        if (filters.industry !== 'all') {
-            list = list.filter((expert) =>
-                (expert.industries ?? []).includes(filters.industry),
-            );
-        }
 
         if (filters.country !== 'all') {
             list = list.filter((expert) => expert.country === filters.country);
@@ -203,10 +180,6 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
             }
         }
 
-        if (filters.availability === 'available') {
-            list = list.filter((expert) => expert.badge);
-        }
-
         if (sort === 'name_asc') {
             list = [...list].sort((a, b) => {
                 const aName =
@@ -243,9 +216,7 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
 
         return list;
     }, [
-        filters.availability,
         filters.country,
-        filters.industry,
         filters.language,
         filters.location,
         locale,
@@ -350,6 +321,8 @@ export default function ExpertsIndex({ experts: expertsProp = [] }) {
                             <FiltersBar
                                 advancedOnly
                                 locationOptions={locationOptions}
+                                countryOptions={countryOptions}
+                                languageOptions={languageOptions}
                                 query={query}
                                 setQuery={setQuery}
                                 filters={filters}

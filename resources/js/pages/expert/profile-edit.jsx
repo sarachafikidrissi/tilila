@@ -1,5 +1,5 @@
 import { Head, router, setLayoutProps, useForm } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useTranslation } from '@/contexts/TranslationContext';
 import { Button } from '@/components/ui/button';
@@ -82,8 +82,42 @@ export default function ExpertProfileEdit({ expert }) {
         portfolio_url: expert?.portfolio_url ?? '',
         instagram_url: expert?.instagram_url ?? '',
         twitter_url: expert?.twitter_url ?? '',
+        profile_image: null,
         cv: null,
     });
+
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(null);
+    const avatarBlobRef = useRef(null);
+
+    useEffect(
+        () => () => {
+            if (avatarBlobRef.current) {
+                URL.revokeObjectURL(avatarBlobRef.current);
+                avatarBlobRef.current = null;
+            }
+        },
+        [],
+    );
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files?.[0] ?? null;
+        if (avatarBlobRef.current) {
+            URL.revokeObjectURL(avatarBlobRef.current);
+            avatarBlobRef.current = null;
+        }
+        setData('profile_image', file);
+        if (file) {
+            avatarBlobRef.current = URL.createObjectURL(file);
+            setAvatarPreviewUrl(avatarBlobRef.current);
+        } else {
+            setAvatarPreviewUrl(null);
+        }
+    };
+
+    const displayAvatarSrc =
+        data.profile_image instanceof File
+            ? avatarPreviewUrl
+            : (expert?.image_url ?? null);
 
     const countryOptions = useMemo(() => buildCountryOptions(locale), [locale]);
     const languageOptions = useMemo(() => buildLanguageOptions(locale), [locale]);
@@ -141,6 +175,32 @@ export default function ExpertProfileEdit({ expert }) {
                                     />
                                     <FieldError error={errors.phone} />
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="profile_image">Profile image</Label>
+                                <div className="flex flex-wrap items-center gap-4">
+                                    {displayAvatarSrc ? (
+                                        <img
+                                            src={displayAvatarSrc}
+                                            alt=""
+                                            className="h-20 w-20 rounded-full border border-border object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-20 w-20 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                                            No image
+                                        </div>
+                                    )}
+                                    <input
+                                        id="profile_image"
+                                        name="profile_image"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        className="flex h-10 w-full max-w-md cursor-pointer rounded-md border border-input bg-background px-3 py-1.5 text-sm shadow-xs ring-offset-background file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                                        onChange={handleAvatarChange}
+                                    />
+                                </div>
+                                <FieldError error={errors.profile_image} />
                             </div>
 
                             <TriLangField

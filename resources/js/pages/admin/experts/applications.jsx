@@ -37,9 +37,12 @@ function getCityLabel(application) {
         application?.city_i18n?.en ||
         application?.city_i18n?.fr ||
         application?.city_i18n?.ar ||
-        application?.city ||
         ''
     );
+}
+
+function getI18nValue(value) {
+    return value?.en || value?.fr || value?.ar || '';
 }
 
 export default function AdminExpertApplicationsIndex({
@@ -192,7 +195,7 @@ export default function AdminExpertApplicationsIndex({
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email, city or status..."
+                            placeholder="Search by name, email, title, or status..."
                             className="h-10 pl-10"
                         />
                     </div>
@@ -252,8 +255,9 @@ export default function AdminExpertApplicationsIndex({
                                     <TableRow key={application.id}>
                                         <TableCell className="py-4 sm:px-3">
                                             <div className="font-semibold text-tblack">
-                                                {application.name_i18n?.en ||
-                                                    application.full_name}
+                                                {getI18nValue(
+                                                    application.name_i18n,
+                                                ) || '—'}
                                             </div>
                                             <div className="text-xs text-tgray">
                                                 {application.email}
@@ -269,10 +273,9 @@ export default function AdminExpertApplicationsIndex({
                                         </TableCell>
                                         <TableCell className="max-w-sm py-4 text-sm text-tgray sm:px-3">
                                             <div className="line-clamp-2">
-                                                {application.expertise_i18n
-                                                    ?.en ||
-                                                    application.expertise ||
-                                                    '—'}
+                                                {getI18nValue(
+                                                    application.expertise_i18n,
+                                                ) || '—'}
                                             </div>
                                         </TableCell>
                                         <TableCell className="py-4 sm:px-3">

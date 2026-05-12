@@ -37,6 +37,16 @@ class ProfileController extends Controller
             $details['cv_path'] = $this->storeCvFromUpload($request->file('cv'));
         }
 
+        if ($request->hasFile('profile_image')) {
+            if ($expert->image) {
+                Storage::disk('public')->delete($expert->image);
+            }
+            $data['image'] = $this->storeProfileImageFromUpload(
+                $request->file('profile_image'),
+            );
+        }
+        unset($data['profile_image']);
+
         $expert->update([
             ...$data,
             'details' => $details,
@@ -74,6 +84,7 @@ class ProfileController extends Controller
             'twitter_url' => trim((string) ($socials['twitter'] ?? '')),
             'instagram_url' => trim((string) ($socials['instagram'] ?? '')),
             'portfolio_url' => trim((string) ($details['portfolio_url'] ?? '')),
+            'image_url' => $expert->image_url,
             'cv_url' => $this->cvUrl($details),
         ];
     }
@@ -103,14 +114,9 @@ class ProfileController extends Controller
     private function normalizeDetailsForForm(?array $details): array
     {
         $base = [
-            'headlineTags' => [],
             'bio' => [],
-            'quote' => ['en' => '', 'fr' => '', 'ar' => ''],
             'socials' => ['linkedin' => '', 'twitter' => '', 'instagram' => ''],
             'expertise' => [],
-            'journey' => [],
-            'appearances' => [],
-            'articles' => [],
             'portfolio_url' => '',
             'phone' => '',
             'cv_path' => '',
@@ -169,6 +175,7 @@ class ProfileController extends Controller
             'twitter_url' => ['nullable', 'url', 'max:2048'],
             'instagram_url' => ['nullable', 'url', 'max:2048'],
             'portfolio_url' => ['nullable', 'url', 'max:2048'],
+            'profile_image' => ['nullable', 'file', 'max:5120', 'mimes:jpeg,png,webp,gif'],
         ]);
 
         if ($request->hasFile('cv')) {
@@ -199,7 +206,6 @@ class ProfileController extends Controller
         $details['portfolio_url'] = $validated['portfolio_url'];
         $details['expertise_text'] = $validated['expertise']['en'];
         $details['bio'] = [$validated['bio']];
-        $details['city_i18n'] = $validated['city'];
         $details['socials'] = [
             'linkedin' => $validated['linkedin_url'],
             'twitter' => $validated['twitter_url'],
@@ -218,9 +224,6 @@ class ProfileController extends Controller
             $validated['bio']
         );
         $validated['city_i18n'] = $validated['city'];
-        $validated['location'] = $validated['city']['en'] !== ''
-            ? $validated['city']['en']
-            : ($validated['city']['fr'] !== '' ? $validated['city']['fr'] : $validated['city']['ar']);
         unset($validated['city']);
 
         return $validated;
@@ -274,38 +277,24 @@ class ProfileController extends Controller
         return Storage::disk('public')->exists($path) ? Storage::url($path) : null;
     }
 
-    private function plainLocationValue(mixed $location): string
-    {
-        if (is_array($location)) {
-            return trim((string) ($location['en'] ?? $location['fr'] ?? $location['ar'] ?? ''));
-        }
-
-        return trim((string) ($location ?? ''));
-    }
-
     /**
      * @return array{en: string, fr: string, ar: string}
      */
     private function resolveCityForForm(Expert $expert): array
     {
-        $details = is_array($expert->details) ? $expert->details : [];
         $cityFromColumn = is_array($expert->city_i18n) ? $expert->city_i18n : null;
         if ($cityFromColumn !== null) {
             return $this->triLangValue($cityFromColumn);
         }
 
-        $city = is_array($details['city_i18n'] ?? null) ? $details['city_i18n'] : null;
+        return $this->triLangValue(['en' => '', 'fr' => '', 'ar' => '']);
+    }
 
-        if ($city !== null) {
-            return $this->triLangValue($city);
-        }
-
-        $fallback = $this->plainLocationValue($expert->location);
-
-        return $this->triLangValue([
-            'en' => $fallback,
-            'fr' => '',
-            'ar' => '',
-        ]);
+    /**
+     * Persist profile image on the public disk and return the stored path.
+     */
+    private function storeProfileImageFromUpload(UploadedFile $file): string
+    {
+        return $file->store('experts', 'public');
     }
 }

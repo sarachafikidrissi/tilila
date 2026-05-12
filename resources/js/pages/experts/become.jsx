@@ -32,10 +32,12 @@ export default function BecomeExpert() {
         twitter_url: '',
         instagram_url: '',
         portfolio_url: '',
+        profile_image: null,
         cv: null,
         locale: 'en',
     });
     const [cvSizeError, setCvSizeError] = useState('');
+    const [imageSizeError, setImageSizeError] = useState('');
     const [languageQuery, setLanguageQuery] = useState('');
     const countryOptions = useMemo(() => buildCountryOptions(locale), [locale]);
     const languageOptions = useMemo(() => buildLanguageOptions(locale), [locale]);
@@ -48,7 +50,11 @@ export default function BecomeExpert() {
     }, [languageOptions, languageQuery]);
 
     const cvHasError = Boolean(errors.cv || cvSizeError);
-    const hasErrors = Object.keys(errors).length > 0 || cvSizeError !== '';
+    const imageHasError = Boolean(errors.profile_image || imageSizeError);
+    const hasErrors =
+        Object.keys(errors).length > 0 ||
+        cvSizeError !== '' ||
+        imageSizeError !== '';
     const requiredMark = <span className="text-alpha-danger">*</span>;
     const getFirstArrayError = (prefix) =>
         Object.entries(errors).find(([key]) => key.startsWith(prefix))?.[1];
@@ -56,12 +62,18 @@ export default function BecomeExpert() {
     const submit = (e) => {
         e.preventDefault();
 
+        if (data.profile_image instanceof File && data.profile_image.size > maxCvSizeBytes) {
+            setImageSizeError('The image must be 5 MB or smaller.');
+            return;
+        }
+
         if (data.cv instanceof File && data.cv.size > maxCvSizeBytes) {
             setCvSizeError('The CV must be 5 MB or smaller.');
             return;
         }
 
         setCvSizeError('');
+        setImageSizeError('');
 
         transform((current) => current);
 
@@ -82,9 +94,11 @@ export default function BecomeExpert() {
                     'twitter_url',
                     'instagram_url',
                     'portfolio_url',
+                    'profile_image',
                     'cv',
                 );
                 setCvSizeError('');
+                setImageSizeError('');
             },
         });
     };
@@ -714,6 +728,54 @@ export default function BecomeExpert() {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="mb-2 block text-sm font-semibold text-tblack">
+                                    <TransText
+                                        en="Profile image"
+                                        fr="Image de profil"
+                                        ar="صورة الملف الشخصي"
+                                    />
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0] ?? null;
+
+                                        if (file && file.size > maxCvSizeBytes) {
+                                            setImageSizeError(
+                                                'The image must be 5 MB or smaller.',
+                                            );
+                                            setData('profile_image', null);
+                                            e.target.value = '';
+                                            return;
+                                        }
+
+                                        setImageSizeError('');
+                                        setData('profile_image', file);
+                                    }}
+                                    aria-invalid={imageHasError}
+                                    className={[
+                                        inputClass,
+                                        imageHasError
+                                            ? 'border-alpha-danger bg-beta-danger/10 focus-visible:border-alpha-danger focus-visible:ring-alpha-danger'
+                                            : '',
+                                    ].join(' ')}
+                                />
+                                {imageSizeError ? (
+                                    <p className="mt-1 text-xs text-alpha-danger">
+                                        {imageSizeError}
+                                    </p>
+                                ) : errors.profile_image ? (
+                                    <p className="mt-1 text-xs text-alpha-danger">
+                                        {errors.profile_image}
+                                    </p>
+                                ) : null}
+                                <p className={helperClass}>
+                                    Optional. JPEG, PNG, WebP, or GIF. Max size: 5 MB.
+                                </p>
                             </div>
 
                             <div>

@@ -19,11 +19,10 @@ class ExpertApplicationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'full_name' => ['nullable', 'string', 'max:255'],
-            'name_i18n' => ['nullable', 'array'],
-            'name_i18n.en' => ['required_without:full_name', 'string', 'max:255'],
-            'name_i18n.fr' => ['required_without:full_name', 'string', 'max:255'],
-            'name_i18n.ar' => ['required_without:full_name', 'string', 'max:255'],
+            'name_i18n' => ['required', 'array'],
+            'name_i18n.en' => ['required', 'string', 'max:255'],
+            'name_i18n.fr' => ['required', 'string', 'max:255'],
+            'name_i18n.ar' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'email',
@@ -38,31 +37,27 @@ class ExpertApplicationController extends Controller
             'city.en' => ['nullable', 'string', 'max:120'],
             'city.fr' => ['nullable', 'string', 'max:120'],
             'city.ar' => ['nullable', 'string', 'max:120'],
-            'industries' => ['nullable', 'array'],
-            'industries.*' => ['string', 'max:64'],
             'languages' => ['nullable', 'array'],
             'languages.*' => ['string', 'max:16'],
-            'current_title' => ['nullable', 'string', 'max:255'],
-            'title_i18n' => ['nullable', 'array'],
-            'title_i18n.en' => ['required_without:current_title', 'string', 'max:255'],
-            'title_i18n.fr' => ['required_without:current_title', 'string', 'max:255'],
-            'title_i18n.ar' => ['required_without:current_title', 'string', 'max:255'],
-            'expertise' => ['nullable', 'string', 'max:2000'],
-            'expertise_i18n' => ['nullable', 'array'],
-            'expertise_i18n.en' => ['required_without:expertise', 'string', 'max:2000'],
-            'expertise_i18n.fr' => ['required_without:expertise', 'string', 'max:2000'],
-            'expertise_i18n.ar' => ['required_without:expertise', 'string', 'max:2000'],
-            'bio' => ['nullable', 'string', 'max:5000'],
-            'bio_i18n' => ['nullable', 'array'],
-            'bio_i18n.en' => ['required_without:bio', 'string', 'max:5000'],
-            'bio_i18n.fr' => ['required_without:bio', 'string', 'max:5000'],
-            'bio_i18n.ar' => ['required_without:bio', 'string', 'max:5000'],
+            'title_i18n' => ['required', 'array'],
+            'title_i18n.en' => ['required', 'string', 'max:255'],
+            'title_i18n.fr' => ['required', 'string', 'max:255'],
+            'title_i18n.ar' => ['required', 'string', 'max:255'],
+            'expertise_i18n' => ['required', 'array'],
+            'expertise_i18n.en' => ['required', 'string', 'max:2000'],
+            'expertise_i18n.fr' => ['required', 'string', 'max:2000'],
+            'expertise_i18n.ar' => ['required', 'string', 'max:2000'],
+            'bio_i18n' => ['required', 'array'],
+            'bio_i18n.en' => ['required', 'string', 'max:5000'],
+            'bio_i18n.fr' => ['required', 'string', 'max:5000'],
+            'bio_i18n.ar' => ['required', 'string', 'max:5000'],
             'linkedin_url' => ['nullable', 'url', 'max:2048'],
             'twitter_url' => ['nullable', 'url', 'max:2048'],
             'instagram_url' => ['nullable', 'url', 'max:2048'],
             'portfolio_url' => ['nullable', 'url', 'max:2048'],
             'locale' => ['nullable', 'string', 'max:8'],
             'cv' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+            'profile_image' => ['nullable', 'file', 'mimes:jpeg,png,webp,gif', 'max:5120'],
         ], [
             'email.unique' => 'You already have a pending application with this email.',
         ]);
@@ -72,45 +67,41 @@ class ExpertApplicationController extends Controller
             $cvPath = $request->file('cv')->store('expert-applications/cv', 'public');
         }
 
-        $nameI18n = $this->normalizeTri($data['name_i18n'] ?? null, $data['full_name'] ?? '');
-        $titleI18n = $this->normalizeTri($data['title_i18n'] ?? null, $data['current_title'] ?? '');
-        $expertiseI18n = $this->normalizeTri($data['expertise_i18n'] ?? null, $data['expertise'] ?? '');
-        $bioI18n = $this->normalizeTri($data['bio_i18n'] ?? null, $data['bio'] ?? '');
+        $imagePath = null;
+        if ($request->hasFile('profile_image')) {
+            $imagePath = $request->file('profile_image')
+                ->store('expert-applications/images', 'public');
+        }
+
+        $nameI18n = $this->normalizeTri($data['name_i18n'] ?? null);
+        $titleI18n = $this->normalizeTri($data['title_i18n'] ?? null);
+        $expertiseI18n = $this->normalizeTri($data['expertise_i18n'] ?? null);
+        $bioI18n = $this->normalizeTri($data['bio_i18n'] ?? null);
         $cityI18n = $this->normalizeTri($data['city'] ?? null, '');
         $socials = [
             'linkedin' => trim((string) ($data['linkedin_url'] ?? '')),
             'twitter' => trim((string) ($data['twitter_url'] ?? '')),
             'instagram' => trim((string) ($data['instagram_url'] ?? '')),
+            'portfolio' => trim((string) ($data['portfolio_url'] ?? '')),
         ];
-        $industries = array_values(array_unique(array_filter(array_map(
-            static fn (string $item): string => trim($item),
-            $data['industries'] ?? [],
-        ))));
         $languages = array_values(array_unique(array_filter(array_map(
             static fn (string $item): string => trim($item),
             $data['languages'] ?? [],
         ))));
 
         ExpertApplication::query()->create([
-            'full_name' => $nameI18n['en'],
             'name_i18n' => $nameI18n,
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'country' => $data['country'] ?? null,
-            'city' => $cityI18n['en'] ?: ($cityI18n['fr'] ?: $cityI18n['ar']),
             'city_i18n' => $cityI18n,
-            'industries' => $industries,
             'languages' => $languages,
-            'current_title' => $titleI18n['en'],
             'title_i18n' => $titleI18n,
-            'expertise' => $expertiseI18n['en'],
             'expertise_i18n' => $expertiseI18n,
-            'bio' => $bioI18n['en'],
             'bio_i18n' => $bioI18n,
             'socials' => $socials,
-            'linkedin_url' => $socials['linkedin'] ?: null,
-            'portfolio_url' => $data['portfolio_url'] ?? null,
             'cv_path' => $cvPath,
+            'image_path' => $imagePath,
             'locale' => $data['locale'] ?? null,
             'ip' => $request->ip(),
             'user_agent' => substr((string) $request->userAgent(), 0, 1000),

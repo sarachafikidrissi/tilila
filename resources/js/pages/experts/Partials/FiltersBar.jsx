@@ -48,6 +48,8 @@ export default function FiltersBar({
     view,
     setView,
     locationOptions = [],
+    countryOptions = [],
+    languageOptions = [],
 }) {
     const { t } = useTranslation();
 
@@ -67,28 +69,7 @@ export default function FiltersBar({
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                        <Select
-                            label={
-                                <TransText
-                                    en="Industry / Theme"
-                                    fr="Secteur / Thème"
-                                    ar="القطاع / الموضوع"
-                                />
-                            }
-                            value={filters.industry}
-                            onChange={(industry) =>
-                                setFilters((current) => ({ ...current, industry }))
-                            }
-                            options={[
-                                { value: 'all', label: t('experts.filters.all') },
-                                { value: 'economics', label: t('experts.filters.economics') },
-                                { value: 'technology', label: t('experts.filters.technology') },
-                                { value: 'health', label: t('experts.filters.health') },
-                                { value: 'legal', label: t('experts.filters.legal') },
-                            ]}
-                        />
-
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                         <Select
                             label={<TransText en="Country" fr="Pays" ar="البلد" />}
                             value={filters.country}
@@ -97,8 +78,10 @@ export default function FiltersBar({
                             }
                             options={[
                                 { value: 'all', label: t('experts.filters.all') },
-                                { value: 'Morocco', label: t('experts.filters.morocco') },
-                                { value: 'Senegal', label: t('experts.filters.senegal') },
+                                ...countryOptions.map((option) => ({
+                                    value: option.value,
+                                    label: option.label,
+                                })),
                             ]}
                         />
 
@@ -131,21 +114,10 @@ export default function FiltersBar({
                             }
                             options={[
                                 { value: 'all', label: t('experts.filters.all') },
-                                { value: 'ar', label: t('experts.filters.arabic') },
-                                { value: 'fr', label: t('experts.filters.french') },
-                                { value: 'en', label: t('experts.filters.english') },
-                            ]}
-                        />
-
-                        <Select
-                            label={<TransText en="Availability" fr="Disponibilité" ar="التوفر" />}
-                            value={filters.availability}
-                            onChange={(availability) =>
-                                setFilters((current) => ({ ...current, availability }))
-                            }
-                            options={[
-                                { value: 'all', label: t('experts.filters.all') },
-                                { value: 'available', label: t('experts.filters.available') },
+                                ...languageOptions.map((option) => ({
+                                    value: option.value,
+                                    label: option.label,
+                                })),
                             ]}
                         />
                     </div>

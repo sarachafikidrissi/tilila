@@ -20,14 +20,9 @@ import { update } from '@/routes/admin/experts';
 
 function emptyDetails() {
     return {
-        headlineTags: [],
         bio: [],
-        quote: { en: '', fr: '', ar: '' },
         socials: { linkedin: '', twitter: '', instagram: '' },
         expertise: [],
-        journey: [],
-        appearances: [],
-        articles: [],
     };
 }
 
@@ -45,14 +40,7 @@ function normalizeDetails(raw) {
             ? /** @type {Record<string, string>} */ (d.socials)
             : {};
     return {
-        headlineTags: Array.isArray(d.headlineTags)
-            ? d.headlineTags
-            : e.headlineTags,
         bio: Array.isArray(d.bio) ? d.bio : e.bio,
-        quote:
-            d.quote && typeof d.quote === 'object'
-                ? { ...e.quote, ...d.quote }
-                : e.quote,
         socials: {
             ...e.socials,
             linkedin: socialsIn.linkedin ?? e.socials.linkedin,
@@ -60,11 +48,6 @@ function normalizeDetails(raw) {
             instagram: socialsIn.instagram ?? e.socials.instagram,
         },
         expertise: Array.isArray(d.expertise) ? d.expertise : e.expertise,
-        journey: Array.isArray(d.journey) ? d.journey : e.journey,
-        appearances: Array.isArray(d.appearances)
-            ? d.appearances
-            : e.appearances,
-        articles: Array.isArray(d.articles) ? d.articles : e.articles,
     };
 }
 
@@ -73,7 +56,6 @@ function normalizeDetails(raw) {
  */
 function buildExpertPayload(data) {
     const {
-        industriesStr,
         languagesStr,
         remove_image,
         profile_image,
@@ -83,20 +65,11 @@ function buildExpertPayload(data) {
     const payload = {
         name: rest.name,
         title: rest.title,
-        location: rest.location,
         country: rest.country,
-        industries: String(industriesStr ?? '')
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean),
         languages: String(languagesStr ?? '')
             .split(',')
             .map((s) => s.trim())
             .filter(Boolean),
-        badge:
-            typeof rest.badge === 'string' && rest.badge.trim() !== ''
-                ? rest.badge.trim()
-                : null,
         status: rest.status,
         email:
             typeof rest.email === 'string' && rest.email.trim() !== ''
@@ -131,7 +104,7 @@ const STEPS = [
         title: 'Classification',
         short: 'Filters & card',
         description:
-            'Country, status, industries, languages, location, and badge.',
+            'Country, status, and languages.',
     },
     {
         id: 3,
@@ -145,7 +118,7 @@ const STEPS = [
         title: 'Public profile',
         short: 'Bio & sections',
         description:
-            'Headline tags, biography, quote, expertise, journey, appearances, and articles.',
+            'Biography, social links, and expertise sections.',
     },
 ];
 
@@ -158,14 +131,8 @@ export default function AdminExpertsEdit({ expert, statuses = [] }) {
     const { data, setData, errors, setError, clearErrors } = useForm({
         name: expert.name ?? { en: '', fr: '', ar: '' },
         title: expert.title ?? { en: '', fr: '', ar: '' },
-        location:
-            typeof expert.location === 'string'
-                ? expert.location
-                : (expert.location?.en ?? ''),
         country: expert.country ?? 'Morocco',
-        industriesStr: (expert.industries ?? []).join(', '),
         languagesStr: (expert.languages ?? []).join(', '),
-        badge: expert.badge ?? '',
         status: expert.status ?? 'draft',
         email: expert.email ?? '',
         profile_image: null,
@@ -303,10 +270,7 @@ export default function AdminExpertsEdit({ expert, statuses = [] }) {
                     const step2 =
                         has('country') ||
                         has('status') ||
-                        has('industries') ||
-                        has('languages') ||
-                        has('location') ||
-                        has('badge');
+                        has('languages');
                     const step3 =
                         has('email') ||
                         has('profile_image') ||
@@ -541,25 +505,6 @@ export default function AdminExpertsEdit({ expert, statuses = [] }) {
                                             />
                                         </div>
                                         <div className="space-y-2 sm:col-span-2">
-                                            <Label htmlFor="industriesStr">
-                                                Industries (comma-separated)
-                                            </Label>
-                                            <Input
-                                                id="industriesStr"
-                                                value={data.industriesStr}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'industriesStr',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="economics, technology"
-                                            />
-                                            <InputError
-                                                message={errors.industries}
-                                            />
-                                        </div>
-                                        <div className="space-y-2 sm:col-span-2">
                                             <Label htmlFor="languagesStr">
                                                 Languages (comma-separated)
                                             </Label>
@@ -576,42 +521,6 @@ export default function AdminExpertsEdit({ expert, statuses = [] }) {
                                             />
                                             <InputError
                                                 message={errors.languages}
-                                            />
-                                        </div>
-                                        <div className="space-y-2 sm:col-span-2">
-                                            <Label htmlFor="location">
-                                                Location
-                                            </Label>
-                                            <Input
-                                                id="location"
-                                                value={data.location}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'location',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="City, region"
-                                            />
-                                            <InputError
-                                                message={errors.location}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="badge">Badge</Label>
-                                            <Input
-                                                id="badge"
-                                                value={data.badge}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'badge',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="Available"
-                                            />
-                                            <InputError
-                                                message={errors.badge}
                                             />
                                         </div>
                                     </div>

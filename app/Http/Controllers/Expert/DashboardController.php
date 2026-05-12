@@ -50,7 +50,6 @@ class DashboardController extends Controller
             'status' => $expert->status,
             'country' => $expert->country,
             'city_i18n' => $expert->city_i18n,
-            'location' => (string) ($expert->city_i18n['en'] ?? $expert->city_i18n['fr'] ?? $expert->city_i18n['ar'] ?? $expert->location ?? ''),
             'updated_at' => optional($expert->updated_at)?->toISOString(),
         ];
     }

@@ -15,12 +15,9 @@ class Expert extends Model
         'name',
         'title',
         'tags',
-        'location',
         'city_i18n',
         'country',
-        'industries',
         'languages',
-        'badge',
         'status',
         'email',
         'image',
@@ -50,7 +47,6 @@ class Expert extends Model
             'title' => 'array',
             'tags' => 'array',
             'city_i18n' => 'array',
-            'industries' => 'array',
             'languages' => 'array',
             'details' => 'array',
             'last_activity_at' => 'datetime',
@@ -65,43 +61,6 @@ class Expert extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Single-line location for directory / cards (legacy JSON rows are normalized).
-     */
-    protected function locationPlain(): string
-    {
-        $city = $this->cityI18nPlain();
-        if ($city !== '') {
-            return $city;
-        }
-
-        $v = $this->location;
-
-        if ($v === null || $v === '') {
-            return '';
-        }
-
-        if (is_string($v)) {
-            return $v;
-        }
-
-        if (is_array($v)) {
-            return (string) ($v['en'] ?? $v['fr'] ?? $v['ar'] ?? '');
-        }
-
-        return '';
-    }
-
-    protected function cityI18nPlain(): string
-    {
-        $city = $this->city_i18n;
-        if (! is_array($city)) {
-            return '';
-        }
-
-        return trim((string) ($city['en'] ?? $city['fr'] ?? $city['ar'] ?? ''));
     }
 
     /**
@@ -145,12 +104,9 @@ class Expert extends Model
             'name' => $this->name,
             'title' => $this->title,
             'tags' => $this->tags ?? [],
-            'location' => $this->locationPlain(),
             'city_i18n' => $this->city_i18n,
             'country' => $this->country,
-            'industries' => $this->industries ?? [],
             'languages' => $this->languages ?? [],
-            'badge' => $this->badge,
             'image' => $this->image_url,
             'email' => $this->email,
         ];

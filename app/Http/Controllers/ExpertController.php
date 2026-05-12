@@ -28,21 +28,8 @@ class ExpertController extends Controller
         $defaults = $this->emptyDetails();
         $incoming = is_array($expert->details) ? $expert->details : [];
         $details = array_merge($defaults, $incoming);
-        if (is_array($incoming['quote'] ?? null)) {
-            $details['quote'] = array_merge($defaults['quote'], $incoming['quote']);
-        }
         if (is_array($incoming['socials'] ?? null)) {
             $details['socials'] = array_merge($defaults['socials'], $incoming['socials']);
-        }
-        if (
-            (! is_array($details['city_i18n'] ?? null) || ($details['city_i18n']['en'] ?? '') === '')
-            && is_array($expert->city_i18n)
-        ) {
-            $details['city_i18n'] = [
-                'en' => trim((string) ($expert->city_i18n['en'] ?? $expert->location)),
-                'fr' => trim((string) ($expert->city_i18n['fr'] ?? $expert->city_i18n['en'] ?? $expert->location)),
-                'ar' => trim((string) ($expert->city_i18n['ar'] ?? $expert->city_i18n['en'] ?? $expert->location)),
-            ];
         }
 
         return Inertia::render('experts/[id]', [
@@ -58,19 +45,13 @@ class ExpertController extends Controller
     private function emptyDetails(): array
     {
         return [
-            'headlineTags' => [],
             'bio' => [],
-            'quote' => ['en' => '', 'fr' => '', 'ar' => ''],
             'socials' => [
                 'linkedin' => '',
                 'twitter' => '',
                 'instagram' => '',
             ],
-            'city_i18n' => ['en' => '', 'fr' => '', 'ar' => ''],
             'expertise' => [],
-            'journey' => [],
-            'appearances' => [],
-            'articles' => [],
         ];
     }
 }

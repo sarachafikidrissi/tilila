@@ -216,15 +216,19 @@ export default function AdminExpertsIndex({ experts, filters }) {
                                         </TableCell>
                                         <TableCell className="max-w-xs py-4 text-tgray sm:px-3">
                                             <div className="flex flex-wrap gap-1">
-                                                {(expert.industries ?? [])
+                                                {(expert.tags ?? [])
                                                     .slice(0, 3)
                                                     .map((tag) => (
                                                         <Badge
-                                                            key={tag}
+                                                            key={
+                                                                tag.en ||
+                                                                tag.fr ||
+                                                                tag.ar
+                                                            }
                                                             variant="secondary"
                                                             className="text-xs font-normal"
                                                         >
-                                                            {tag}
+                                                            {tag.en || tag.fr || tag.ar}
                                                         </Badge>
                                                     ))}
                                             </div>

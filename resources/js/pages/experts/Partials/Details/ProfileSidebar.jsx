@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Linkedin, Mail, Twitter } from 'lucide-react';
+import { Instagram, Linkedin, Link, Mail, X } from 'lucide-react';
 import TransText from '@/components/TransText';
 import { useTranslation } from '@/contexts/TranslationContext';
 import { buildCountryOptions } from '@/components/helpers/expert-form-options';
@@ -23,6 +23,7 @@ export default function ProfileSidebar({ expert, details }) {
     const linkedin = withHttps(socials.linkedin);
     const twitter = withHttps(socials.twitter);
     const instagram = withHttps(socials.instagram);
+    const portfolio = withHttps(socials.portfolio);
     const email = (expert.email ?? '').trim();
 
     const iconWrapClass =
@@ -32,11 +33,11 @@ export default function ProfileSidebar({ expert, details }) {
         <aside className="space-y-4">
             <div className="rounded-2xl bg-card shadow-sm ring-1 ring-border">
                 <div className="relative">
-                    <div className="relative h-28 w-full overflow-hidden rounded-t-2xl bg-muted">
+                    <div className="relative h-32 w-full overflow-hidden rounded-t-2xl bg-muted">
                         {expert.image ? (
                             <img
                                 src={expert.image}
-                                alt=""
+                                alt="Profile image"
                                 className="absolute inset-0 h-full w-full object-cover"
                             />
                         ) : null}
@@ -47,34 +48,15 @@ export default function ProfileSidebar({ expert, details }) {
                     <div className="flex items-center justify-between gap-3">
                         <div>
                             <div className="text-lg font-extrabold text-foreground">
-                                <TransText
-                                    {...expert?.name}
-                                />
+                                <TransText {...expert?.name} />
                             </div>
                             <div className="mt-1 text-sm text-muted-foreground">
-                                <TransText
-                                    {...expert?.title}
-                                />
+                                <TransText {...expert?.title} />
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
-                        <span
-                            className="rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground"
-                        >
-                            {buildCountryOptions(locale).find(option => option.value === expert?.country)?.label}
-                        </span>
-                        <span
-                            className="rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground"
-                        >
-                            <TransText
-                                {...expert?.city_i18n}
-                            />
-                        </span>
-                    </div>
-
-                    {linkedin || twitter || instagram || email ? (
+                    {linkedin || twitter || instagram || portfolio ? (
                         <div className="mt-4 flex flex-wrap items-center gap-2">
                             {linkedin ? (
                                 <a
@@ -105,11 +87,14 @@ export default function ProfileSidebar({ expert, details }) {
                                         'X (Twitter)'
                                     }
                                 >
-                                    <Twitter
-                                        className="size-4"
-                                        strokeWidth={2}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 640 640"
+                                        className="size-4.5 fill-current stroke-2"
                                         aria-hidden
-                                    />
+                                    >
+                                        <path d="M453.2 112L523.8 112L369.6 288.2L551 528L409 528L297.7 382.6L170.5 528L99.8 528L264.7 339.5L90.8 112L236.4 112L336.9 244.9L453.2 112zM428.4 485.8L467.5 485.8L215.1 152L173.1 152L428.4 485.8z" />
+                                    </svg>
                                 </a>
                             ) : null}
                             {instagram ? (
@@ -130,16 +115,18 @@ export default function ProfileSidebar({ expert, details }) {
                                     />
                                 </a>
                             ) : null}
-                            {email ? (
+                            {portfolio ? (
                                 <a
-                                    href={`mailto:${email}`}
+                                    href={portfolio}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className={iconWrapClass}
                                     aria-label={
-                                        t('experts.actions.emailAria') ??
-                                        'Email'
+                                        t('experts.actions.portfolioAria') ??
+                                        'Portfolio'
                                     }
                                 >
-                                    <Mail
+                                    <Link
                                         className="size-4"
                                         strokeWidth={2}
                                         aria-hidden

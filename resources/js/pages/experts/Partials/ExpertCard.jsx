@@ -18,7 +18,6 @@ export default function ExpertCard({ expert, view = 'grid' }) {
         expert.city_i18n?.en ||
         expert.city_i18n?.fr ||
         expert.city_i18n?.ar ||
-        expert.location ||
         '';
 
     return (
@@ -40,13 +39,6 @@ export default function ExpertCard({ expert, view = 'grid' }) {
                     ) : null}
                 </div>
 
-                {expert.badge ? (
-                    <div className="absolute top-3 left-3 z-10 rounded-full bg-beta-green px-2.5 py-1 text-xs font-semibold text-alpha-green ring-1 ring-border">
-                        {(
-                            t('experts.filters.available') ?? expert.badge
-                        ).toUpperCase()}
-                    </div>
-                ) : null}
             </div>
 
             <div className="p-5">

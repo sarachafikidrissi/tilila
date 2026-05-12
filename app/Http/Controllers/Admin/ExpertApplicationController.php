@@ -24,17 +24,14 @@ class ExpertApplicationController extends Controller
         if ($search = trim((string) $request->query('search', ''))) {
             $like = '%'.$search.'%';
             $query->where(function ($q) use ($like): void {
-                $q->where('full_name', 'like', $like)
-                    ->orWhere('name_i18n->en', 'like', $like)
+                $q->where('name_i18n->en', 'like', $like)
                     ->orWhere('name_i18n->fr', 'like', $like)
                     ->orWhere('name_i18n->ar', 'like', $like)
                     ->orWhere('email', 'like', $like)
                     ->orWhere('country', 'like', $like)
-                    ->orWhere('city', 'like', $like)
                     ->orWhere('city_i18n->en', 'like', $like)
                     ->orWhere('city_i18n->fr', 'like', $like)
                     ->orWhere('city_i18n->ar', 'like', $like)
-                    ->orWhere('current_title', 'like', $like)
                     ->orWhere('title_i18n->en', 'like', $like)
                     ->orWhere('title_i18n->fr', 'like', $like)
                     ->orWhere('title_i18n->ar', 'like', $like)
@@ -158,7 +155,7 @@ class ExpertApplicationController extends Controller
 
         $temporaryPassword = Str::password(12);
 
-        $nameI18n = $this->resolveTri($application->name_i18n, (string) $application->full_name, 'Expert');
+        $nameI18n = $this->resolveTri($application->name_i18n, '', 'Expert');
 
         $user = User::query()->create([
             'name' => $nameI18n['en'],
@@ -190,6 +187,9 @@ class ExpertApplicationController extends Controller
             if ((! is_string($expert->email) || trim($expert->email) === '') && is_string($application->email)) {
                 $updates['email'] = trim($application->email);
             }
+            if ((! is_string($expert->image) || trim($expert->image) === '') && is_string($application->image_path)) {
+                $updates['image'] = trim($application->image_path);
+            }
 
             if ($updates !== []) {
                 $expert->update($updates);
@@ -198,13 +198,13 @@ class ExpertApplicationController extends Controller
             return $expert;
         }
 
-        $name = $this->resolveTri($application->name_i18n, (string) $application->full_name, 'Expert');
-        $title = $this->resolveTri($application->title_i18n, (string) ($application->current_title ?: 'Expert'), 'Expert');
-        $bio = $this->resolveTri($application->bio_i18n, (string) ($application->bio ?? ''), '');
-        $expertiseText = $this->resolveTri($application->expertise_i18n, (string) ($application->expertise ?? ''), '');
+        $name = $this->resolveTri($application->name_i18n, '', 'Expert');
+        $title = $this->resolveTri($application->title_i18n, '', 'Expert');
+        $bio = $this->resolveTri($application->bio_i18n, '', '');
+        $expertiseText = $this->resolveTri($application->expertise_i18n, '', '');
         $cityI18n = $this->resolveTri(
             is_array($application->city_i18n) ? $application->city_i18n : null,
-            (string) ($application->city ?? ''),
+            '',
             ''
         );
 
@@ -216,20 +216,15 @@ class ExpertApplicationController extends Controller
 
         $topicTags = $this->buildLocalizedTopics($topicsByLocale);
         $expertiseCards = $this->buildExpertiseCards($topicTags, $bio);
-        $industriesFromApplication = is_array($application->industries)
-            ? array_values(array_unique(array_filter(array_map(static fn (mixed $item): string => Str::slug((string) $item), $application->industries))))
-            : [];
-        $industriesFromTopics = array_values(array_unique(array_filter(array_map(static fn (string $topic): string => Str::slug($topic), $topicsByLocale['en']))));
-        $industries = $industriesFromApplication !== [] ? $industriesFromApplication : $industriesFromTopics;
-
         $languages = is_array($application->languages)
             ? array_values(array_unique(array_filter(array_map(static fn (mixed $item): string => trim((string) $item), $application->languages))))
             : [];
 
         $socials = is_array($application->socials) ? $application->socials : [];
-        $linkedin = trim((string) ($socials['linkedin'] ?? $application->linkedin_url ?? ''));
+        $linkedin = trim((string) ($socials['linkedin'] ?? ''));
         $twitter = trim((string) ($socials['twitter'] ?? ''));
         $instagram = trim((string) ($socials['instagram'] ?? ''));
+        $portfolio = trim((string) ($socials['portfolio'] ?? ''));
 
         // Keep compatibility with old profile renderer by ensuring at least one headline tag.
         if ($topicTags === []) {
@@ -253,33 +248,25 @@ class ExpertApplicationController extends Controller
             'name' => $name,
             'title' => $title,
             'tags' => $topicTags,
-            'location' => $cityI18n['en'] ?: ($cityI18n['fr'] ?: $cityI18n['ar']),
             'city_i18n' => $cityI18n,
             'country' => $application->country ?: 'Morocco',
-            'industries' => $industries,
             'languages' => $languages,
-            'badge' => 'Available',
             'status' => 'published',
             'email' => $application->email,
+            'image' => $application->image_path ?: null,
             'details' => [
-                'headlineTags' => $topicTags,
                 'bio' => [
                     $bio,
                 ],
-                'quote' => ['en' => '', 'fr' => '', 'ar' => ''],
                 'socials' => [
                     'linkedin' => $linkedin,
                     'twitter' => $twitter,
                     'instagram' => $instagram,
                 ],
-                'city_i18n' => $cityI18n,
-                'portfolio_url' => (string) ($application->portfolio_url ?? ''),
+                'portfolio_url' => $portfolio,
                 'phone' => (string) ($application->phone ?? ''),
                 'expertise_text' => $expertiseText['en'],
                 'expertise' => $expertiseCards,
-                'journey' => [],
-                'appearances' => [],
-                'articles' => [],
             ],
             'last_activity_at' => now(),
         ]);

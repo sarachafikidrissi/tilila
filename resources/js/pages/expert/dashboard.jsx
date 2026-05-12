@@ -27,7 +27,7 @@ function getCityValue(expert) {
         );
     }
 
-    return expert?.location || '';
+    return '';
 }
 
 export default function ExpertDashboard({ expert }) {
