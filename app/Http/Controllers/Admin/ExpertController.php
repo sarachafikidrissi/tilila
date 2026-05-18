@@ -166,6 +166,28 @@ class ExpertController extends Controller
             ->with('success', 'Expert deleted.');
     }
 
+    public function feature(Request $request, Expert $expert): RedirectResponse
+    {
+        $data = $request->validate([
+            'on_front' => ['required', 'boolean'],
+        ]);
+
+        if ($expert->status !== 'published') {
+            return back()->with('error', 'Only published experts can be featured.');
+        }
+
+        $expert->update([
+            'on_front' => (bool) $data['on_front'],
+        ]);
+
+        return back()->with(
+            'success',
+            $expert->on_front
+                ? 'Expert featured on the front section.'
+                : 'Expert removed from the front section.'
+        );
+    }
+
     /**
      * @return array<string, mixed>
      */

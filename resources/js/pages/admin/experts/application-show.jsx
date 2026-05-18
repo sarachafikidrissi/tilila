@@ -268,6 +268,12 @@ export default function AdminExpertApplicationShow({ application }) {
                                         : ''
                                 }
                             />
+                            {a.status !== 'pending' ? (
+                                <Row
+                                    label="Featured on front"
+                                    value={a.expert?.on_front ? 'Yes' : 'No'}
+                                />
+                            ) : null}
                             <Row label="Admin notes" value={a.admin_notes} />
                         </SectionCard>
 

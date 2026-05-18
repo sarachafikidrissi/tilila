@@ -55,7 +55,26 @@ export default function FiltersBar({
 
     return (
         <div className="space-y-4">
-            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm sm:p-5">
+            <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm sm:p-6">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h3 className="text-sm font-semibold text-foreground">
+                            <TransText
+                                en="Refine your search"
+                                fr="Affiner votre recherche"
+                                ar="حسّن بحثك"
+                            />
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                            <TransText
+                                en="Filter by country, city, language, and sorting."
+                                fr="Filtrez par pays, ville, langue et tri."
+                                ar="تصفية حسب البلد والمدينة واللغة والترتيب."
+                            />
+                        </p>
+                    </div>
+                </div>
+
                 <div className="space-y-4">
                     <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted-foreground">

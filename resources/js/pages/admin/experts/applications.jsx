@@ -1,5 +1,5 @@
 import { Head, Link, router, setLayoutProps } from '@inertiajs/react';
-import { Search } from 'lucide-react';
+import { Search, Star, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -72,6 +72,14 @@ export default function AdminExpertApplicationsIndex({
         applicationId: null,
         note: '',
     });
+    const [monthModal, setMonthModal] = useState({
+        open: false,
+        applicationId: null,
+        expertId: null,
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+        videoUrl: '',
+    });
 
     const rows = applications?.data ?? [];
     const links = applications?.links ?? [];
@@ -108,6 +116,24 @@ export default function AdminExpertApplicationsIndex({
         );
     };
 
+    const toggleFeatured = (application) => {
+        if (!application?.expert_id) {
+            return;
+        }
+
+        const nextValue = !Boolean(application?.expert?.on_front);
+
+        router.patch(
+            `/admin/experts/${application.expert_id}/feature`,
+            {
+                on_front: nextValue,
+            },
+            {
+                preserveScroll: true,
+            },
+        );
+    };
+
     const submitDeny = () => {
         if (!denyModal.applicationId) {
             return;
@@ -126,6 +152,48 @@ export default function AdminExpertApplicationsIndex({
                         open: false,
                         applicationId: null,
                         note: '',
+                    }),
+            },
+        );
+    };
+
+    const openMonthModal = (application) => {
+        setMonthModal({
+            open: true,
+            applicationId: application.id,
+            expertId: application.expert_id,
+            month: new Date().getMonth() + 1,
+            year: new Date().getFullYear(),
+            videoUrl: '',
+        });
+    };
+
+    const submitMonth = () => {
+        if (!monthModal.applicationId) {
+            return;
+        }
+
+        if (!String(monthModal.videoUrl ?? '').trim()) {
+            return;
+        }
+
+        router.post(
+            `/admin/expert-applications/${monthModal.applicationId}/expert-of-month`,
+            {
+                month: Number(monthModal.month),
+                year: Number(monthModal.year),
+                video_url: monthModal.videoUrl,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () =>
+                    setMonthModal({
+                        open: false,
+                        applicationId: null,
+                        expertId: null,
+                        month: new Date().getMonth() + 1,
+                        year: new Date().getFullYear(),
+                        videoUrl: '',
                     }),
             },
         );
@@ -359,9 +427,48 @@ export default function AdminExpertApplicationsIndex({
                                                         </Button>
                                                     </>
                                                 ) : application.expert_id ? (
-                                                    <span className="text-xs font-medium text-alpha-green">
-                                                        Published
-                                                    </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span
+                                                            className={cn(
+                                                                'inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold',
+                                                                application.expert?.on_front
+                                                                    ? 'border-beta-blue/40 bg-beta-blue/15 text-beta-blue'
+                                                                    : 'border-border bg-muted text-muted-foreground',
+                                                            )}
+                                                        >
+                                                            <Star className="mr-1 size-3" />
+                                                            Featured
+                                                        </span>
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant={
+                                                                application.expert?.on_front
+                                                                    ? 'outline'
+                                                                    : 'secondary'
+                                                            }
+                                                            onClick={() =>
+                                                                toggleFeatured(application)
+                                                            }
+                                                        >
+                                                            {application.expert?.on_front
+                                                                ? 'Remove'
+                                                                : 'Feature'}
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() =>
+                                                                openMonthModal(
+                                                                    application,
+                                                                )
+                                                            }
+                                                        >
+                                                            <Sparkles className="mr-1 size-3" />
+                                                            Expert of month
+                                                        </Button>
+                                                    </div>
                                                 ) : null}
                                             </div>
                                         </TableCell>
@@ -480,6 +587,133 @@ export default function AdminExpertApplicationsIndex({
                             onClick={submitDeny}
                         >
                             Confirm deny
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                open={monthModal.open}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setMonthModal({
+                            open: false,
+                            applicationId: null,
+                            expertId: null,
+                            month: new Date().getMonth() + 1,
+                            year: new Date().getFullYear(),
+                            videoUrl: '',
+                        });
+                        return;
+                    }
+                    setMonthModal((prev) => ({ ...prev, open }));
+                }}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Expert of the month</DialogTitle>
+                        <DialogDescription>
+                            Assign the expert of the month and optionally attach
+                            a YouTube video highlight.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                            <label
+                                htmlFor="month-select"
+                                className="text-sm font-medium text-foreground"
+                            >
+                                Month
+                            </label>
+                            <select
+                                id="month-select"
+                                value={monthModal.month}
+                                onChange={(e) =>
+                                    setMonthModal((prev) => ({
+                                        ...prev,
+                                        month: Number(e.target.value),
+                                    }))
+                                }
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                            >
+                                {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                                    (value) => (
+                                        <option key={value} value={value}>
+                                            {String(value).padStart(2, '0')}
+                                        </option>
+                                    ),
+                                )}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label
+                                htmlFor="year-input"
+                                className="text-sm font-medium text-foreground"
+                            >
+                                Year
+                            </label>
+                            <Input
+                                id="year-input"
+                                type="number"
+                                min="2000"
+                                max="2100"
+                                value={monthModal.year}
+                                onChange={(e) =>
+                                    setMonthModal((prev) => ({
+                                        ...prev,
+                                        year: e.target.value,
+                                    }))
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label
+                            htmlFor="video-url"
+                            className="text-sm font-medium text-foreground"
+                        >
+                            YouTube video URL
+                        </label>
+                        <Input
+                            id="video-url"
+                            type="url"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                            value={monthModal.videoUrl}
+                            onChange={(e) =>
+                                setMonthModal((prev) => ({
+                                    ...prev,
+                                    videoUrl: e.target.value,
+                                }))
+                            }
+                            required
+                        />
+                    </div>
+
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() =>
+                                setMonthModal({
+                                    open: false,
+                                    applicationId: null,
+                                    expertId: null,
+                                    month: new Date().getMonth() + 1,
+                                    year: new Date().getFullYear(),
+                                    videoUrl: '',
+                                })
+                            }
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={submitMonth}
+                            disabled={!String(monthModal.videoUrl ?? '').trim()}
+                        >
+                            Save
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expert;
+use App\Models\ExpertOfMonth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -10,6 +11,29 @@ class ExpertController extends Controller
 {
     public function index(): Response
     {
+        $expertOfMonthEntry = ExpertOfMonth::query()
+            ->with('expert')
+            ->orderByDesc('year')
+            ->orderByDesc('month')
+            ->first();
+
+        $expertOfMonth = null;
+        if ($expertOfMonthEntry && $expertOfMonthEntry->expert?->isPublished()) {
+            $expertOfMonth = [
+                'month' => $expertOfMonthEntry->month,
+                'year' => $expertOfMonthEntry->year,
+                'video_url' => $expertOfMonthEntry->video_url,
+                'expert' => $expertOfMonthEntry->expert->toDirectoryArray(),
+            ];
+        }
+
+        $featured = Expert::query()
+            ->where('status', 'published')
+            ->where('on_front', true)
+            ->orderBy('id')
+            ->get()
+            ->map(fn (Expert $e) => $e->toDirectoryArray());
+
         $experts = Expert::query()
             ->where('status', 'published')
             ->orderBy('id')
@@ -18,6 +42,8 @@ class ExpertController extends Controller
 
         return Inertia::render('experts/index', [
             'experts' => $experts,
+            'featuredExperts' => $featured,
+            'expertOfMonth' => $expertOfMonth,
         ]);
     }
 

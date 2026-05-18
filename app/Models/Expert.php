@@ -21,6 +21,7 @@ class Expert extends Model
         'industries',
         'languages',
         'status',
+        'on_front',
         'email',
         'image',
         'details',
@@ -51,6 +52,7 @@ class Expert extends Model
             'city_i18n' => 'array',
             'languages' => 'array',
             'details' => 'array',
+            'on_front' => 'boolean',
             'last_activity_at' => 'datetime',
         ];
     }
@@ -109,6 +111,7 @@ class Expert extends Model
             'city_i18n' => $this->city_i18n,
             'country' => $this->country,
             'languages' => $this->languages ?? [],
+            'on_front' => (bool) $this->on_front,
             'image' => $this->image_url,
             'email' => $this->email,
         ];
