@@ -22,12 +22,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('expert-applications', [ExpertApplicationController::class, 'index'])->name('expert-applications.index');
     Route::get('expert-applications/{application}', [ExpertApplicationController::class, 'show'])->name('expert-applications.show');
     Route::patch('expert-applications/{application}/review', [ExpertApplicationController::class, 'review'])->name('expert-applications.review');
-    Route::post('expert-applications/{application}/expert-of-month', [ExpertApplicationController::class, 'storeExpertOfMonth'])
-        ->name('expert-applications.expert-of-month');
 
     Route::get('experts/export.csv', [ExpertController::class, 'exportCsv'])->name('experts.export');
     Route::patch('experts/{expert}/feature', [ExpertController::class, 'feature'])->name('experts.feature');
-    Route::resource('experts', ExpertController::class);
+    Route::post('experts/{expert}/expert-of-month', [ExpertController::class, 'storeExpertOfMonth'])
+        ->name('experts.expert-of-month.store');
+    Route::patch('expert-of-months/{expertOfMonth}', [ExpertController::class, 'updateExpertOfMonth'])
+        ->name('expert-of-months.update');
+    Route::delete('expert-of-months/{expertOfMonth}', [ExpertController::class, 'destroyExpertOfMonth'])
+        ->name('expert-of-months.destroy');
+    Route::get('experts', [ExpertController::class, 'index'])->name('experts.index');
 
     Route::get('opportunities/export.csv', [OpportunityController::class, 'exportCsv'])->name('opportunities.export');
     Route::resource('opportunities', OpportunityController::class);

@@ -11,6 +11,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
 
 function Row({ label, value }) {
     return (
@@ -25,9 +26,14 @@ function Row({ label, value }) {
     );
 }
 
-function SectionCard({ title, description, children }) {
+function SectionCard({ title, description, children, className = '' }) {
     return (
-        <section className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
+        <section
+            className={cn(
+                'rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6',
+                className,
+            )}
+        >
             <div className="mb-4">
                 <h2 className="text-base font-semibold text-tblack">{title}</h2>
                 {description ? (
@@ -120,7 +126,7 @@ export default function AdminExpertApplicationShow({ application }) {
             {
                 title: `#${application?.id ?? ''}`,
                 href: '#',
-            }
+            },
         ],
         title: `Experte Application #${application?.id ?? ''}`,
         description:
@@ -167,17 +173,15 @@ export default function AdminExpertApplicationShow({ application }) {
 
     return (
         <>
-            <Head title={`Expert Request #${a.id ?? ''}`} />
+            <Head title={`Expert Application #${a.id ?? ''}`} />
 
-            <div className="mx-auto flex w-full max-w-[min(100%,72rem)] flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+            <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col gap-8 px-4 py-4 sm:gap-10 md:px-6">
                 <div className="rounded-2xl border border-border/70 bg-card px-5 py-5 shadow-sm sm:px-6">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                            <p className="text-xs font-semibold tracking-[0.3em] text-tgray uppercase">
-                                Expertes Directory jnnnn
-                            </p>
                             <h1 className="mt-2 text-2xl font-bold tracking-tight text-tblack sm:text-3xl">
-                                {getI18nValue(a.name_i18n) || 'Application details'}
+                                {getI18nValue(a.name_i18n) ||
+                                    'Application details'}
                             </h1>
                             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                 <span className="inline-flex items-center gap-1">
@@ -254,39 +258,49 @@ export default function AdminExpertApplicationShow({ application }) {
 
                 <div className="grid gap-6">
                     <div className="flex flex-col gap-6">
-                        <SectionCard
-                            title="Review"
-                            description="Decision and reviewer metadata."
-                        >
-                            <Row label="Status" value={a.status || 'pending'} />
-                            <Row label="Reviewed at" value={reviewedAt} />
-                            <Row
-                                label="Reviewed by"
-                                value={
-                                    a.reviewed_by
-                                        ? `${a.reviewed_by.name ?? ''} (${a.reviewed_by.email ?? ''})`
-                                        : ''
-                                }
-                            />
-                            {a.status !== 'pending' ? (
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                            <SectionCard
+                                title="Review"
+                                description="Decision and reviewer metadata."
+                            >
                                 <Row
-                                    label="Featured on front"
-                                    value={a.expert?.on_front ? 'Yes' : 'No'}
+                                    label="Status"
+                                    value={a.status || 'pending'}
                                 />
-                            ) : null}
-                            <Row label="Admin notes" value={a.admin_notes} />
-                        </SectionCard>
+                                <Row label="Reviewed at" value={reviewedAt} />
+                                <Row
+                                    label="Reviewed by"
+                                    value={
+                                        a.reviewed_by
+                                            ? `${a.reviewed_by.name ?? ''} (${a.reviewed_by.email ?? ''})`
+                                            : ''
+                                    }
+                                />
+                                {a.status !== 'pending' ? (
+                                    <Row
+                                        label="Featured on front"
+                                        value={
+                                            a.expert?.on_front ? 'Yes' : 'No'
+                                        }
+                                    />
+                                ) : null}
+                                <Row
+                                    label="Admin notes"
+                                    value={a.admin_notes}
+                                />
+                            </SectionCard>
 
-                        <SectionCard
-                            title="Identity"
-                            description="Primary contact details and localization."
-                        >
-                            <Row label="Email" value={a.email} />
-                            <Row label="Phone" value={a.phone} />
-                            <Row label="Locale" value={a.locale} />
-                            <Row label="Country" value={a.country} />
-                            <Row label="City" value={getCityLabel(a)} />
-                        </SectionCard>
+                            <SectionCard
+                                title="Identity"
+                                description="Primary contact details and localization."
+                            >
+                                <Row label="Email" value={a.email} />
+                                <Row label="Phone" value={a.phone} />
+                                <Row label="Locale" value={a.locale} />
+                                <Row label="Country" value={a.country} />
+                                <Row label="City" value={getCityLabel(a)} />
+                            </SectionCard>
+                        </div>
 
                         <SectionCard
                             title="Names and Titles"
@@ -382,44 +396,46 @@ export default function AdminExpertApplicationShow({ application }) {
                             </div>
                         </SectionCard>
 
-                        <SectionCard
-                            title="Languages"
-                            description="Spoken languages from the application."
-                        >
-                            <div>
-                                <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                                    Languages
-                                </p>
-                                <div className="mt-2">
-                                    <TagList items={languages} />
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+                            <SectionCard
+                                className="lg:col-span-2"
+                                title="Languages"
+                                description="Spoken languages from the application."
+                            >
+                                <div>
+                                    <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                        Languages
+                                    </p>
+                                    <div className="mt-2">
+                                        <TagList items={languages} />
+                                    </div>
                                 </div>
-                            </div>
-                        </SectionCard>
+                            </SectionCard>
 
-                        <SectionCard
-                            title="Social Links"
-                            description="Optional public profiles."
-                        >
-                            <Row
-                                label="LinkedIn"
-                                value={a.socials?.linkedin}
-                            />
-                            <Row
-                                label="Twitter / X"
-                                value={a.socials?.twitter}
-                            />
-                            <Row
-                                label="Instagram"
-                                value={a.socials?.instagram}
-                            />
-                            <Row
-                                label="Portfolio"
-                                value={a.socials?.portfolio}
-                            />
-                        </SectionCard>
+                            <SectionCard
+                                title="Social Links"
+                                className="lg:col-span-3"
+                                description="Optional public profiles."
+                            >
+                                <Row
+                                    label="LinkedIn"
+                                    value={a.socials?.linkedin}
+                                />
+                                <Row
+                                    label="Twitter / X"
+                                    value={a.socials?.twitter}
+                                />
+                                <Row
+                                    label="Instagram"
+                                    value={a.socials?.instagram}
+                                />
+                                <Row
+                                    label="Portfolio"
+                                    value={a.socials?.portfolio}
+                                />
+                            </SectionCard>
+                        </div>
                     </div>
-
-                    <div className="flex flex-col gap-6"></div>
                 </div>
             </div>
 

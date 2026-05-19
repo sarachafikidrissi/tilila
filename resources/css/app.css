@@ -171,6 +171,14 @@ html {
     body {
         @apply bg-background text-foreground;
     }
+
+    button {
+        @apply cursor-pointer;
+
+        &:disabled {
+            @apply cursor-not-allowed;
+        }
+    }
 }
 
 *::selection {

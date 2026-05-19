@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Mail\ExpertAccountCreated;
 use App\Models\Expert;
 use App\Models\ExpertApplication;
-use App\Models\ExpertOfMonth;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,9 +19,7 @@ class ExpertApplicationController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = ExpertApplication::query()
-            ->with(['expert:id,on_front'])
-            ->orderByDesc('created_at');
+        $query = ExpertApplication::query()->orderByDesc('created_at');
 
         if ($search = trim((string) $request->query('search', ''))) {
             $like = '%'.$search.'%';
@@ -132,37 +129,6 @@ class ExpertApplicationController extends Controller
         return Inertia::render('admin/experts/application-show', [
             'application' => $application,
         ]);
-    }
-
-    public function storeExpertOfMonth(Request $request, ExpertApplication $application): RedirectResponse
-    {
-        if (! $application->expert_id) {
-            return back()->with('error', 'This application is not linked to a published expert yet.');
-        }
-
-        $data = $request->validate([
-            'month' => ['required', 'integer', 'between:1,12'],
-            'year' => ['required', 'integer', 'between:2000,2100'],
-            'video_url' => ['required', 'string', 'max:2048', 'url'],
-        ]);
-
-        $expert = Expert::query()->findOrFail($application->expert_id);
-        if (! $expert->isPublished()) {
-            return back()->with('error', 'Only published experts can be featured.');
-        }
-
-        ExpertOfMonth::query()->updateOrCreate(
-            [
-                'month' => (int) $data['month'],
-                'year' => (int) $data['year'],
-            ],
-            [
-                'expert_id' => $expert->id,
-                'video_url' => $data['video_url'],
-            ]
-        );
-
-        return back()->with('success', 'Expert of the month updated.');
     }
 
     /**
