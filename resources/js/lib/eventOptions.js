@@ -52,9 +52,11 @@ export function normalizeStoredStatus(status) {
     if (s === 'draft') {
         return 'upcoming';
     }
+
     if (s === 'archived') {
         return 'finished';
     }
+
     if (EVENT_STATUSES.includes(s)) {
         return s;
     }

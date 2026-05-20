@@ -4,11 +4,15 @@ function coverImageSrc(galleryImages) {
     if (Array.isArray(galleryImages) && galleryImages[0]) {
         return `/storage/${galleryImages[0]}`;
     }
+
     return '';
 }
 
 export function normalizeEdition(raw) {
-    if (!raw) return null;
+    if (!raw) {
+return null;
+}
+
     const galleryImages = Array.isArray(raw.gallery_images)
         ? raw.gallery_images
         : [];

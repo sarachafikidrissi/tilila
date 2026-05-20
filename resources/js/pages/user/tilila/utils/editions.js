@@ -6,11 +6,14 @@ function coverImageSrc(coverPath, galleryImages) {
         ) {
             return coverPath.startsWith('/') ? coverPath : `/${coverPath}`;
         }
+
         return `/storage/${coverPath}`;
     }
+
     if (Array.isArray(galleryImages) && galleryImages[0]) {
         return `/storage/${galleryImages[0]}`;
     }
+
     return '';
 }
 
@@ -18,7 +21,10 @@ function coverImageSrc(coverPath, galleryImages) {
  * Normalise Tilila edition payloads from the API for archive / carousel UIs.
  */
 export function normalizeEdition(raw) {
-    if (!raw) return null;
+    if (!raw) {
+return null;
+}
+
     const coverPath = raw.cover_image_path ?? null;
     const galleryImages = Array.isArray(raw.gallery_images)
         ? raw.gallery_images

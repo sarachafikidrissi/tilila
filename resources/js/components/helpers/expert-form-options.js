@@ -95,10 +95,12 @@ function getDisplayNames(locale, type) {
 export function buildCountryOptions(locale = 'en') {
     const englishNames = getDisplayNames('en', 'region');
     const localizedNames = getDisplayNames(locale, 'region');
+
     return ALL_COUNTRY_CODES
         .map((code) => {
             const value = englishNames?.of(code) ?? code;
             const label = localizedNames?.of(code) ?? value;
+
             return { value, label };
         })
         .filter((item) => item.value && item.label)
@@ -109,6 +111,7 @@ export function buildLanguageOptions(locale = 'en') {
     return LANGUAGE_DATASET
         .map((item) => {
             const localizedLabel = item[locale] ?? item.en;
+
             return {
                 value: item.value,
                 label: localizedLabel,

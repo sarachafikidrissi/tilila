@@ -2,7 +2,6 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Calendar,
     LayoutGrid,
-    Mail,
     Megaphone,
     Trophy,
     Users,
