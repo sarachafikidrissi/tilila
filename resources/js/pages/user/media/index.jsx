@@ -4,7 +4,6 @@ import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { useTranslation } from '@/contexts/TranslationContext';
 
-import FeaturedHero from '@/pages/user/media/partials/FeaturedHero';
 import MediaTabs from '@/pages/user/media/partials/MediaTabs';
 import MediaCard from '@/pages/user/media/partials/MediaCard';
 import SidebarNewsletter from '@/pages/user/media/partials/SidebarNewsletter';
@@ -35,12 +34,6 @@ export default function MediaIndex({ items: allItems = [], sidebar = null }) {
             <Head title={t('media.headTitle')} />
 
             <div>
-                <div className="bg-beta-white py-8">
-                    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <FeaturedHero />
-                    </div>
-                </div>
-
                 <div className="bg-twhite py-10">
                     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">

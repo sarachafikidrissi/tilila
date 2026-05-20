@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\ExpertApplicationController;
 use App\Http\Controllers\Admin\ExpertController;
-use App\Http\Controllers\Admin\HomeHighlightController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaSidebarController;
 use App\Http\Controllers\Admin\OpportunityController;
@@ -37,10 +36,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('opportunities', OpportunityController::class);
 
     Route::resource('events', EventController::class);
-
-    Route::resource('home-highlights', HomeHighlightController::class)
-        ->except(['show'])
-        ->names('home-highlights');
 
     Route::get('tilila-connect-requests', [TililaConnectRequestController::class, 'index'])
         ->name('tilila-connect-requests.index');

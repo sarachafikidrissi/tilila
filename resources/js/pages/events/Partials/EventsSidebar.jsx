@@ -206,8 +206,6 @@ function statusLabelNode(status) {
             return <TransText en="Live" fr="En direct" ar="مباشر" />;
         case 'finished':
             return <TransText en="Finished" fr="Terminé" ar="منتهية" />;
-        case 'archived':
-            return <TransText en="Archived" fr="Archivé" ar="مؤرشفة" />;
         default:
             return (
                 <span className="capitalize">
@@ -223,7 +221,7 @@ export default function EventsSidebar({
     selectedDayIso,
     setSelectedDayIso,
     events = [],
-    eventStatuses = ['upcoming', 'live', 'finished', 'archived'],
+    eventStatuses = ['upcoming', 'live', 'finished'],
     statusFilters = {},
     setStatusFilters,
 }) {

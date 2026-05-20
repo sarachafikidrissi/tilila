@@ -94,7 +94,25 @@ export default function FeaturedLaureatesSection() {
                                     </span>
                                 </div>
                                 <div className="p-5">
-                                    <h3 className="text-sm font-semibold text-tblack">
+                                    {person?.trophy &&
+                                    (person.trophy.en ||
+                                        person.trophy.fr ||
+                                        person.trophy.ar) ? (
+                                        <p className="text-xs font-bold tracking-wide text-beta-blue uppercase">
+                                            <TransText
+                                                en={person.trophy.en}
+                                                fr={person.trophy.fr}
+                                                ar={person.trophy.ar}
+                                            />
+                                        </p>
+                                    ) : null}
+                                    <h3
+                                        className={
+                                            person?.trophy
+                                                ? 'mt-1 text-sm font-semibold text-tblack'
+                                                : 'text-sm font-semibold text-tblack'
+                                        }
+                                    >
                                         {person?.full_name ?? '—'}
                                     </h3>
                                     <p className="mt-2 text-sm leading-6 text-tgray">

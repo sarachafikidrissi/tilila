@@ -12,6 +12,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    EVENT_TYPE_OTHER,
+    EVENT_TYPE_PRESETS,
+} from '@/lib/eventOptions';
 import { cn } from '@/lib/utils';
 
 function SpeakerListAvatar({ speaker }) {
@@ -141,16 +145,13 @@ export default function EventForm({
     data,
     setData,
     errors,
-    types = [],
     statuses = [],
     visibilities = [],
     submitLabel = 'Save',
     processing = false,
     onSubmit,
 }) {
-    const canManageGallery =
-        mode === 'edit' &&
-        (data.status === 'finished' || data.status === 'archived');
+    const canManageGallery = mode === 'edit' && data.status === 'finished';
     const [speakerModalOpen, setSpeakerModalOpen] = React.useState(false);
     const [partnerModalOpen, setPartnerModalOpen] = React.useState(false);
     const [speakerDraft, setSpeakerDraft] = React.useState({
@@ -303,7 +304,7 @@ export default function EventForm({
                             <Card className="border-border/70 bg-background shadow-none">
                                 <CardHeader className="flex flex-col gap-3 px-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                                     <CardTitle className="text-base">
-                                        Agenda
+                                        Timeline
                                     </CardTitle>
                                     <Button
                                         type="button"
@@ -322,14 +323,14 @@ export default function EventForm({
                                     </Button>
                                 </CardHeader>
                                 <CardContent className="space-y-4 px-5 sm:px-6">
-                                    <div className="space-y-2">
+                                    {/* <div className="space-y-2">
                                         <Label htmlFor="agenda-section-title">
                                             Section title
                                         </Label>
                                         <Input
                                             id="agenda-section-title"
                                             value={
-                                                data.agenda?.title ?? 'Agenda'
+                                                data.agenda?.title ?? 'Timeline'
                                             }
                                             onChange={(e) =>
                                                 setData('agenda', {
@@ -340,9 +341,9 @@ export default function EventForm({
                                                         [],
                                                 })
                                             }
-                                            placeholder="Agenda"
+                                            placeholder="Timeline"
                                         />
-                                    </div>
+                                    </div> */}
                                     {(data.agenda?.items ?? []).length === 0 ? (
                                         <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
                                             No agenda items yet. Add times and
@@ -416,7 +417,7 @@ export default function EventForm({
                                                                                 data
                                                                                     .agenda
                                                                                     ?.title ??
-                                                                                'Agenda',
+                                                                                'Timeline',
                                                                             items: next,
                                                                         },
                                                                     );
@@ -532,7 +533,7 @@ export default function EventForm({
                                                 </div>
                                                 <p className="text-sm text-muted-foreground">
                                                     Add photos after the event
-                                                    is finished or archived. New
+                                                    is finished. New
                                                     files are appended when you
                                                     save.
                                                 </p>
@@ -651,10 +652,6 @@ export default function EventForm({
                                                 status is{' '}
                                                 <span className="font-semibold text-foreground">
                                                     Finished
-                                                </span>{' '}
-                                                or{' '}
-                                                <span className="font-semibold text-foreground">
-                                                    Archived
                                                 </span>
                                                 . Change status in the sidebar,
                                                 save, then return here.
@@ -681,10 +678,7 @@ export default function EventForm({
                                     onChange={(e) => {
                                         const next = e.target.value;
                                         setData('status', next);
-                                        if (
-                                            next !== 'finished' &&
-                                            next !== 'archived'
-                                        ) {
+                                        if (next !== 'finished') {
                                             setData('media_files', []);
                                         }
                                     }}
@@ -716,7 +710,7 @@ export default function EventForm({
                                                 e.target.value,
                                             )
                                         }
-                                        placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…"
+                                        placeholder="https://www.youtube.com/live/… or watch?v=…"
                                     />
                                     <p className="text-xs text-muted-foreground">
                                         Shown on the public event page while
@@ -724,8 +718,8 @@ export default function EventForm({
                                         <span className="font-semibold text-foreground">
                                             Live
                                         </span>
-                                        . Same formats as replay (watch, shorts,
-                                        youtu.be).
+                                        . Accepts live, watch, shorts, youtu.be,
+                                        or embed URLs.
                                     </p>
                                     <InputError
                                         message={errors.live_video_url}
@@ -755,23 +749,52 @@ export default function EventForm({
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="type">Type</Label>
+                                <Label htmlFor="type_kind">Type</Label>
                                 <select
-                                    id="type"
-                                    value={data.type}
-                                    onChange={(e) =>
-                                        setData('type', e.target.value)
-                                    }
+                                    id="type_kind"
+                                    value={data.type_kind ?? 'tilitalks'}
+                                    onChange={(e) => {
+                                        const next = e.target.value;
+                                        setData('type_kind', next);
+                                        if (next !== EVENT_TYPE_OTHER) {
+                                            setData('type_custom', '');
+                                        }
+                                    }}
                                     className={cn(
                                         'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none',
                                     )}
                                 >
-                                    {types.map((t) => (
-                                        <option key={t} value={t}>
-                                            {t}
+                                    {EVENT_TYPE_PRESETS.map((t) => (
+                                        <option key={t.value} value={t.value}>
+                                            {t.label}
                                         </option>
                                     ))}
+                                    <option value={EVENT_TYPE_OTHER}>
+                                        Other
+                                    </option>
                                 </select>
+                                {data.type_kind === EVENT_TYPE_OTHER ? (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="type_custom">
+                                            Custom type
+                                        </Label>
+                                        <Input
+                                            id="type_custom"
+                                            value={data.type_custom ?? ''}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'type_custom',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="e.g. masterclass"
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Enter the event type label (stored
+                                            as-is, max 32 characters).
+                                        </p>
+                                    </div>
+                                ) : null}
                                 <InputError message={errors.type} />
                             </div>
 
@@ -782,13 +805,6 @@ export default function EventForm({
                                     className="bg-beta-blue text-twhite hover:bg-beta-blue/90"
                                 >
                                     {processing ? 'Saving…' : submitLabel}
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    disabled={processing}
-                                >
-                                    Save Draft
                                 </Button>
                             </div>
                         </CardContent>
@@ -1365,7 +1381,7 @@ export default function EventForm({
                                     setData('agenda', {
                                         title:
                                             (data.agenda?.title ?? '').trim() ||
-                                            'Agenda',
+                                            'Timeline',
                                         items,
                                     });
                                     setAgendaModalOpen(false);

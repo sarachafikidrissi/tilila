@@ -1,10 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
-import ArchiveSection from '@/pages/user/tilila/partials/ArchiveSection';
-import CtaSection from '@/pages/user/tilila/partials/CtaSection';
-import FeaturedLaureatesSection from '@/pages/user/tilila/partials/FeaturedLaureatesSection';
-import HeroSection from '@/pages/user/tilila/partials/HeroSection';
-import ParticipateSection from '@/pages/user/tilila/partials/ParticipateModal';
+import ParticipateModal from '@/pages/user/tilila/partials/ParticipateModal';
+import TililaHowToApply from '@/pages/user/tilila/partials/TililaHowToApply';
+import TililaPastEditionsCarousel from '@/pages/user/tilila/partials/TililaPastEditionsCarousel';
 import {
     TililaApplySection,
     TililaConceptSection,
@@ -16,35 +15,31 @@ import {
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililaIndex() {
-    const { editions } = usePage().props;
-    // `editions` is provided by the /tilila route (Inertia props)
+    const { editions, flash } = usePage().props;
+    const [formOpen, setFormOpen] = useState(false);
+
     return (
         <>
             <TililaHead />
             <div>
-                <div className="pb-8">
-                    <HeroSection
-                        onParticipate={() => {
-                            requestAnimationFrame(() => {
-                                const el = document.getElementById(
-                                    'tilila-participate-section',
-                                );
-                                if (el) {
-                                    el.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'start',
-                                    });
-                                }
-                            });
-                        }}
-                    />
-                </div>
-                <div className="bg-twhite px-8 py-10">
-                    <FeaturedLaureatesSection />
-                </div>
+                {flash?.success ? (
+                    <div className="border-b border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm text-emerald-900 sm:px-6">
+                        {flash.success}
+                    </div>
+                ) : null}
+
+                <TililaPastEditionsCarousel editions={editions ?? []} />
 
                 <nav className="bg-background/70 backdrop-blur">
                     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-4 text-sm font-semibold text-beta-blue">
+                        <a href="#past-editions" className="hover:underline">
+                            Éditions
+                        </a>
+                        <span className="text-tgray">·</span>
+                        <a href="#how-to-apply" className="hover:underline">
+                            Candidature
+                        </a>
+                        <span className="text-tgray">·</span>
                         <a href="#concept" className="hover:underline">
                             Concept
                         </a>
@@ -58,43 +53,39 @@ export default function TililaIndex() {
                         </a>
                         <span className="text-tgray">·</span>
                         <a href="#apply" className="hover:underline">
-                            Candidature
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#faq" className="hover:underline">
-                            FAQ
+                            Formulaire
                         </a>
                         <span className="text-tgray">·</span>
                         <a href="#sponsors" className="hover:underline">
                             Sponsors
                         </a>
                         <span className="text-tgray">·</span>
-                        <a href="#archive" className="hover:underline">
-                            Archives
+                        <a href="#faq" className="hover:underline">
+                            FAQ
                         </a>
                     </div>
                 </nav>
 
-                <div className="bg-beta-white">
+                {/* <div className="bg-beta-white">
                     <TililaConceptSection />
                     <TililaPrizesSection />
                     <TililaCriteriaSection />
+                </div> */}
+
+                <div className="bg-background">
+                    <TililaHowToApply onOpenForm={() => setFormOpen(true)} />
                 </div>
 
-                <ParticipateSection />
-
                 <div className="bg-twhite">
-                    <TililaApplySection />
-                    <TililaFaqSection />
+                    {/* <TililaApplySection onOpenForm={() => setFormOpen(true)} /> */}
                     <TililaSponsorsSection />
                 </div>
 
-                <div className="bg-beta-white py-10">
-                    <ArchiveSection editions={editions ?? []} />
+                <div className="border-t border-border bg-background">
+                    <TililaFaqSection />
                 </div>
-                {/* <div className="bg-twhite py-10">
-                    <CtaSection />
-                </div> */}
+
+                <ParticipateModal open={formOpen} onOpenChange={setFormOpen} />
             </div>
         </>
     );

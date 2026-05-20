@@ -14,6 +14,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { EVENT_TYPE_PRESETS, typeLabel } from '@/lib/eventOptions';
 import { cn } from '@/lib/utils';
 
 function eventRouteKey(ev) {
@@ -67,8 +68,8 @@ export default function AdminEventsIndex({
                             Event Management
                         </h1>
                         <p className="mt-1 max-w-2xl text-sm text-tgray">
-                            Manage TiliTalks, trophies, and development
-                            workshops.
+                            Manage TiliTalks, Tilila Awards, Tililab, and other
+                            events.
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -125,11 +126,12 @@ export default function AdminEventsIndex({
                             )}
                         >
                             <option value="">All Event Types</option>
-                            {types.map((t) => (
-                                <option key={t} value={t}>
-                                    {t}
+                            {EVENT_TYPE_PRESETS.map((t) => (
+                                <option key={t.value} value={t.value}>
+                                    {t.label}
                                 </option>
                             ))}
+                            <option value="other">Other (custom)</option>
                         </select>
 
                         <select
@@ -220,7 +222,7 @@ export default function AdminEventsIndex({
                                                 variant="secondary"
                                                 className="text-xs font-normal"
                                             >
-                                                {ev.type}
+                                                {typeLabel(ev.type)}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="py-4 text-sm text-tgray sm:px-3">

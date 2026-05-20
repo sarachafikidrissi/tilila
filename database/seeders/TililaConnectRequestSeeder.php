@@ -4,11 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\TililaConnectRequest;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class TililaConnectRequestSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Demo connect requests aligned with database/database.sqlite.
      */
     public function run(): void
     {
@@ -23,8 +24,8 @@ class TililaConnectRequestSeeder extends Seeder
                 'locale' => 'fr',
                 'ip' => '127.0.0.1',
                 'user_agent' => 'Seeder',
-                'created_at' => now()->subDays(3),
-                'updated_at' => now()->subDays(3),
+                'created_at' => '2026-05-17 16:24:36',
+                'updated_at' => '2026-05-17 16:24:36',
             ],
             [
                 'request_type' => 'speaker_panel',
@@ -36,8 +37,8 @@ class TililaConnectRequestSeeder extends Seeder
                 'locale' => 'en',
                 'ip' => '127.0.0.1',
                 'user_agent' => 'Seeder',
-                'created_at' => now()->subDays(1),
-                'updated_at' => now()->subDays(1),
+                'created_at' => '2026-05-19 16:24:36',
+                'updated_at' => '2026-05-19 16:24:36',
             ],
             [
                 'request_type' => 'network',
@@ -49,14 +50,30 @@ class TililaConnectRequestSeeder extends Seeder
                 'locale' => 'ar',
                 'ip' => '127.0.0.1',
                 'user_agent' => 'Seeder',
-                'created_at' => now()->subHours(2),
-                'updated_at' => now()->subHours(2),
+                'created_at' => '2026-05-20 14:24:36',
+                'updated_at' => '2026-05-20 14:24:36',
             ],
         ];
 
         TililaConnectRequest::query()->delete();
+
         foreach ($rows as $row) {
-            TililaConnectRequest::query()->create($row);
+            $createdAt = Carbon::parse($row['created_at']);
+            $updatedAt = Carbon::parse($row['updated_at']);
+
+            TililaConnectRequest::query()->create([
+                'request_type' => $row['request_type'],
+                'full_name' => $row['full_name'],
+                'email' => $row['email'],
+                'phone' => $row['phone'],
+                'organization' => $row['organization'],
+                'message' => $row['message'],
+                'locale' => $row['locale'],
+                'ip' => $row['ip'],
+                'user_agent' => $row['user_agent'],
+                'created_at' => $createdAt,
+                'updated_at' => $updatedAt,
+            ]);
         }
     }
 }

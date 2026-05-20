@@ -1,11 +1,12 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import EditionForm from '@/pages/admin/tililab/editions/partials/EditionForm';
 
 export default function AdminTililabEditionsEdit({ edition }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, errors, setError, clearErrors } = useForm({
         year: edition?.year ?? '',
         edition_label: {
             en: edition?.edition_label?.en ?? '',
@@ -31,13 +32,22 @@ export default function AdminTililabEditionsEdit({ edition }) {
             : [],
     });
 
+    const [processing, setProcessing] = useState(false);
+
     const onSubmit = (e) => {
         e.preventDefault();
-        post(`/admin/tililab/editions/${edition.id}`, {
-            forceFormData: true,
-            preserveScroll: true,
-            _method: 'put',
-        });
+        clearErrors();
+        router.post(
+            `/admin/tililab/editions/${edition.id}`,
+            { ...data, _method: 'put' },
+            {
+                forceFormData: true,
+                preserveScroll: true,
+                onStart: () => setProcessing(true),
+                onFinish: () => setProcessing(false),
+                onError: (serverErrors) => setError(serverErrors),
+            },
+        );
     };
 
     return (

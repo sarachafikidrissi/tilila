@@ -109,7 +109,14 @@ function useFilePreview(file) {
     return url;
 }
 
-function PersonRow({ peopleKey, idx, person, updateRow, removeRow }) {
+function PersonRow({
+    peopleKey,
+    idx,
+    person,
+    updateRow,
+    removeRow,
+    showTrophyCategory = false,
+}) {
     const existingSrc = person?.photo_path
         ? `/storage/${person.photo_path}`
         : '';
@@ -144,6 +151,29 @@ function PersonRow({ peopleKey, idx, person, updateRow, removeRow }) {
                             }
                             placeholder="Full name"
                         />
+
+                        {showTrophyCategory ? (
+                            <div className="mt-4">
+                                <TriInputs
+                                    label="Trophy / category won"
+                                    value={
+                                        person?.trophy ?? {
+                                            en: '',
+                                            fr: '',
+                                            ar: '',
+                                        }
+                                    }
+                                    onChange={(v) =>
+                                        updateRow(idx, { trophy: v })
+                                    }
+                                    placeholderBase="Grand Prize"
+                                />
+                                <p className="mt-2 text-xs text-muted-foreground">
+                                    e.g. Grand Prize, Jury Prize, 1st Prize,
+                                    Special Mention…
+                                </p>
+                            </div>
+                        ) : null}
 
                         <div className="mt-4 text-sm font-semibold text-foreground">
                             Photo
@@ -193,15 +223,16 @@ function PeopleSection({ title, peopleKey, data, setData, maxItems }) {
 
     const addRow = () => {
         if (typeof maxItems === 'number' && rows.length >= maxItems) return;
-        setData(peopleKey, [
-            ...rows,
-            {
-                full_name: '',
-                bio: { en: '', fr: '', ar: '' },
-                photo: null,
-                photo_path: null,
-            },
-        ]);
+        const row = {
+            full_name: '',
+            bio: { en: '', fr: '', ar: '' },
+            photo: null,
+            photo_path: null,
+        };
+        if (peopleKey === 'winners') {
+            row.trophy = { en: '', fr: '', ar: '' };
+        }
+        setData(peopleKey, [...rows, row]);
     };
 
     const updateRow = (idx, patch) => {
@@ -224,7 +255,9 @@ function PeopleSection({ title, peopleKey, data, setData, maxItems }) {
                         {title}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                        Add name, photo, and a short bio.
+                        {peopleKey === 'winners'
+                            ? 'Add name, trophy category, photo, and a short bio.'
+                            : 'Add name, photo, and a short bio.'}
                     </div>
                 </div>
                 <Button
@@ -253,6 +286,7 @@ function PeopleSection({ title, peopleKey, data, setData, maxItems }) {
                             person={p}
                             updateRow={updateRow}
                             removeRow={removeRow}
+                            showTrophyCategory={peopleKey === 'winners'}
                         />
                     ))}
                 </div>
@@ -423,6 +457,30 @@ export default function EditionForm({
                             placeholderBase="Digital Inclusion"
                         />
                     </div>
+
+                    <div className="mt-6 space-y-2 rounded-xl border border-border/70 bg-muted/20 p-4">
+                        <div className="text-sm font-semibold text-foreground">
+                            Ceremony video (YouTube)
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Optional link to the awards ceremony replay. Shown on
+                            the public edition page.
+                        </p>
+                        <Input
+                            id="ceremony_video_url"
+                            type="url"
+                            value={data.ceremony_video_url ?? ''}
+                            onChange={(e) =>
+                                setData('ceremony_video_url', e.target.value)
+                            }
+                            placeholder="https://www.youtube.com/watch?v=… or /live/…"
+                        />
+                        {errors?.ceremony_video_url ? (
+                            <div className="text-xs text-alpha-danger">
+                                {errors.ceremony_video_url}
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
 
                 <PeopleSection
@@ -430,7 +488,6 @@ export default function EditionForm({
                     peopleKey="winners"
                     data={data}
                     setData={setData}
-                    maxItems={1}
                 />
                 <PeopleSection
                     title="Jury"

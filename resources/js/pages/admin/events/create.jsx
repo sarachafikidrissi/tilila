@@ -5,19 +5,22 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import EventForm from '@/pages/admin/events/partials/EventForm';
+import {
+    buildEventSubmitPayload,
+    initialEventTypeFields,
+} from '@/lib/eventOptions';
 
 function emptyTri() {
     return { en: '', fr: '', ar: '' };
 }
 
 export default function AdminEventsCreate({
-    types = [],
     statuses = [],
     visibilities = [],
 }) {
     const { data, setData, errors, setError, clearErrors } = useForm({
-        type: types[0] ?? 'tilitalk',
-        status: statuses[0] ?? 'draft',
+        ...initialEventTypeFields('tilitalks'),
+        status: statuses[0] ?? 'upcoming',
         visibility: visibilities[0] ?? 'public',
         title: emptyTri(),
         location: emptyTri(),
@@ -33,7 +36,7 @@ export default function AdminEventsCreate({
         partners: [],
         replay_video_url: '',
         live_video_url: '',
-        agenda: { title: 'Agenda', items: [] },
+        agenda: { title: 'Timeline', items: [] },
     });
 
     const [processing, setProcessing] = useState(false);
@@ -41,7 +44,7 @@ export default function AdminEventsCreate({
     const submit = (e) => {
         e.preventDefault();
         clearErrors();
-        router.post('/admin/events', data, {
+        router.post('/admin/events', buildEventSubmitPayload(data), {
             forceFormData: true,
             preserveScroll: true,
             onStart: () => setProcessing(true),
@@ -78,7 +81,6 @@ export default function AdminEventsCreate({
                     data={data}
                     setData={setData}
                     errors={errors}
-                    types={types}
                     statuses={statuses}
                     visibilities={visibilities}
                     submitLabel="Publish Event"

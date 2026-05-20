@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TililaEdition;
+use App\Support\YoutubeVideo;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -171,8 +173,12 @@ class TililaEditionController extends Controller
             'theme.fr' => ['nullable', 'string', 'max:255'],
             'theme.ar' => ['nullable', 'string', 'max:255'],
             'cover_image_path' => ['nullable', 'string', 'max:500'],
-            'winners' => ['nullable', 'array', 'max:1'],
+            'winners' => ['nullable', 'array'],
             'winners.*.full_name' => ['nullable', 'string', 'max:255'],
+            'winners.*.trophy' => ['nullable', 'array'],
+            'winners.*.trophy.en' => ['nullable', 'string', 'max:255'],
+            'winners.*.trophy.fr' => ['nullable', 'string', 'max:255'],
+            'winners.*.trophy.ar' => ['nullable', 'string', 'max:255'],
             'winners.*.bio' => ['nullable', 'array'],
             'winners.*.bio.en' => ['nullable', 'string', 'max:800'],
             'winners.*.bio.fr' => ['nullable', 'string', 'max:800'],
@@ -188,6 +194,7 @@ class TililaEditionController extends Controller
             'winners_url' => ['nullable', 'url', 'max:2048'],
             'jury_url' => ['nullable', 'url', 'max:2048'],
             'gallery_url' => ['nullable', 'url', 'max:2048'],
+            'ceremony_video_url' => ['nullable', 'string', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
@@ -229,6 +236,14 @@ class TililaEditionController extends Controller
         $data['winners_url'] = ($data['winners_url'] ?? null) ?: null;
         $data['jury_url'] = ($data['jury_url'] ?? null) ?: null;
         $data['gallery_url'] = ($data['gallery_url'] ?? null) ?: null;
+
+        $ceremonyUrl = trim((string) ($data['ceremony_video_url'] ?? ''));
+        if ($ceremonyUrl !== '' && YoutubeVideo::embedUrlFromInput($ceremonyUrl) === null) {
+            throw ValidationException::withMessages([
+                'ceremony_video_url' => 'Enter a valid YouTube link (watch, live, shorts, youtu.be, or embed).',
+            ]);
+        }
+        $data['ceremony_video_url'] = $ceremonyUrl === '' ? null : $ceremonyUrl;
 
         // Checkbox can be absent in requests.
         $data['has_gallery'] = (bool) ($data['has_gallery'] ?? false);
@@ -309,6 +324,13 @@ class TililaEditionController extends Controller
                 'ar' => trim((string) ($bioIn['ar'] ?? '')),
             ];
 
+            $trophyIn = is_array($row['trophy'] ?? null) ? $row['trophy'] : [];
+            $trophy = [
+                'en' => trim((string) ($trophyIn['en'] ?? '')),
+                'fr' => trim((string) ($trophyIn['fr'] ?? '')),
+                'ar' => trim((string) ($trophyIn['ar'] ?? '')),
+            ];
+
             $photoPath = null;
             $file = $request->file("$key.$idx.photo");
             if ($file instanceof UploadedFile && $file->isValid()) {
@@ -321,11 +343,17 @@ class TililaEditionController extends Controller
                 $keepPaths[] = $photoPath;
             }
 
-            $rows[] = [
+            $entry = [
                 'full_name' => $fullName,
                 'bio' => $bio,
                 'photo_path' => $photoPath,
             ];
+
+            if ($key === 'winners') {
+                $entry['trophy'] = $trophy;
+            }
+
+            $rows[] = $entry;
         }
 
         // Delete old photos that are no longer referenced.

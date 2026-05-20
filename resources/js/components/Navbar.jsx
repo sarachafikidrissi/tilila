@@ -24,13 +24,13 @@ export default function Navbar() {
             },
             { en: 'About', fr: 'À propos', ar: 'حول', href: '/about' },
             {
-                en: 'Events',
-                fr: 'Événements',
-                ar: 'الفعاليات',
+                en: 'Tilala Events',
+                fr: 'Tilila Événements',
+                ar: 'فعاليات تيليلا',
                 href: '/events',
             },
-            { en: 'Experts', fr: 'Expertes', ar: 'الخبيرات', href: '/experts' },
-            { en: 'Learn', fr: 'Learn', ar: 'تعلم', href: '/learn' },
+            { en: 'Tilila Experts', fr: 'Tilala Expertes', ar: 'خبيرات تيليلا', href: '/experts' },
+            { en: 'Tilila Learn', fr: 'Tilila Learn', ar: 'تعلم تيليلا', href: '/learn' },
         ],
         [],
     );
@@ -124,6 +124,7 @@ export default function Navbar() {
                         loading="eager"
                         decoding="async"
                     />
+                    <TransText en="Tilila" fr="Tilila" ar="تيليلا" />
                 </Link>
 
                 <nav className="hidden flex-1 items-center justify-center gap-6 lg:gap-8 md:flex">

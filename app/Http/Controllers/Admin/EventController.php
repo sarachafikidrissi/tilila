@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Support\EventOptions;
 use App\Support\YoutubeVideo;
+use Illuminate\Validation\Rule;
 use App\Models\EventPartner;
 use App\Models\EventSpeaker;
 use Illuminate\Http\RedirectResponse;
@@ -198,7 +200,7 @@ class EventController extends Controller
                 $prevPartners,
             );
 
-            $allowsGallery = in_array($data['status'], ['finished', 'archived'], true);
+            $allowsGallery = ($data['status'] ?? '') === 'finished';
 
             if ($allowsGallery && $request->hasFile('media_files')) {
                 $sortBase = (int) $event->media()->max('sort') + 1;
@@ -255,7 +257,7 @@ class EventController extends Controller
      */
     private function types(): array
     {
-        return ['tilitalk', 'trophy', 'workshop', 'other'];
+        return EventOptions::typePresets();
     }
 
     /**
@@ -263,7 +265,7 @@ class EventController extends Controller
      */
     private function statuses(): array
     {
-        return ['draft', 'upcoming', 'live', 'finished', 'archived'];
+        return EventOptions::statuses();
     }
 
     /**
@@ -280,8 +282,18 @@ class EventController extends Controller
     private function validated(Request $request, ?Event $event = null): array
     {
         $validated = $request->validate([
-            'type' => 'required|string|max:32',
-            'status' => 'required|string|max:32',
+            'type' => [
+                'required',
+                'string',
+                'max:32',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    $value = trim((string) $value);
+                    if ($value === '' || strtolower($value) === 'other') {
+                        $fail('The type field is required when Other is selected.');
+                    }
+                },
+            ],
+            'status' => ['required', Rule::in(EventOptions::statuses())],
             'visibility' => 'required|string|max:16',
             'title' => 'required|array',
             'title.en' => 'required|string|max:255',
@@ -333,10 +345,14 @@ class EventController extends Controller
         $liveUrl = trim((string) ($validated['live_video_url'] ?? ''));
         if ($liveUrl !== '' && YoutubeVideo::embedUrlFromInput($liveUrl) === null) {
             throw ValidationException::withMessages([
-                'live_video_url' => 'Enter a valid YouTube link (watch URL, youtu.be, or embed).',
+                'live_video_url' => 'Enter a valid YouTube link (watch, live, shorts, youtu.be, or embed).',
             ]);
         }
         $validated['live_video_url'] = $liveUrl === '' ? null : $liveUrl;
+
+        $validated['type'] = EventOptions::isPresetType($validated['type'])
+            ? EventOptions::normalizeStoredType($validated['type'])
+            : trim((string) $validated['type']);
 
         return $validated;
     }
@@ -353,7 +369,7 @@ class EventController extends Controller
 
         $title = trim((string) ($agenda['title'] ?? ''));
         if ($title === '') {
-            $title = 'Agenda';
+            $title = 'Timeline';
         }
 
         $items = [];

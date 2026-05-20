@@ -1,5 +1,8 @@
 import { usePage } from '@inertiajs/react';
 import Footer from '@/components/Footer';
+import HeroCarousel, {
+    shouldShowHeroCarousel,
+} from '@/components/HeroCarousel';
 import Navbar from '@/components/Navbar';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { BreadcrumbItem } from '@/types';
@@ -30,10 +33,15 @@ export default function AppLayout({
         (isSettingsPage && (role === 'admin' || role === 'expert'));
 
     if (!isBackOfficePage) {
+        const showHero = shouldShowHeroCarousel(currentPath);
+
         return (
             <div className="flex min-h-screen flex-col bg-background">
                 <Navbar />
-                <main className="flex-1 pt-16">{children}</main>
+                <main className="flex-1 pt-16">
+                    {showHero ? <HeroCarousel /> : null}
+                    {children}
+                </main>
                 <Footer />
             </div>
         );

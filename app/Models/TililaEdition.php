@@ -10,6 +10,7 @@ class TililaEdition extends Model
         'year',
         'edition_label',
         'theme',
+        'ceremony_video_url',
         'cover_image_path',
         'winners',
         'jury',

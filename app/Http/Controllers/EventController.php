@@ -35,11 +35,16 @@ class EventController extends Controller
         }
         ksort($eventsByYear);
 
-        $initialPanel = $request->query('view') === 'calendar' ? 'calendar' : 'hub';
+        $view = $request->query('view');
+        $initialPanel = match ($view) {
+            'hub', 'calendar' => $view,
+            'tilitalks' => 'calendar',
+            default => 'hub',
+        };
 
         return Inertia::render('events/index', [
             'events' => $events,
-            'eventStatuses' => ['upcoming', 'live', 'finished', 'archived'],
+            'eventStatuses' => ['upcoming', 'live', 'finished'],
             'eventsByYear' => $eventsByYear,
             'eventsInitialPanel' => $initialPanel,
         ]);
@@ -273,7 +278,8 @@ class EventController extends Controller
 
     private function eventAllowsReplayAndGallery(Event $event): bool
     {
-        return in_array($event->status, ['finished', 'archived'], true);
+        return $event->status === 'finished'
+            || $event->status === 'archived';
     }
 
     /**
@@ -283,12 +289,12 @@ class EventController extends Controller
     {
         $a = $event->agenda;
         if (! is_array($a)) {
-            return ['title' => 'Agenda', 'items' => []];
+            return ['title' => 'Timeline', 'items' => []];
         }
 
         $title = isset($a['title']) && is_string($a['title']) && trim($a['title']) !== ''
             ? trim($a['title'])
-            : 'Agenda';
+            : 'Timeline';
 
         $items = [];
         foreach ($a['items'] ?? [] as $row) {

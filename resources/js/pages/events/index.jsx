@@ -1,34 +1,36 @@
 import React, { useMemo, useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import EventsHub from '@/pages/events/Partials/EventsHub';
 import EventsTabs from '@/pages/events/Partials/EventsTabs';
 import EventsSidebar from '@/pages/events/Partials/EventsSidebar';
 import EventCard from '@/pages/events/Partials/EventCard';
-import TiliTalksLanding from '@/pages/events/Partials/TiliTalksLanding';
 import { useTranslation } from '@/contexts/TranslationContext';
 import TransText from '@/components/TransText';
+import { categoryKeyForFilter } from '@/lib/eventOptions';
 
-function isPastEvent(event) {
-    const ts = new Date(event?.dateTimeIso ?? '').getTime();
-    if (Number.isNaN(ts)) return false;
+function isPastByDate(event) {
+    const iso = event?.dateTimeIso ?? event?.dateIso ?? '';
+    const ts = new Date(iso).getTime();
+    if (Number.isNaN(ts)) {
+        return false;
+    }
     return ts < Date.now();
 }
 
-/** Map DB types to top-level IA categories (Awards | Tililab | TiliTalks). */
-function categoryKeyForFilter(type) {
-    const t = String(type ?? '').toLowerCase();
+/** Live/upcoming stay in Upcoming until status is finished. */
+function isPastEvent(event) {
+    const status = String(event?.status ?? 'upcoming').toLowerCase();
 
-    if (t === 'tililab') return 'tililab';
-
-    // Awards (historically stored as "trophy" in our DB).
-    if (t === 'trophy' || t === 'awards' || t === 'tilila-awards') {
-        return 'awards';
+    if (status === 'live' || status === 'upcoming') {
+        return false;
     }
 
-    // Everything else is treated as a public conversation / session.
-    // Includes: tilitalk, talk, webinar, workshop, other...
-    return 'tilitalks';
+    if (status === 'finished' || status === 'archived') {
+        return true;
+    }
+
+    return isPastByDate(event);
 }
 
 function panelFromUrl(url, fallback) {
@@ -38,7 +40,7 @@ function panelFromUrl(url, fallback) {
         return 'calendar';
     }
     if (v === 'tilitalks') {
-        return 'tilitalks';
+        return 'calendar';
     }
     if (v === 'hub') {
         return 'hub';
@@ -55,7 +57,11 @@ export default function EventsIndex({
     const { t } = useTranslation();
     const { url } = usePage();
     const topPanel = panelFromUrl(url, eventsInitialPanel);
-    const [activeTab, setActiveTab] = useState('upcoming'); // upcoming | past
+    const [activeTab, setActiveTab] = useState(() => {
+        const all = events ?? [];
+        const upcomingCount = all.filter((e) => !isPastEvent(e)).length;
+        return upcomingCount > 0 ? 'upcoming' : 'past';
+    });
     const [selectedDayIso, setSelectedDayIso] = useState(null);
     const [categories, setCategories] = useState({
         awards: true,
@@ -67,7 +73,7 @@ export default function EventsIndex({
         Object.fromEntries(
             (eventStatuses?.length
                 ? eventStatuses
-                : ['upcoming', 'live', 'finished', 'archived']
+                : ['upcoming', 'live', 'finished']
             ).map((s) => [s, true]),
         ),
     );
@@ -120,7 +126,7 @@ export default function EventsIndex({
             <Head title={t('events.headTitle')} />
 
             <div>
-                <div className="bg-beta-white py-10">
+                <div className="bg-beta-white py-8 sm:py-10">
                     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                         <header className="mx-auto max-w-3xl text-center">
                             <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
@@ -137,51 +143,6 @@ export default function EventsIndex({
                                     ar="الجوائز وتيليلاب وتيلي توكس والتقويم السنوي."
                                 />
                             </p>
-
-                            <div className="mt-7 inline-flex rounded-full border border-border bg-card p-1 shadow-sm">
-                                <Link
-                                    href="/events"
-                                    className={[
-                                        'rounded-full px-5 py-2 text-sm font-semibold transition',
-                                        topPanel === 'hub'
-                                            ? 'bg-beta-blue text-white'
-                                            : 'text-muted-foreground hover:text-foreground',
-                                    ].join(' ')}
-                                >
-                                    <TransText en="Hub" fr="Hub" ar="البوابة" />
-                                </Link>
-                                <Link
-                                    href="/events?view=tilitalks"
-                                    className={[
-                                        'rounded-full px-5 py-2 text-sm font-semibold transition',
-                                        topPanel === 'tilitalks'
-                                            ? 'bg-beta-blue text-white'
-                                            : 'text-muted-foreground hover:text-foreground',
-                                    ].join(' ')}
-                                >
-                                    <TransText
-                                        en="TiliTalks"
-                                        fr="TiliTalks"
-                                        ar="تيلي توكس"
-                                    />
-                                </Link>
-                                <Link
-                                    href="/events?view=calendar"
-                                    className={[
-                                        'rounded-full px-5 py-2 text-sm font-semibold transition',
-                                        topPanel === 'calendar'
-                                            ? 'bg-beta-blue text-white'
-                                            : 'text-muted-foreground hover:text-foreground',
-                                    ].join(' ')}
-                                >
-                                    <TransText
-                                        en="Calendar"
-                                        fr="Agenda"
-                                        ar="الأجندة"
-                                    />
-                                </Link>
-                            </div>
-
                             {topPanel === 'calendar' ? (
                                 <div className="mt-8 flex justify-center">
                                     <EventsTabs
@@ -203,12 +164,6 @@ export default function EventsIndex({
                     </div>
                 ) : null}
 
-                {topPanel === 'tilitalks' ? (
-                    <div className="bg-twhite py-12">
-                        <TiliTalksLanding />
-                    </div>
-                ) : null}
-
                 {topPanel === 'calendar' ? (
                     <div className="bg-twhite py-10">
                         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -227,7 +182,6 @@ export default function EventsIndex({
                                                   'upcoming',
                                                   'live',
                                                   'finished',
-                                                  'archived',
                                               ]
                                     }
                                     statusFilters={statusFilters}

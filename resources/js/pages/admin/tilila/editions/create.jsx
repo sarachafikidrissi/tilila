@@ -1,6 +1,5 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -11,10 +10,11 @@ function emptyTri() {
 }
 
 export default function AdminTililaEditionsCreate() {
-    const { data, setData, errors, setError, clearErrors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         year: '',
         edition_label: emptyTri(),
         theme: emptyTri(),
+        ceremony_video_url: '',
         cover_image: null,
         cover_image_path: null,
         winners: [],
@@ -25,17 +25,11 @@ export default function AdminTililaEditionsCreate() {
         has_gallery: false,
     });
 
-    const [processing, setProcessing] = useState(false);
-
     const submit = (e) => {
         e.preventDefault();
-        clearErrors();
-        router.post('/admin/tilila/editions', data, {
+        post('/admin/tilila/editions', {
             forceFormData: true,
             preserveScroll: true,
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-            onError: (serverErrors) => setError(serverErrors),
         });
     };
 

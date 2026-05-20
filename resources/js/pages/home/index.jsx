@@ -1,24 +1,18 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import Hero from '@/pages/home/Partials/Hero';
-import HomeCtaStrip from '@/pages/home/Partials/HomeCtaStrip';
-import HomeNews from '@/pages/home/Partials/HomeNews';
 import ImpactStats from '@/pages/home/Partials/ImpactStats';
 import PillarTiles from '@/pages/home/Partials/PillarTiles';
 import FeaturedExperts from '@/pages/home/Partials/FeaturedExperts';
 import LatestMedia from '@/pages/home/Partials/LatestMedia';
 import QuickAgenda from '@/pages/home/Partials/QuickAgenda';
-import PartnersStrip from '@/pages/home/Partials/PartnersStrip';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function HomeIndex({
     canRegister = true,
     stats = null,
-    homeHighlights = [],
     featuredExperts = [],
     latestMedia = [],
     quickAgenda = [],
-    partners = [],
 }) {
     const { t } = useTranslation();
 
@@ -32,15 +26,11 @@ export default function HomeIndex({
                 />
             </Head>
 
-            <Hero />
-            <HomeCtaStrip />
-            <HomeNews items={homeHighlights} />
+            <QuickAgenda items={quickAgenda} />
             <ImpactStats stats={stats} />
             <PillarTiles />
             <FeaturedExperts items={featuredExperts} />
             <LatestMedia items={latestMedia} />
-            <QuickAgenda items={quickAgenda} />
-            {/* <PartnersStrip items={partners} /> */}
 
             <div
                 className="sr-only"

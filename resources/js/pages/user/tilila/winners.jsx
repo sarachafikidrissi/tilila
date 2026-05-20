@@ -3,63 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
-
-function PeopleGrid({ title, people }) {
-    return (
-        <div className="mt-8">
-            <h2 className="text-xl font-semibold text-tblack">{title}</h2>
-            {people.length === 0 ? (
-                <div className="mt-4 rounded-2xl border border-border bg-beta-white p-10 text-center text-sm text-tgray">
-                    <TransText
-                        en="No entries yet."
-                        fr="Aucune entrée pour le moment."
-                        ar="لا توجد إدخالات بعد."
-                    />
-                </div>
-            ) : (
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {people.map((p, idx) => {
-                        const img = p?.photo_path
-                            ? `/storage/${p.photo_path}`
-                            : '';
-                        return (
-                            <div
-                                key={`${p.full_name}-${idx}`}
-                                className="rounded-2xl border border-border bg-white p-5 shadow-sm"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="size-16 overflow-hidden rounded-xl border border-border bg-muted">
-                                        {img ? (
-                                            <img
-                                                src={img}
-                                                alt=""
-                                                className="h-full w-full object-cover"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        ) : null}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <div className="text-base font-semibold text-foreground">
-                                            {p.full_name}
-                                        </div>
-                                        <div className="mt-2 text-sm text-muted-foreground">
-                                            <TransText
-                                                en={p?.bio?.en ?? ''}
-                                                fr={p?.bio?.fr ?? ''}
-                                                ar={p?.bio?.ar ?? ''}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-}
+import TililaPeopleGrid from '@/components/TililaPeopleGrid';
 
 export default function TililaEditionWinners() {
     const { edition } = usePage().props;
@@ -108,11 +52,12 @@ export default function TililaEditionWinners() {
                     </Link>
                 </div>
 
-                <PeopleGrid
+                <TililaPeopleGrid
                     title={
                         <TransText en="Winners" fr="Lauréats" ar="الفائزون" />
                     }
                     people={winners}
+                    showTrophy
                 />
             </section>
         </>

@@ -1,6 +1,6 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -15,10 +15,15 @@ export default function AdminTililaEditionsEdit({ edition }) {
         year: edition?.year ?? '',
         edition_label: edition?.edition_label ?? emptyTri(),
         theme: edition?.theme ?? emptyTri(),
+        ceremony_video_url: edition?.ceremony_video_url ?? '',
         cover_image: null,
         cover_image_path: edition?.cover_image_path ?? null,
-        winners: edition?.winners ?? [],
-        jury: edition?.jury ?? [],
+        winners: (edition?.winners ?? []).map((p) => ({
+            ...p,
+            photo: null,
+            trophy: p?.trophy ?? emptyTri(),
+        })),
+        jury: (edition?.jury ?? []).map((p) => ({ ...p, photo: null })),
         gallery_images: edition?.gallery_images ?? [],
         gallery_images_files: [],
         remove_gallery_images: [],
@@ -27,35 +32,20 @@ export default function AdminTililaEditionsEdit({ edition }) {
 
     const [processing, setProcessing] = useState(false);
 
-    useEffect(() => {
-        // In case Inertia swaps props without remount
-        if (!edition) return;
-        setData({
-            year: edition.year ?? '',
-            edition_label: edition.edition_label ?? emptyTri(),
-            theme: edition.theme ?? emptyTri(),
-            cover_image: null,
-            cover_image_path: edition?.cover_image_path ?? null,
-            winners: edition.winners ?? [],
-            jury: edition.jury ?? [],
-            gallery_images: edition.gallery_images ?? [],
-            gallery_images_files: [],
-            remove_gallery_images: [],
-            has_gallery: Boolean(edition.has_gallery),
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [edition?.id]);
-
     const submit = (e) => {
         e.preventDefault();
         clearErrors();
-        router.put(`/admin/tilila/editions/${edition.id}`, data, {
-            forceFormData: true,
-            preserveScroll: true,
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-            onError: (serverErrors) => setError(serverErrors),
-        });
+        router.post(
+            `/admin/tilila/editions/${edition.id}`,
+            { ...data, _method: 'put' },
+            {
+                forceFormData: true,
+                preserveScroll: true,
+                onStart: () => setProcessing(true),
+                onFinish: () => setProcessing(false),
+                onError: (serverErrors) => setError(serverErrors),
+            },
+        );
     };
 
     return (

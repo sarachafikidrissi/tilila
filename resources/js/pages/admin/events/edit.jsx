@@ -5,6 +5,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import EventForm from '@/pages/admin/events/partials/EventForm';
+import {
+    buildEventSubmitPayload,
+    initialEventTypeFields,
+    normalizeStoredStatus,
+} from '@/lib/eventOptions';
 
 function emptyTri() {
     return { en: '', fr: '', ar: '' };
@@ -12,13 +17,12 @@ function emptyTri() {
 
 export default function AdminEventsEdit({
     event,
-    types = [],
     statuses = [],
     visibilities = [],
 }) {
     const { data, setData, errors, setError, clearErrors } = useForm({
-        type: event.type ?? types[0] ?? 'tilitalk',
-        status: event.status ?? statuses[0] ?? 'draft',
+        ...initialEventTypeFields(event.type ?? 'tilitalks'),
+        status: normalizeStoredStatus(event.status ?? statuses[0]),
         visibility: event.visibility ?? visibilities[0] ?? 'public',
         title: { ...emptyTri(), ...(event.title ?? {}) },
         location: { ...emptyTri(), ...(event.location ?? {}) },
@@ -54,7 +58,7 @@ export default function AdminEventsEdit({
                           typeof event.agenda.title === 'string' &&
                           event.agenda.title.trim() !== ''
                               ? event.agenda.title
-                              : 'Agenda',
+                              : 'Timeline',
                       items: Array.isArray(event.agenda.items)
                           ? event.agenda.items.map((row) => ({
                                 time: row?.time ?? '',
@@ -62,7 +66,7 @@ export default function AdminEventsEdit({
                             }))
                           : [],
                   }
-                : { title: 'Agenda', items: [] },
+                : { title: 'Timeline', items: [] },
     });
 
     const [processing, setProcessing] = useState(false);
@@ -72,7 +76,7 @@ export default function AdminEventsEdit({
         clearErrors();
         router.post(
             `/admin/events/${encodeURIComponent(event.slug ?? '')}`,
-            { ...data, _method: 'put' },
+            { ...buildEventSubmitPayload(data), _method: 'put' },
             {
                 forceFormData: true,
                 preserveScroll: true,
@@ -113,7 +117,6 @@ export default function AdminEventsEdit({
                     data={data}
                     setData={setData}
                     errors={errors}
-                    types={types}
                     statuses={statuses}
                     visibilities={visibilities}
                     submitLabel="Save changes"

@@ -3,64 +3,9 @@ import { ChevronLeft, GalleryHorizontal, Gavel, Trophy } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
-
-function PeopleGrid({ title, people }) {
-    const rows = Array.isArray(people) ? people : [];
-    return (
-        <div className="mt-8">
-            <h2 className="text-xl font-semibold text-tblack">{title}</h2>
-            {rows.length === 0 ? (
-                <div className="mt-4 rounded-2xl border border-border bg-beta-white p-10 text-center text-sm text-tgray">
-                    <TransText
-                        en="No entries yet."
-                        fr="Aucune entrée pour le moment."
-                        ar="لا توجد إدخالات بعد."
-                    />
-                </div>
-            ) : (
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {rows.map((p, idx) => {
-                        const img = p?.photo_path
-                            ? `/storage/${p.photo_path}`
-                            : '';
-                        return (
-                            <div
-                                key={`${p?.full_name ?? 'person'}-${idx}`}
-                                className="rounded-2xl border border-border bg-white p-5 shadow-sm"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="size-16 overflow-hidden rounded-xl border border-border bg-muted">
-                                        {img ? (
-                                            <img
-                                                src={img}
-                                                alt=""
-                                                className="h-full w-full object-cover"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        ) : null}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <div className="text-base font-semibold text-foreground">
-                                            {p?.full_name ?? ''}
-                                        </div>
-                                        <div className="mt-2 text-sm text-muted-foreground">
-                                            <TransText
-                                                en={p?.bio?.en ?? ''}
-                                                fr={p?.bio?.fr ?? ''}
-                                                ar={p?.bio?.ar ?? ''}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-}
+import EventReplay from '@/pages/events/Partials/Details/EventReplay';
+import TililaPeopleGrid from '@/components/TililaPeopleGrid';
+import { getYoutubeEmbedUrl } from '@/lib/youtubeEmbed';
 
 function GalleryGrid({ images }) {
     const rows = Array.isArray(images) ? images : [];
@@ -116,6 +61,7 @@ export default function TililaEditionDetails() {
     const images = Array.isArray(edition?.gallery_images)
         ? edition.gallery_images
         : [];
+    const ceremonyEmbed = getYoutubeEmbedUrl(edition?.ceremony_video_url);
 
     return (
         <>
@@ -156,7 +102,7 @@ export default function TililaEditionDetails() {
 
                     <div className="flex flex-wrap items-center gap-2">
                         <Link
-                            href="/tilila#archive"
+                            href="/tilila#past-editions"
                             className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
                         >
                             <ChevronLeft className="size-4 text-tgray" />
@@ -194,10 +140,43 @@ export default function TililaEditionDetails() {
                     </div>
                 </div>
 
+                {ceremonyEmbed ? (
+                    <div id="ceremony" className="mt-10">
+                        <EventReplay
+                            title={
+                                <TransText
+                                    en="Awards ceremony"
+                                    fr="Cérémonie des lauréats"
+                                    ar="حفل توزيع الجوائز"
+                                />
+                            }
+                            videoTitle={
+                                edition?.edition_label?.en
+                                    ? `${edition.edition_label.en} — ceremony`
+                                    : 'Awards ceremony'
+                            }
+                            embedUrl={ceremonyEmbed}
+                            mode="replay"
+                        />
+                    </div>
+                ) : null}
+
                 <nav
                     className="mt-8 flex flex-wrap gap-2 text-sm font-semibold text-beta-blue"
                     aria-label="Edition sections"
                 >
+                    {ceremonyEmbed ? (
+                        <>
+                            <a href="#ceremony" className="hover:underline">
+                                <TransText
+                                    en="Ceremony"
+                                    fr="Cérémonie"
+                                    ar="الحفل"
+                                />
+                            </a>
+                            <span className="text-tgray">·</span>
+                        </>
+                    ) : null}
                     <a href="#winners" className="hover:underline">
                         <TransText en="Winners" fr="Lauréats" ar="الفائزون" />
                     </a>
@@ -212,7 +191,7 @@ export default function TililaEditionDetails() {
                 </nav>
 
                 <div id="winners">
-                    <PeopleGrid
+                    <TililaPeopleGrid
                         title={
                             <TransText
                                 en="Winners"
@@ -221,10 +200,11 @@ export default function TililaEditionDetails() {
                             />
                         }
                         people={winners}
+                        showTrophy
                     />
                 </div>
                 <div id="jury">
-                    <PeopleGrid
+                    <TililaPeopleGrid
                         title={
                             <TransText
                                 en="Jury"
