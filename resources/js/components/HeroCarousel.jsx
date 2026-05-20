@@ -80,8 +80,25 @@ function pickLocalizedTriple(obj, locale) {
     );
 }
 
+function heroImageClasses(slide) {
+    const imageContain = Boolean(slide?.imageContain);
+    return cn(
+        'absolute inset-0 h-full w-full',
+        imageContain
+            ? cn(
+                  'object-contain p-6 sm:p-8 lg:p-10',
+                  slide?.imagePosition === 'right'
+                      ? 'object-right'
+                      : 'object-center',
+              )
+            : 'object-cover object-center',
+    );
+}
+
 function HeroSlideLayer({ slide, isActive, locale }) {
     const imageContain = Boolean(slide?.imageContain);
+    const imageBg =
+        slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
     const hasSecondary = Boolean(slide?.secondaryCta && slide?.secondaryHref);
 
     return (
@@ -94,7 +111,9 @@ function HeroSlideLayer({ slide, isActive, locale }) {
             )}
             aria-hidden={!isActive}
         >
-            <div className="absolute inset-0 overflow-hidden bg-tblack">
+            <div
+                className={cn('absolute inset-0 overflow-hidden', imageBg)}
+            >
                 {slide?.imageSrc ? (
                     <img
                         src={slide.imageSrc}
@@ -103,10 +122,7 @@ function HeroSlideLayer({ slide, isActive, locale }) {
                             locale,
                         )}
                         className={cn(
-                            'absolute inset-0 h-full w-full',
-                            imageContain
-                                ? 'object-contain object-center p-8 sm:p-12'
-                                : 'object-cover object-center',
+                            heroImageClasses(slide),
                             isActive &&
                                 'motion-safe:animate-[hero-ken-burns_12s_ease-out_forwards] motion-reduce:animate-none',
                         )}
@@ -236,12 +252,15 @@ function HeroSlideLayer({ slide, isActive, locale }) {
 }
 
 function PageHeroBanner({ slide, locale }) {
-    const imageContain = Boolean(slide?.imageContain);
+    const imageBg =
+        slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
     const hasSecondary = Boolean(slide?.secondaryCta && slide?.secondaryHref);
 
     return (
         <div className="relative min-h-[min(28rem,72vh)] max-h-[42rem] overflow-hidden rounded-3xl border border-border shadow-[0_24px_60px_-12px_rgba(15,23,42,0.18)] ring-1 ring-tblack/10">
-            <div className="absolute inset-0 overflow-hidden bg-tblack">
+            <div
+                className={cn('absolute inset-0 overflow-hidden', imageBg)}
+            >
                 {slide?.imageSrc ? (
                     <img
                         src={slide.imageSrc}
@@ -250,10 +269,7 @@ function PageHeroBanner({ slide, locale }) {
                             locale,
                         )}
                         className={cn(
-                            'absolute inset-0 h-full w-full',
-                            imageContain
-                                ? 'object-contain object-center p-8 sm:p-12'
-                                : 'object-cover object-center',
+                            heroImageClasses(slide),
                             'motion-safe:animate-[hero-ken-burns_12s_ease-out_forwards] motion-reduce:animate-none',
                         )}
                         loading="eager"

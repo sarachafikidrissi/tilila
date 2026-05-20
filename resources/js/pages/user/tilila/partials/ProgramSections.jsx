@@ -1,4 +1,10 @@
 import TransText from '@/components/TransText';
+import { TILILA_FAQ_ITEMS } from '@/data/tilila-faq';
+import {
+    TILILA_INSTITUTIONAL_PARTNERS,
+    TILILA_MEDIA_PARTNERS,
+    TILILA_ORGANISER_LOGO,
+} from '@/data/tilila-partners-logos';
 
 function SectionShell({ id, title, subtitle, children }) {
     return (
@@ -148,7 +154,7 @@ export function TililaCriteriaSection() {
     );
 }
 
-export function TililaApplySection() {
+export function TililaApplySection({ onOpenForm }) {
     return (
         <SectionShell
             id="apply"
@@ -167,26 +173,87 @@ export function TililaApplySection() {
                 />
             }
         >
-            <div className="flex flex-col gap-3 rounded-2xl border border-border bg-background p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 rounded-2xl border border-border bg-background p-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-sm text-tgray">
                     <TransText
-                        en="Applications are managed per edition."
-                        fr="Les candidatures sont gérées par édition."
-                        ar="يتم إدارة الترشحات حسب الدورة."
+                        en="Applications are managed per edition. Use the secure form to send your file."
+                        fr="Les candidatures sont gérées par édition. Utilisez le formulaire sécurisé pour envoyer votre dossier."
+                        ar="يتم إدارة الترشحات حسب الدورة. استخدم الاستمارة الآمنة لإرسال ملفك."
                     />
                 </div>
-                <a
-                    href="#archive"
-                    className="inline-flex items-center justify-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-twhite hover:opacity-90"
-                >
-                    <TransText
-                        en="Browse editions"
-                        fr="Parcourir les éditions"
-                        ar="تصفح الدورات"
-                    />
-                </a>
+                <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+                    {typeof onOpenForm === 'function' ? (
+                        <button
+                            type="button"
+                            onClick={() => onOpenForm()}
+                            className="inline-flex items-center justify-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-twhite hover:opacity-90"
+                        >
+                            <TransText
+                                en="Open form"
+                                fr="Ouvrir le formulaire"
+                                ar="افتح الاستمارة"
+                            />
+                        </button>
+                    ) : null}
+                    <a
+                        href="#past-editions"
+                        className="inline-flex items-center justify-center rounded-full border border-border px-5 py-2 text-sm font-semibold text-tblack hover:bg-muted"
+                    >
+                        <TransText
+                            en="Past editions"
+                            fr="Éditions passées"
+                            ar="الدورات السابقة"
+                        />
+                    </a>
+                </div>
             </div>
         </SectionShell>
+    );
+}
+
+function TililaFaqAnswer({ item }) {
+    const bodyClass = [
+        'mt-3 text-sm leading-relaxed text-tgray',
+        item.preline ? 'whitespace-pre-line' : '',
+    ]
+        .filter(Boolean)
+        .join(' ');
+
+    if (item.email) {
+        return (
+            <div className={bodyClass}>
+                <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />
+                {' '}
+                <a
+                    href={`mailto:${item.email}`}
+                    className="font-semibold text-beta-blue hover:underline"
+                >
+                    {item.email}
+                </a>
+            </div>
+        );
+    }
+
+    if (item.link) {
+        return (
+            <div className={bodyClass}>
+                <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />{' '}
+                <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-beta-blue hover:underline"
+                >
+                    www.tropheetilila.ma
+                </a>
+            </div>
+        );
+    }
+
+    return (
+        <div className={bodyClass}>
+            <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />
+        </div>
     );
 }
 
@@ -197,53 +264,84 @@ export function TililaFaqSection() {
             title={<TransText en="FAQ" fr="FAQ" ar="الأسئلة الشائعة" />}
             subtitle={
                 <TransText
-                    en="Key answers for candidates and partners."
-                    fr="Réponses essentielles pour les candidats et partenaires."
-                    ar="أهم الإجابات للمرشحين والشركاء."
+                    en="Official answers about Trophée Tilila, eligibility, submission, and awards."
+                    fr="Réponses officielles sur le Trophée Tilila, l’éligibilité, les candidatures et les prix."
+                    ar="إجابات رسمية حول تروفي تيليلا، الأهلية، الترشح والجوائز."
                 />
             }
         >
             <div className="space-y-3">
-                {[
-                    {
-                        qEn: 'Who can apply?',
-                        qFr: 'Qui peut candidater ?',
-                        qAr: 'من يمكنه الترشح؟',
-                        aEn: 'Eligibility depends on the current edition rules.',
-                        aFr: 'Les conditions dépendent des règles de l’édition en cours.',
-                        aAr: 'تعتمد الشروط على قواعد الدورة الحالية.',
-                    },
-                    {
-                        qEn: 'How are campaigns evaluated?',
-                        qFr: 'Comment les campagnes sont-elles évaluées ?',
-                        qAr: 'كيف يتم تقييم الحملات؟',
-                        aEn: 'Using the published criteria: representation, narrative, craft, and impact.',
-                        aFr: 'Selon les critères publiés : représentation, récit, exécution et impact.',
-                        aAr: 'وفقًا للمعايير المنشورة: التمثيل، السرد، الإتقان، والأثر.',
-                    },
-                ].map((item) => (
+                {TILILA_FAQ_ITEMS.map((item, index) => (
                     <details
-                        key={item.qEn}
+                        key={item.id}
                         className="rounded-2xl border border-border bg-background p-5"
+                        open={index === 0}
                     >
                         <summary className="cursor-pointer text-sm font-semibold text-tblack">
                             <TransText
-                                en={item.qEn}
-                                fr={item.qFr}
-                                ar={item.qAr}
+                                en={item.q.en}
+                                fr={item.q.fr}
+                                ar={item.q.ar}
                             />
                         </summary>
-                        <div className="mt-3 text-sm text-tgray">
-                            <TransText
-                                en={item.aEn}
-                                fr={item.aFr}
-                                ar={item.aAr}
-                            />
-                        </div>
+                        <TililaFaqAnswer item={item} />
                     </details>
                 ))}
             </div>
         </SectionShell>
+    );
+}
+
+function PartnerLogoTile({ name, logoUrl, subtitle, tall = false }) {
+    return (
+        <div
+            className={[
+                'flex flex-col items-center justify-center rounded-2xl border border-border bg-white px-4 shadow-sm transition hover:shadow-md',
+                tall ? 'min-h-32 py-5' : 'min-h-24 py-4',
+            ].join(' ')}
+        >
+            {logoUrl ? (
+                <img
+                    src={logoUrl}
+                    alt={`${name} logo`}
+                    className={[
+                        'w-full object-contain',
+                        tall ? 'max-h-24' : 'max-h-16',
+                    ].join(' ')}
+                    loading="lazy"
+                    decoding="async"
+                />
+            ) : (
+                <span className="text-center text-sm font-semibold text-tblack">
+                    {name}
+                </span>
+            )}
+            {logoUrl ? (
+                <span className="mt-3 text-center text-xs font-medium text-tgray">
+                    {name}
+                </span>
+            ) : null}
+            {subtitle ? (
+                <p className="mt-1 text-center text-xs text-tgray">{subtitle}</p>
+            ) : null}
+        </div>
+    );
+}
+
+function PartnerTier({ badge, title, description, children }) {
+    return (
+        <div className="rounded-2xl border border-border bg-background p-6 shadow-sm ring-1 ring-border/50">
+            <p className="text-xs font-bold tracking-[0.18em] text-beta-blue uppercase">
+                {badge}
+            </p>
+            <h3 className="mt-2 text-lg font-semibold text-tblack">{title}</h3>
+            {description ? (
+                <p className="mt-2 text-sm leading-relaxed text-tgray">
+                    {description}
+                </p>
+            ) : null}
+            <div className="mt-4">{children}</div>
+        </div>
     );
 }
 
@@ -253,26 +351,197 @@ export function TililaSponsorsSection() {
             id="sponsors"
             title={
                 <TransText
-                    en="Sponsors & partners"
-                    fr="Sponsors & partenaires"
-                    ar="الرعاة والشركاء"
+                    en="Complete list of sponsors & partners"
+                    fr="Liste complète des sponsors & partenaires"
+                    ar="القائمة الكاملة للرعاة والشركاء"
                 />
             }
             subtitle={
                 <TransText
-                    en="Organizations supporting the program and each edition."
-                    fr="Organisations soutenant le programme et chaque édition."
-                    ar="الجهات الداعمة للبرنامج ولكل دورة."
+                    en="Trophée Tilila by 2M — institutional and media partners, not traditional commercial sponsors."
+                    fr="Trophée Tilila par 2M — partenaires institutionnels et médias, sans sponsors commerciaux classiques."
+                    ar="تrophي تيليلا من 2M — شركاء مؤسسات وإعلام، وليس رعاة تجاريين تقليديين."
                 />
             }
         >
-            <div className="rounded-2xl border border-border bg-muted/30 p-6 text-sm text-tgray">
+            <div className="max-w-3xl rounded-2xl border border-gold/25 bg-linear-to-br from-gold/5 to-beta-blue/5 p-6 text-sm leading-relaxed text-tgray">
                 <TransText
-                    en="Sponsor logos and partner lists can be added here per edition."
-                    fr="Les logos sponsors et listes de partenaires peuvent être ajoutés ici par édition."
-                    ar="يمكن إضافة شعارات الرعاة وقوائم الشركاء هنا حسب الدورة."
+                    en="Tilila is mainly an initiative of 2M through its Comité Parité et Diversité. It does not rely on traditional commercial sponsors like many events, but on strong institutional and media partners regularly mentioned in official posts and ceremonies."
+                    fr="Tilila est avant tout une initiative de 2M via son Comité Parité et Diversité. Le Trophée ne s’appuie pas sur des sponsors commerciaux classiques comme beaucoup d’événements, mais sur des partenaires institutionnels et médias solides, régulièrement cités dans les communications et cérémonies officielles."
+                    ar="تيليلا مبادرة أساساً من 2M عبر لجنة المساواة والتنوع. لا يعتمد التروفي على رعاة تجاريين تقليديين كما في كثير من الفعاليات، بل على شركاء مؤسساتيين وإعلاميين قويين يُذكرون بانتظام في المنشورات والحفلات الرسمية."
                 />
             </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                <PartnerTier
+                    badge={
+                        <TransText
+                            en="Main organiser"
+                            fr="Organisateur principal"
+                            ar="المنظم الرئيسي"
+                        />
+                    }
+                    title={
+                        <TransText
+                            en="2M — Comité Parité et Diversité"
+                            fr="2M — Comité Parité et Diversité"
+                            ar="2M — لجنة المساواة والتنوع"
+                        />
+                    }
+                    description={
+                        <TransText
+                            en="The driving force behind Trophée Tilila and its commitment to parity, diversity, and responsible advertising."
+                            fr="La force motrice du Trophée Tilila et de son engagement pour la parité, la diversité et une publicité responsable."
+                            ar="القوة الدافعة وراء تروفي تيليلا والتزامه بالمساواة والتنوع والإعلان المسؤول."
+                        />
+                    }
+                >
+                    <div className="flex justify-center rounded-2xl border border-border bg-white px-8 py-8 shadow-sm">
+                        <img
+                            src={TILILA_ORGANISER_LOGO}
+                            alt="2M logo"
+                            className="h-24 w-full max-w-xs object-contain sm:h-28"
+                            loading="eager"
+                            decoding="async"
+                        />
+                    </div>
+                </PartnerTier>
+
+                <PartnerTier
+                    badge={
+                        <TransText
+                            en="Strategic partners"
+                            fr="Partenaires stratégiques"
+                            ar="الشركاء الاستراتيجيون"
+                        />
+                    }
+                    title={
+                        <TransText
+                            en="Institutional partners (core)"
+                            fr="Partenaires institutionnels (cœur)"
+                            ar="الشركاء المؤسساتيون (الأساس)"
+                        />
+                    }
+                    description={
+                        <TransText
+                            en="Consistent across editions — main partners of the Trophée."
+                            fr="Présents sur les éditions — partenaires principaux du Trophée."
+                            ar="حاضرون في الدورات — الشركاء الرئيسيون للتروفي."
+                        />
+                    }
+                >
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {TILILA_INSTITUTIONAL_PARTNERS.map((partner) => (
+                            <PartnerLogoTile
+                                key={partner.id}
+                                name={partner.name}
+                                logoUrl={partner.logoUrl}
+                                tall
+                                subtitle={
+                                    <TransText
+                                        en={partner.subtitle.en}
+                                        fr={partner.subtitle.fr}
+                                        ar={partner.subtitle.ar}
+                                    />
+                                }
+                            />
+                        ))}
+                    </div>
+                </PartnerTier>
+            </div>
+
+            <div className="mt-6">
+                <PartnerTier
+                    badge={
+                        <TransText
+                            en="Media & other partners"
+                            fr="Partenaires médias & autres"
+                            ar="شركاء إعلام وآخرون"
+                        />
+                    }
+                    title={
+                        <TransText
+                            en="7th edition (2025) and recent editions"
+                            fr="7e édition (2025) et éditions récentes"
+                            ar="الدورة السابعة (2025) والدورات الأخيرة"
+                        />
+                    }
+                    description={
+                        <TransText
+                            en="Supporting media partners — the list may vary slightly per edition; these are the most recurring names in official communications."
+                            fr="Partenaires médias de soutien — la liste peut varier légèrement selon l’édition ; ce sont les noms les plus récurrents dans les communications officielles."
+                            ar="شركاء إعلام داعمون — قد تختلف القائمة قليلاً حسب الدورة؛ هذه أكثر الأسماء تكراراً في التواصل الرسمي."
+                        />
+                    }
+                >
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                        {TILILA_MEDIA_PARTNERS.map((partner) => (
+                            <PartnerLogoTile
+                                key={partner.id}
+                                name={partner.name}
+                                logoUrl={partner.logoUrl}
+                            />
+                        ))}
+                    </div>
+                    <p className="mt-4 text-xs text-tgray">
+                        <TransText
+                            en="Tswera is listed among recurring partners; add its logo under public/assets when available."
+                            fr="Tswera figure parmi les partenaires récurrents ; son logo pourra être ajouté dans public/assets lorsqu’il sera disponible."
+                            ar="تسويرة ضمن الشركاء المتكررين؛ يمكن إضافة شعارها في public/assets عند توفرها."
+                        />
+                    </p>
+                </PartnerTier>
+            </div>
+{/* 
+            <div className="mt-8 rounded-2xl border border-border bg-tblack px-6 py-5 text-sm text-twhite">
+                <div className="text-xs font-bold tracking-[0.2em] text-gold uppercase">
+                    <TransText en="Summary" fr="Synthèse" ar="ملخص" />
+                </div>
+                <dl className="mt-4 space-y-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+                        <dt className="shrink-0 font-semibold text-gold sm:w-44">
+                            <TransText
+                                en="Main organiser"
+                                fr="Organisateur"
+                                ar="المنظم"
+                            />
+                        </dt>
+                        <dd className="text-twhite/85">
+                            <TransText
+                                en="2M — Comité Parité et Diversité"
+                                fr="2M — Comité Parité et Diversité"
+                                ar="2M — لجنة المساواة والتنوع"
+                            />
+                        </dd>
+                    </div>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+                        <dt className="shrink-0 font-semibold text-gold sm:w-44">
+                            <TransText
+                                en="Strategic partners"
+                                fr="Partenaires stratégiques"
+                                ar="شركاء استراتيجيون"
+                            />
+                        </dt>
+                        <dd className="text-twhite/85">UACC + GAM</dd>
+                    </div>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+                        <dt className="shrink-0 font-semibold text-gold sm:w-44">
+                            <TransText
+                                en="Media partners"
+                                fr="Partenaires médias"
+                                ar="شركاء إعلام"
+                            />
+                        </dt>
+                        <dd className="text-twhite/85">
+                            <TransText
+                                en="Les Impériales, MFM Radio / Radio 2M, Tiqqa, SNRT, Médias24, Le Site Info, Tswera, U Radio, Media Marketing Magazine — among others, depending on the edition."
+                                fr="Les Impériales, MFM Radio / Radio 2M, Tiqqa, SNRT, Médias24, Le Site Info, Tswera, U Radio, Media Marketing Magazine — entre autres, selon l’édition."
+                                ar="Les Impériales وMFM Radio / Radio 2M وTiqqa وSNRT وMédias24 وLe Site Info وTswera وU Radio وMedia Marketing Magazine — وغيرها حسب الدورة."
+                            />
+                        </dd>
+                    </div>
+                </dl>
+            </div> */}
         </SectionShell>
     );
 }

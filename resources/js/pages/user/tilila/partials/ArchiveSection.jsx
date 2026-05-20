@@ -9,38 +9,7 @@ import TransText from '@/components/TransText';
 import { router } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-function normalizeEdition(raw) {
-    if (!raw) return null;
-    return {
-        id: raw.id ?? `${raw.year ?? ''}-${raw.sort ?? ''}`,
-        year: String(raw.year ?? ''),
-        edition_label: raw.edition_label ?? { en: '', fr: '', ar: '' },
-        theme: raw.theme ?? { en: '', fr: '', ar: '' },
-        cover_image_path: raw.cover_image_path ?? null,
-        cover_image_src: raw.cover_image_path
-            ? `/storage/${raw.cover_image_path}`
-            : Array.isArray(raw.gallery_images) && raw.gallery_images[0]
-              ? `/storage/${raw.gallery_images[0]}`
-              : '',
-        details_url: raw.id ? `/tilila/editions/${raw.id}` : '/tilila',
-        winners_url:
-            raw.winners_url ??
-            (raw.id ? `/tilila/editions/${raw.id}/winners` : '/tilila'),
-        jury_url:
-            raw.jury_url ??
-            (raw.id ? `/tilila/editions/${raw.id}/jury` : '/tilila'),
-        gallery_url:
-            raw.gallery_url ??
-            (raw.id ? `/tilila/editions/${raw.id}/gallery` : '/tilila'),
-        gallery_images: Array.isArray(raw.gallery_images)
-            ? raw.gallery_images
-            : [],
-        has_gallery:
-            Boolean(raw.has_gallery) ||
-            (Array.isArray(raw.gallery_images) &&
-                raw.gallery_images.length > 0),
-    };
-}
+import { normalizeEdition } from '@/pages/user/tilila/utils/editions';
 
 export default function ArchiveSection({ editions = [] }) {
     const rows = useMemo(() => {
@@ -158,7 +127,10 @@ export default function ArchiveSection({ editions = [] }) {
     }, [paused, rows.length]);
 
     return (
-        <section id="archive" className="mx-auto max-w-7xl px-4 pt-10 pb-12">
+        <section
+            id="archive"
+            className="mx-auto max-w-7xl border-t border-border/50 px-4 pt-14 pb-12 sm:px-6 lg:px-8"
+        >
             <div className="text-center">
                 <h2 className="text-3xl font-semibold tracking-tight text-tblack sm:text-4xl">
                     <TransText
@@ -169,9 +141,9 @@ export default function ArchiveSection({ editions = [] }) {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-tgray">
                     <TransText
-                        en="Explore the history of the Trophée Tilila. Dive into past ceremonies, discover the illustrious jury members, and see the evolution of our mission."
-                        fr="Explorez l’histoire du Trophée Tilila. Plongez dans les cérémonies passées, découvrez les membres du jury, et suivez l’évolution de notre mission."
-                        ar="استكشف تاريخ جائزة تيليلا. تعرّف على الدورات السابقة، واكتشف أعضاء لجنة التحكيم، وتابع تطور رسالتنا."
+                        en="Open each edition below for galleries, jury, and more detail. The timeline above summarises all seven ceremonies, themes, and main laureates."
+                        fr="Ouvrez chaque édition ci-dessous pour galeries, jury et détails. La frise plus haut résume les sept cérémonies, thèmes et lauréats principaux."
+                        ar="افتحوا كل دورة أدناه للمعرض ولجنة التحكيم والمزيد. الخط الزمني أعلاه يلخّص الدورات السبع والمواضيع والفائزين الرئيسيين."
                     />
                 </p>
             </div>

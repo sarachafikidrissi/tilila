@@ -26,12 +26,14 @@ const stats = [
         arLabel: 'حملات تمت مراجعتها',
     },
     {
-        value: '6',
+        value: '7',
         enLabel: 'EDITIONS CELEBRATED',
         frLabel: 'ÉDITIONS CÉLÉBRÉES',
         arLabel: 'دورات مُحتفى بها',
     },
 ];
+
+const HERO_POSTER_SRC = '/assets/tilila/hero-7eme-edition.png';
 
 export default function HeroSection({ onParticipate }) {
     return (
@@ -157,17 +159,23 @@ export default function HeroSection({ onParticipate }) {
                                     background: 'rgba(0,0,0,0.25)',
                                 }}
                             >
-                                {/* Image slot — swap src for real photo */}
-                                <div
-                                    className="flex w-full items-center justify-center"
-                                    style={{
-                                        minHeight: 240,
-                                        background:
-                                            'linear-gradient(160deg, #1a1a2e 0%, #2a1a0e 60%, #1a1a2e 100%)',
-                                    }}
-                                >
-                                    {/* Replace this SVG with: <img src="..." alt="Trophée Tilila" className="w-full aspect-[4/3] object-cover" /> */}
-                                    <TrophySVG />
+                                <div className="bg-white">
+                                    <img
+                                        src={HERO_POSTER_SRC}
+                                        alt=""
+                                        className="w-full object-contain object-center"
+                                        width={1200}
+                                        height={800}
+                                        fetchPriority="high"
+                                        decoding="async"
+                                    />
+                                    <p className="sr-only">
+                                        <TransText
+                                            en="7th edition of Trophée Tilila — awards ceremony 16 October. Organized by 2M."
+                                            fr="7e édition du Trophée Tilila — remise des prix le 16 octobre. Organisé par 2M."
+                                            ar="الدورة السابعة لتروفي تيليلا — حفل التتويج 16 أكتوبر. تنظيم 2M."
+                                        />
+                                    </p>
                                 </div>
 
                                 {/* Card footer */}
@@ -294,69 +302,5 @@ export default function HeroSection({ onParticipate }) {
                 </div>
             </div>
         </section>
-    );
-}
-
-function TrophySVG() {
-    return (
-        <svg
-            width="90"
-            height="110"
-            viewBox="0 0 80 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M15 10 H65 V45 C65 68 50 78 40 82 C30 78 15 68 15 45 Z"
-                fill="none"
-                stroke="#c29d57"
-                strokeWidth="2.5"
-            />
-            <path
-                d="M15 20 H5 C5 20 3 38 15 38"
-                stroke="#c29d57"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-            <path
-                d="M65 20 H75 C75 20 77 38 65 38"
-                stroke="#c29d57"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-            <path
-                d="M40 82 V90"
-                stroke="#c29d57"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-            />
-            <rect
-                x="24"
-                y="90"
-                width="32"
-                height="6"
-                rx="2"
-                fill="#c29d57"
-                opacity="0.8"
-            />
-            <circle
-                cx="40"
-                cy="46"
-                r="10"
-                fill="rgba(194,157,87,0.18)"
-                stroke="#c29d57"
-                strokeWidth="1.5"
-            />
-            <text
-                x="40"
-                y="51"
-                fontSize="12"
-                textAnchor="middle"
-                fill="#c29d57"
-                fontWeight="bold"
-            >
-                ★
-            </text>
-        </svg>
     );
 }

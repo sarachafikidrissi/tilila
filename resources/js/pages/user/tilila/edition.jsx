@@ -156,7 +156,7 @@ export default function TililaEditionDetails() {
 
                     <div className="flex flex-wrap items-center gap-2">
                         <Link
-                            href="/tilila#archive"
+                            href="/tilila#past-editions"
                             className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
                         >
                             <ChevronLeft className="size-4 text-tgray" />
