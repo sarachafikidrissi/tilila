@@ -31,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('expert-of-months/{expertOfMonth}', [ExpertController::class, 'destroyExpertOfMonth'])
         ->name('expert-of-months.destroy');
     Route::get('experts', [ExpertController::class, 'index'])->name('experts.index');
+    Route::get('experts/{expert}/edit', [ExpertController::class, 'edit'])->name('experts.edit');
+    Route::match(['put', 'patch'], 'experts/{expert}', [ExpertController::class, 'update'])->name('experts.update');
 
     Route::get('opportunities/export.csv', [OpportunityController::class, 'exportCsv'])->name('opportunities.export');
     Route::resource('opportunities', OpportunityController::class);
