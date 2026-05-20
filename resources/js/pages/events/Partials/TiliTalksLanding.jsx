@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import { TILITALKS_LOGO } from '@/data/tilila-brand-logos';
 
 function Section({ id, title, subtitle, children }) {
     return (
@@ -21,6 +22,23 @@ function Section({ id, title, subtitle, children }) {
 export default function TiliTalksLanding() {
     return (
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8 flex flex-col items-center rounded-2xl border border-border bg-card px-6 py-8 text-center sm:py-10">
+                <img
+                    src={TILITALKS_LOGO}
+                    alt="TiliTalks"
+                    className="h-16 w-full max-w-md object-contain sm:h-20"
+                    loading="eager"
+                    decoding="async"
+                />
+                <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+                    <TransText
+                        en="Public conversations — talks, workshops, and webinars from the Tilila programme."
+                        fr="Conversations publiques — talks, ateliers et webinaires du programme Tilila."
+                        ar="حوارات عامة — لقاءات وورش وندوات من برنامج تيليلا."
+                    />
+                </p>
+            </div>
+
             <div className="grid gap-6 lg:grid-cols-12">
                 <div className="space-y-6 lg:col-span-8">
                     <Section

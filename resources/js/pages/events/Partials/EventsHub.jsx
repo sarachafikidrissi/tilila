@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import {
+    TILILA_AWARDS_LOGO,
+    TILILAB_LOGO,
+    TILITALKS_LOGO,
+} from '@/data/tilila-brand-logos';
 
 const MODULES = [
     {
         href: '/tilila',
+        logoSrc: TILILA_AWARDS_LOGO,
+        logoAlt: 'Les Débats Tilila — Trophée Tilila',
+        logoClassName: 'h-14 w-full max-w-[12rem] object-contain',
         enTitle: 'Tilila Awards',
         frTitle: 'Tilila Awards',
         arTitle: 'جوائز تيليلا',
@@ -17,6 +25,9 @@ const MODULES = [
     },
     {
         href: '/tililab',
+        logoSrc: TILILAB_LOGO,
+        logoAlt: 'Tililab',
+        logoClassName: 'h-14 w-14 object-contain',
         enTitle: 'Tililab',
         frTitle: 'Tililab',
         arTitle: 'تيليلاب',
@@ -29,6 +40,9 @@ const MODULES = [
     },
     {
         href: '/events?view=tilitalks',
+        logoSrc: TILITALKS_LOGO,
+        logoAlt: 'TiliTalks',
+        logoClassName: 'h-12 w-full max-w-[10rem] object-contain',
         enTitle: 'TiliTalks',
         frTitle: 'TiliTalks',
         arTitle: 'تيلي توكس',
@@ -61,7 +75,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                         ar="كل ما تحتاج معرفته قبل التفاصيل: الجوائز وتيليلاب والحوارات العامة — بهيكل موحّد وخطوات واضحة."
                     />
                 </p>
-
+{/* 
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                     <Link
                         href="/events?view=calendar"
@@ -83,7 +97,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                             ar="أجندة تيليلا ليرن"
                         />
                     </Link>
-                </div>
+                </div> */}
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
@@ -93,8 +107,14 @@ export default function EventsHub({ eventsByYear = {} }) {
                         href={m.href}
                         className="group rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border transition hover:-translate-y-0.5 hover:shadow-md"
                     >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-alpha-blue text-beta-blue">
-                            <div className="h-4 w-4 rounded bg-beta-blue/30" />
+                        <div className="flex h-16 items-center">
+                            <img
+                                src={m.logoSrc}
+                                alt={m.logoAlt}
+                                className={m.logoClassName}
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </div>
                         <h3 className="mt-4 text-lg font-bold text-foreground group-hover:text-beta-blue">
                             <TransText

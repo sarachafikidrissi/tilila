@@ -69,6 +69,14 @@ export function shouldShowHeroCarousel(pathname) {
         return false;
     }
 
+    if (path.startsWith('/tilila/')) {
+        return false;
+    }
+
+    if (path === '/tililab/form') {
+        return false;
+    }
+
     return getSlideForPath(path) !== null;
 }
 
@@ -81,6 +89,19 @@ function pickLocalizedTriple(obj, locale) {
 }
 
 function heroImageClasses(slide) {
+    if (slide?.bannerImage) {
+        if (slide?.bannerImageContain) {
+            return cn(
+                'absolute inset-0 h-full w-full object-contain p-4 sm:p-6 lg:p-8',
+                slide?.imagePosition === 'right'
+                    ? 'object-right'
+                    : 'object-center',
+            );
+        }
+
+        return 'absolute inset-0 h-full w-full object-cover object-center';
+    }
+
     const imageContain = Boolean(slide?.imageContain);
     return cn(
         'absolute inset-0 h-full w-full',
@@ -252,9 +273,79 @@ function HeroSlideLayer({ slide, isActive, locale }) {
 }
 
 function PageHeroBanner({ slide, locale }) {
-    const imageBg =
-        slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
+    const isBanner = Boolean(slide?.bannerImage);
+    const imageBg = isBanner
+        ? 'bg-muted'
+        : slide?.imageBg === 'white'
+          ? 'bg-white'
+          : 'bg-tblack';
     const hasSecondary = Boolean(slide?.secondaryCta && slide?.secondaryHref);
+    const showHeadline =
+        !isBanner &&
+        Boolean(
+            slide?.titleBefore?.en ||
+                slide?.titleAccent?.en ||
+                slide?.badge?.en,
+        );
+
+    if (isBanner && slide?.imageSrc) {
+        const bannerBg =
+            slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
+
+        return (
+            <div className="relative min-h-[min(28rem,72vh)] max-h-[42rem] overflow-hidden rounded-3xl border border-border shadow-[0_24px_60px_-12px_rgba(15,23,42,0.18)] ring-1 ring-tblack/10">
+                <div
+                    className={cn(
+                        'absolute inset-0 overflow-hidden',
+                        bannerBg,
+                    )}
+                >
+                    <img
+                        src={slide.imageSrc}
+                        alt={pickLocalizedTriple(
+                            slide.imageAlt ?? { en: '', fr: '', ar: '' },
+                            locale,
+                        )}
+                        className={heroImageClasses(slide)}
+                        loading="eager"
+                        decoding="async"
+                    />
+                </div>
+                <div
+                    className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/50 via-tblack/10 to-transparent"
+                    aria-hidden
+                />
+                <div className="absolute inset-x-0 bottom-0 flex justify-end px-5 pb-5 sm:px-8 sm:pb-6 lg:px-12">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        {slide?.primaryCta && slide?.primaryHref ? (
+                            <Link
+                                href={slide.primaryHref}
+                                className="inline-flex w-full items-center justify-center rounded-xl bg-beta-blue px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-tblack/30 transition hover:bg-beta-blue/90 sm:w-auto"
+                            >
+                                <TransText
+                                    en={slide.primaryCta.en}
+                                    fr={slide.primaryCta.fr}
+                                    ar={slide.primaryCta.ar}
+                                />
+                            </Link>
+                        ) : null}
+                        {hasSecondary ? (
+                            <Link
+                                href={slide.secondaryHref}
+                                className="inline-flex w-full items-center justify-center rounded-xl border border-white/35 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 sm:w-auto"
+                            >
+                                <TransText
+                                    en={slide.secondaryCta.en}
+                                    fr={slide.secondaryCta.fr}
+                                    ar={slide.secondaryCta.ar}
+                                />
+                            </Link>
+                        ) : null}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative min-h-[min(28rem,72vh)] max-h-[42rem] overflow-hidden rounded-3xl border border-border shadow-[0_24px_60px_-12px_rgba(15,23,42,0.18)] ring-1 ring-tblack/10">
@@ -290,70 +381,74 @@ function PageHeroBanner({ slide, locale }) {
             <div className="absolute inset-0 flex flex-col justify-end">
                 <div className="mx-auto w-full max-w-[min(100%,1920px)] px-5 pb-16 pt-24 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
                     <div className="max-w-2xl">
-                        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
-                            {slide?.cardKicker ? (
-                                <TransText
-                                    tag="p"
-                                    className="text-[0.65rem] font-bold tracking-[0.2em] text-beta-blue uppercase"
-                                    en={slide.cardKicker.en}
-                                    fr={slide.cardKicker.fr}
-                                    ar={slide.cardKicker.ar}
-                                />
-                            ) : null}
-                            {slide?.badge ? (
-                                <>
-                                    <span
-                                        className="text-white/40"
-                                        aria-hidden
-                                    >
-                                        ·
-                                    </span>
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-                                        <span
-                                            className="size-1.5 rounded-full bg-beta-blue shadow-[0_0_8px_rgba(0,151,170,0.8)]"
-                                            aria-hidden
-                                        />
+                        <>
+                                <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
+                                    {slide?.cardKicker ? (
                                         <TransText
-                                            en={slide.badge.en}
-                                            fr={slide.badge.fr}
-                                            ar={slide.badge.ar}
+                                            tag="p"
+                                            className="text-[0.65rem] font-bold tracking-[0.2em] text-beta-blue uppercase"
+                                            en={slide.cardKicker.en}
+                                            fr={slide.cardKicker.fr}
+                                            ar={slide.cardKicker.ar}
                                         />
-                                    </span>
-                                </>
-                            ) : null}
-                        </div>
+                                    ) : null}
+                                    {slide?.badge ? (
+                                        <>
+                                            <span
+                                                className="text-white/40"
+                                                aria-hidden
+                                            >
+                                                ·
+                                            </span>
+                                            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                                                <span
+                                                    className="size-1.5 rounded-full bg-beta-blue shadow-[0_0_8px_rgba(0,151,170,0.8)]"
+                                                    aria-hidden
+                                                />
+                                                <TransText
+                                                    en={slide.badge.en}
+                                                    fr={slide.badge.fr}
+                                                    ar={slide.badge.ar}
+                                                />
+                                            </span>
+                                        </>
+                                    ) : null}
+                                </div>
 
-                        <h1 className="text-2xl font-bold tracking-tight text-balance text-white sm:text-3xl lg:text-4xl lg:leading-tight xl:text-[2.75rem]">
-                            <TransText
-                                en={slide?.titleBefore?.en ?? ''}
-                                fr={slide?.titleBefore?.fr ?? ''}
-                                ar={slide?.titleBefore?.ar ?? ''}
-                            />{' '}
-                            <TransText
-                                className="text-beta-blue"
-                                en={slide?.titleAccent?.en ?? ''}
-                                fr={slide?.titleAccent?.fr ?? ''}
-                                ar={slide?.titleAccent?.ar ?? ''}
-                            />
-                        </h1>
+                                {showHeadline ? (
+                                    <h1 className="text-2xl font-bold tracking-tight text-balance text-white sm:text-3xl lg:text-4xl lg:leading-tight xl:text-[2.75rem]">
+                                        <TransText
+                                            en={slide?.titleBefore?.en ?? ''}
+                                            fr={slide?.titleBefore?.fr ?? ''}
+                                            ar={slide?.titleBefore?.ar ?? ''}
+                                        />{' '}
+                                        <TransText
+                                            className="text-beta-blue"
+                                            en={slide?.titleAccent?.en ?? ''}
+                                            fr={slide?.titleAccent?.fr ?? ''}
+                                            ar={slide?.titleAccent?.ar ?? ''}
+                                        />
+                                    </h1>
+                                ) : null}
 
-                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/85 sm:mt-4 sm:text-base lg:text-lg">
-                            <TransText
-                                en={slide?.description?.en ?? ''}
-                                fr={slide?.description?.fr ?? ''}
-                                ar={slide?.description?.ar ?? ''}
-                            />
-                        </p>
+                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/85 sm:mt-4 sm:text-base lg:text-lg">
+                                    <TransText
+                                        en={slide?.description?.en ?? ''}
+                                        fr={slide?.description?.fr ?? ''}
+                                        ar={slide?.description?.ar ?? ''}
+                                    />
+                                </p>
 
-                        {slide?.cardLine ? (
-                            <p className="mt-2 max-w-xl text-xs text-white/65 sm:text-sm">
-                                <TransText
-                                    en={slide.cardLine.en}
-                                    fr={slide.cardLine.fr}
-                                    ar={slide.cardLine.ar}
-                                />
-                            </p>
-                        ) : null}
+                                {slide?.cardLine ? (
+                                    <p className="mt-2 max-w-xl text-xs text-white/65 sm:text-sm">
+                                        <TransText
+                                            en={slide.cardLine.en}
+                                            fr={slide.cardLine.fr}
+                                            ar={slide.cardLine.ar}
+                                        />
+                                    </p>
+                                ) : null}
+                        </>
 
                         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                             {slide?.primaryCta && slide?.primaryHref ? (
