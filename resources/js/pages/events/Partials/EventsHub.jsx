@@ -39,16 +39,16 @@ const MODULES = [
             'عرض · جوائز · معايير · لجنة التحكيم · ترشح · أسئلة · رعاة · فائزات',
     },
     {
-        href: '/events?view=tilitalks',
+        href: '/events?view=calendar',
         logoSrc: TILITALKS_LOGO,
         logoAlt: 'TiliTalks',
         logoClassName: 'h-12 w-full max-w-[10rem] object-contain',
         enTitle: 'TiliTalks',
         frTitle: 'TiliTalks',
         arTitle: 'تيلي توكس',
-        enBody: 'Concept · Agenda · Speakers · Replays · Photos · Register',
-        frBody: 'Concept · Agenda · Speakers · Replays · Photos · Inscription',
-        arBody: 'المفهوم · الأجندة · المتحدثون · الإعادات · الصور · التسجيل',
+        enBody: '',
+        frBody: '',
+        arBody: '',
     },
 ];
 
@@ -60,46 +60,6 @@ export default function EventsHub({ eventsByYear = {} }) {
 
     return (
         <div className="space-y-12">
-            <div className="mx-auto max-w-3xl text-center">
-                <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                    <TransText
-                        en="TILILA EVENTS"
-                        fr="ÉVÉNEMENTS TILILA"
-                        ar="فعاليات تيليلا"
-                    />
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    <TransText
-                        en="Everything you need to know before diving in: awards, Tililab, and public conversations — with a shared structure and clear next steps."
-                        fr="Tout ce qu’il faut savoir avant d’entrer dans le détail : Awards, Tililab et conversations publiques — avec un socle commun et des étapes claires."
-                        ar="كل ما تحتاج معرفته قبل التفاصيل: الجوائز وتيليلاب والحوارات العامة — بهيكل موحّد وخطوات واضحة."
-                    />
-                </p>
-{/* 
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                    <Link
-                        href="/events?view=calendar"
-                        className="inline-flex items-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-white transition hover:bg-beta-blue/90"
-                    >
-                        <TransText
-                            en="View annual calendar"
-                            fr="Voir le calendrier annuel"
-                            ar="عرض التقويم السنوي"
-                        />
-                    </Link>
-                    <Link
-                        href="/learn/agenda"
-                        className="inline-flex items-center rounded-full border border-border bg-card px-5 py-2 text-sm font-semibold text-foreground transition hover:bg-muted"
-                    >
-                        <TransText
-                            en="Tilila Learn agenda"
-                            fr="Agenda Tilila Learn"
-                            ar="أجندة تيليلا ليرن"
-                        />
-                    </Link>
-                </div> */}
-            </div>
-
             <div className="grid gap-6 md:grid-cols-3">
                 {MODULES.map((m) => (
                     <Link
@@ -123,14 +83,23 @@ export default function EventsHub({ eventsByYear = {} }) {
                                 ar={m.arTitle}
                             />
                         </h3>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                            <TransText
-                                en={m.enBody}
-                                fr={m.frBody}
-                                ar={m.arBody}
-                            />
-                        </p>
-                        <span className="mt-4 inline-flex text-sm font-semibold text-beta-blue">
+                        {m.enBody || m.frBody || m.arBody ? (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                                <TransText
+                                    en={m.enBody}
+                                    fr={m.frBody}
+                                    ar={m.arBody}
+                                />
+                            </p>
+                        ) : null}
+                        <span
+                            className={[
+                                'inline-flex text-sm font-semibold text-beta-blue',
+                                m.enBody || m.frBody || m.arBody
+                                    ? 'mt-4'
+                                    : 'mt-6',
+                            ].join(' ')}
+                        >
                             <TransText en="Open" fr="Ouvrir" ar="افتح" /> →
                         </span>
                     </Link>
@@ -216,7 +185,6 @@ export default function EventsHub({ eventsByYear = {} }) {
                     </div>
                 </div>
             </div>
-{/* 
             {years.length > 0 ? (
                 <div className="rounded-2xl border border-border bg-muted/30 p-6">
                     <h3 className="text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
@@ -242,7 +210,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                         ))}
                     </div>
                 </div>
-            ) : null} */}
+            ) : null}
         </div>
     );
 }

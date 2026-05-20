@@ -35,10 +35,11 @@ class EventController extends Controller
         }
         ksort($eventsByYear);
 
-        $initialPanel = match ($request->query('view')) {
-            'hub', 'tilitalks' => $request->query('view'),
-            'calendar' => 'calendar',
-            default => 'calendar',
+        $view = $request->query('view');
+        $initialPanel = match ($view) {
+            'hub', 'calendar' => $view,
+            'tilitalks' => 'calendar',
+            default => 'hub',
         };
 
         return Inertia::render('events/index', [
