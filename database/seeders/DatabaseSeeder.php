@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TililabEditionSeeder::class);
         $this->call(MediaItemSeeder::class);
         $this->call(MediaSidebarSettingSeeder::class);
-        $this->call(HomeHighlightSeeder::class);
         $this->call(TililaConnectRequestSeeder::class);
         $this->call(NewsletterSubscriptionSeeder::class);
     }

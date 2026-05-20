@@ -10,7 +10,6 @@ use App\Http\Controllers\TililaConnectController;
 use App\Http\Controllers\TililaParticipationController;
 use App\Models\Event;
 use App\Models\Expert;
-use App\Models\HomeHighlight;
 use App\Models\MediaItem;
 use App\Models\TililabEdition;
 use App\Models\TililaEdition;
@@ -50,11 +49,6 @@ Route::get('/', function () {
                 + TililaEdition::query()->count()
                 + TililabEdition::query()->count(),
         ],
-        'homeHighlights' => HomeHighlight::query()
-            ->activeOrdered()
-            ->limit(3)
-            ->get()
-            ->map(fn (HomeHighlight $h) => $h->toPublicArray()),
         'featuredExperts' => Expert::query()
             ->where('status', 'published')
             ->orderByDesc('last_activity_at')
@@ -80,19 +74,38 @@ Route::get('/', function () {
         'quickAgenda' => Event::query()
             ->where('visibility', 'public')
             ->where('status', '!=', 'draft')
-            ->whereNotNull('date')
-            ->whereDate('date', '>=', now()->toDateString())
+            ->where(function ($q) {
+                $q->where('status', 'live')
+                    ->orWhere(function ($q2) {
+                        $q2->whereIn('status', ['upcoming'])
+                            ->whereNotNull('date')
+                            ->whereDate('date', '>=', now()->toDateString());
+                    });
+            })
+            ->orderByRaw("CASE WHEN status = 'live' THEN 0 ELSE 1 END")
             ->orderBy('date')
             ->orderBy('time')
-            ->limit(4)
+            ->limit(3)
             ->get()
-            ->map(fn (Event $e) => [
-                'id' => $e->id,
-                'title' => $e->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
-                'date' => $e->date?->format('Y-m-d') ?? '',
-                'type' => $e->type,
-                'href' => route('events.show', $e->id),
-            ]),
+            ->map(function (Event $e) {
+                $loc = $e->location ?? [];
+                $locationLabel = trim((string) ($loc['en'] ?? ''));
+                if ($locationLabel === '') {
+                    $locationLabel = trim((string) ($loc['fr'] ?? $loc['ar'] ?? ''));
+                }
+
+                return [
+                    'id' => $e->id,
+                    'title' => $e->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
+                    'date' => $e->date?->format('Y-m-d') ?? '',
+                    'time' => $e->time ? substr((string) $e->time, 0, 5) : null,
+                    'timezone' => $e->timezone,
+                    'status' => $e->status,
+                    'type' => $e->type,
+                    'locationLabel' => $locationLabel,
+                    'href' => route('events.show', $e->id),
+                ];
+            }),
         'partners' => [
             ['name' => 'SOREAD 2M', 'href' => null],
             ['name' => 'Programme EDI Tilila', 'href' => null],

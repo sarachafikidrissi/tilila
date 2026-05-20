@@ -4,7 +4,6 @@ import {
     LayoutGrid,
     Mail,
     Megaphone,
-    Newspaper,
     Trophy,
     Users,
 } from 'lucide-react';
@@ -39,11 +38,6 @@ const adminModuleItems: NavItem[] = [
         title: 'Events',
         href: '/admin/events',
         icon: Calendar,
-    },
-    {
-        title: 'Home highlights',
-        href: '/admin/home-highlights',
-        icon: Newspaper,
     },
     // {
     //     title: 'Connect requests',
