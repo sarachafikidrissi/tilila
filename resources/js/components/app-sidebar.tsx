@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Calendar,
     LayoutGrid,
+    Mail,
     Megaphone,
     Trophy,
     Users,
@@ -204,6 +205,18 @@ export function AppSidebar() {
                                         title: 'Participants',
                                         href: '/admin/tililab/participants',
                                         icon: Users,
+                                    },
+                                ]}
+                            />
+                        </SidebarGroup>
+                        <SidebarGroup className="mt-4 py-0">
+                            <SidebarGroupLabel>Others</SidebarGroupLabel>
+                            <SidebarNavLinks
+                                items={[
+                                    {
+                                        title: 'Newsletter',
+                                        href: '/admin/newsletter',
+                                        icon: Mail,
                                     },
                                 ]}
                             />
