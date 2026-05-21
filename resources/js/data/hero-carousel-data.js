@@ -229,13 +229,17 @@ export const HERO_CAROUSEL_SLIDES = [
             ar: 'ابحث عن ملفات في الاقتصاد والتقنية والصحة والقانون وغيرها — جاهزة للإعلام والمؤسسات.',
         },
         primaryCta: {
+            en: 'Become an Expert',
+            fr: 'Devenir experte',
+            ar: 'أصبحي خبيرة',
+        },
+        primaryHref: '/experts/become',
+        secondaryCta: {
             en: 'Browse experts',
             fr: 'Parcourir les profils',
             ar: 'تصفح الخبراء',
         },
-        primaryHref: '/experts',
-        secondaryCta: null,
-        secondaryHref: null,
+        secondaryHref: '/experts#experts-directory',
         cardKicker: {
             en: 'Expert network',
             fr: 'Réseau d’expertes',

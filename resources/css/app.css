@@ -185,3 +185,66 @@ html {
     background-color: var(--color-beta-blue);
     color: var(--color-alpha-blue);
 }
+
+/* TipTap rich text editor */
+.tiptap {
+    outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+    color: var(--color-tgray);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+.article-editor.tiptap h1,
+.article-content h1 {
+    @apply mt-6 mb-3 text-2xl font-extrabold text-tblack;
+}
+
+.article-editor.tiptap h2,
+.article-content h2 {
+    @apply mt-5 mb-2 text-xl font-bold text-tblack;
+}
+
+.article-editor.tiptap h3,
+.article-content h3 {
+    @apply mt-4 mb-2 text-lg font-bold text-tblack;
+}
+
+.article-editor.tiptap p,
+.article-content p {
+    @apply mb-3 text-sm leading-relaxed;
+}
+
+.article-editor.tiptap ul,
+.article-content ul {
+    @apply mb-3 list-disc pl-6 text-sm;
+}
+
+.article-editor.tiptap ol,
+.article-content ol {
+    @apply mb-3 list-decimal pl-6 text-sm;
+}
+
+.article-editor.tiptap li,
+.article-content li {
+    @apply mb-1;
+}
+
+.article-editor.tiptap blockquote,
+.article-content blockquote {
+    @apply my-4 border-l-4 border-beta-blue/40 pl-4 text-sm italic text-muted-foreground;
+}
+
+.article-editor.tiptap strong,
+.article-content strong {
+    @apply font-bold text-tblack;
+}
+
+.article-editor.tiptap em,
+.article-content em {
+    @apply italic;
+}

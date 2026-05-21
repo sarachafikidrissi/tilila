@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expert;
+use App\Models\ExpertArticle;
 use App\Models\ExpertOfMonth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -40,10 +41,20 @@ class ExpertController extends Controller
             ->get()
             ->map(fn (Expert $e) => $e->toDirectoryArray());
 
+        $articles = ExpertArticle::query()
+            ->with('expert')
+            ->where('status', 'published')
+            ->whereHas('expert', fn ($q) => $q->where('status', 'published'))
+            ->orderByDesc('created_at')
+            ->limit(12)
+            ->get()
+            ->map(fn (ExpertArticle $article) => $article->toFeedArray());
+
         return Inertia::render('experts/index', [
             'experts' => $experts,
             'featuredExperts' => $featured,
             'expertOfMonth' => $expertOfMonth,
+            'articles' => $articles,
         ]);
     }
 

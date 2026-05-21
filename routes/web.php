@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExpertApplicationController;
+use App\Http\Controllers\ExpertArticleController;
 use App\Http\Controllers\ExpertController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsletterSubscriptionController;
@@ -120,6 +121,7 @@ Route::get('/experts/connect', [TililaConnectController::class, 'create'])->name
 Route::post('/experts/connect', [TililaConnectController::class, 'store'])->name('experts.connect.store');
 Route::get('/experts/become', [ExpertApplicationController::class, 'create'])->name('experts.become');
 Route::post('/experts/become', [ExpertApplicationController::class, 'store'])->name('experts.become.store');
+Route::get('/experts/articles/{article}', [ExpertArticleController::class, 'show'])->name('experts.articles.show');
 Route::get('/experts/{expert}', [ExpertController::class, 'show'])->name('experts.show');
 
 Route::post('/newsletter', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.store');

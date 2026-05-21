@@ -43,6 +43,7 @@ class ExpertSeeder extends Seeder
                 "status" => "published",
                 "expertise" => [],
             ],
+            
         ];
     }
 }

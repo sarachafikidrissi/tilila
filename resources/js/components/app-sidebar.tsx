@@ -3,6 +3,7 @@ import {
     Calendar,
     LayoutGrid,
     Megaphone,
+    Newspaper,
     Trophy,
     Users,
 } from 'lucide-react';
@@ -55,6 +56,11 @@ const expertModuleItems: NavItem[] = [
         title: 'Information',
         href: '/expert/profile',
         icon: Users,
+    },
+    {
+        title: 'Articles',
+        href: '/expert/articles',
+        icon: Newspaper,
     },
     {
         title: 'Network',

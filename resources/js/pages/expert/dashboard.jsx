@@ -1,6 +1,7 @@
 import { Head, Link, setLayoutProps } from '@inertiajs/react';
 import {
     ExternalLink,
+    FileText,
     Globe2,
     Languages,
     MapPin,
@@ -395,6 +396,20 @@ export default function ExpertDashboard({ expert }) {
                                 />
                             </h2>
                             <div className="mt-4 flex flex-col gap-2">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="w-full justify-start gap-2"
+                                >
+                                    <Link href="/expert/articles">
+                                        <FileText className="size-4" />
+                                        <TransText
+                                            en="My articles"
+                                            fr="Mes articles"
+                                            ar="مقالاتي"
+                                        />
+                                    </Link>
+                                </Button>
                                 <Button
                                     asChild
                                     variant="outline"
