@@ -1,30 +1,15 @@
 import { useForm } from '@inertiajs/react';
-import { Send } from 'lucide-react';
+import { Send, Users } from 'lucide-react';
 import { useState } from 'react';
 
 import InputError from '@/components/input-error';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+
+// import NewsletterEmailPreview from './NewsletterEmailPreview';
 
 function audienceCount(stats, locale) {
     if (!stats) {
@@ -43,9 +28,17 @@ function audienceCount(stats, locale) {
     }
 }
 
+const AUDIENCE_OPTIONS = [
+    { value: 'all', label: 'All', short: 'Everyone' },
+    { value: 'en', label: 'English', short: 'EN' },
+    { value: 'fr', label: 'French', short: 'FR' },
+    { value: 'ar', label: 'Arabic', short: 'AR' },
+];
+
 export default function NewsletterComposeForm({
     localeOptions = [],
     stats = {},
+    className,
 }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -55,9 +48,16 @@ export default function NewsletterComposeForm({
         locale: 'all',
     });
 
+    const recipients = audienceCount(stats, data.locale);
     const audienceLabel =
         localeOptions.find((o) => o.value === data.locale)?.label ??
         'All subscribers';
+
+    const bodyLength = data.body.length;
+    const canSend =
+        data.subject.trim().length > 0 &&
+        data.body.trim().length > 0 &&
+        recipients > 0;
 
     const submitSend = () => {
         post('/admin/newsletter/send', {
@@ -70,120 +70,171 @@ export default function NewsletterComposeForm({
         });
     };
 
+    // const previewAudience = useMemo(
+    //     () =>
+    //         AUDIENCE_OPTIONS.find((o) => o.value === data.locale)?.label ??
+    //         audienceLabel,
+    //     [data.locale, audienceLabel],
+    // );
+
     return (
         <>
-            <Card className="border-border/70 shadow-sm">
-                <CardHeader className="border-b border-border/60 pb-4">
-                    <CardTitle className="text-lg text-tblack">
-                        Compose newsletter
-                    </CardTitle>
-                    <p className="text-sm font-normal text-tgray">
-                        Write your message and choose who receives it.
+            <section
+                className={cn(
+                    'overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm',
+                    className,
+                )}
+            >
+                <div className="border-b border-border/60 px-5 py-4 sm:px-6">
+                    <h2 className="text-base font-semibold text-tblack">
+                        Compose campaign
+                    </h2>
+                    <p className="mt-0.5 text-sm text-tgray">
+                        Draft your message, pick an audience, and preview before
+                        sending.
                     </p>
-                </CardHeader>
-                <CardContent className="space-y-5 pt-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="newsletter-subject">Subject</Label>
-                        <Input
-                            id="newsletter-subject"
-                            value={data.subject}
-                            onChange={(e) =>
-                                setData('subject', e.target.value)
-                            }
-                            placeholder="e.g. This week on TILILA"
-                        />
-                        <InputError message={errors.subject} />
-                    </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="newsletter-body">Message</Label>
-                        <textarea
-                            id="newsletter-body"
-                            rows={10}
-                            className={cn(
-                                'flex min-h-[200px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none placeholder:text-muted-foreground',
-                                'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+                <div className=" lg:divide-x lg:divide-border/60">
+                    <div className="space-y-5 p-5 sm:p-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="newsletter-subject">Subject</Label>
+                            <Input
+                                id="newsletter-subject"
+                                value={data.subject}
+                                onChange={(e) =>
+                                    setData('subject', e.target.value)
+                                }
+                                placeholder="e.g. This week on TILILA"
+                                maxLength={255}
+                            />
+                            <InputError message={errors.subject} />
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                                <Label htmlFor="newsletter-body">Message</Label>
+                                <span className="text-xs tabular-nums text-tgray">
+                                    {bodyLength} / 50 000
+                                </span>
+                            </div>
+                            <textarea
+                                id="newsletter-body"
+                                rows={8}
+                                className={cn(
+                                    'flex min-h-[180px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none placeholder:text-muted-foreground',
+                                    'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+                                )}
+                                value={data.body}
+                                onChange={(e) =>
+                                    setData('body', e.target.value)
+                                }
+                                placeholder="Write your newsletter. Line breaks are preserved in the email."
+                            />
+                            <InputError message={errors.body} />
+                        </div>
+
+                        <div className="space-y-3">
+                            <Label>Audience</Label>
+                            <div className="flex flex-wrap gap-2">
+                                {AUDIENCE_OPTIONS.map((opt) => {
+                                    const count = audienceCount(
+                                        stats,
+                                        opt.value,
+                                    );
+                                    const active = data.locale === opt.value;
+
+                                    return (
+                                        <button
+                                            key={opt.value}
+                                            type="button"
+                                            onClick={() =>
+                                                setData('locale', opt.value)
+                                            }
+                                            className={cn(
+                                                'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors',
+                                                active
+                                                    ? 'border-beta-blue bg-beta-blue/10 font-semibold text-beta-blue'
+                                                    : 'border-border bg-beta-white text-tgray hover:border-beta-blue/40 hover:text-tblack',
+                                            )}
+                                        >
+                                            <span>{opt.label}</span>
+                                            <span
+                                                className={cn(
+                                                    'rounded-md px-1.5 py-0.5 text-xs tabular-nums',
+                                                    active
+                                                        ? 'bg-beta-blue/15'
+                                                        : 'bg-muted',
+                                                )}
+                                            >
+                                                {count}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            <InputError message={errors.locale} />
+                            {recipients === 0 ? (
+                                <p className="text-xs text-alpha-danger">
+                                    No subscribers in this audience. Choose
+                                    another segment or wait for new sign-ups.
+                                </p>
+                            ) : (
+                                <p className="flex items-center gap-1.5 text-xs text-tgray">
+                                    <Users className="size-3.5 shrink-0" />
+                                    {recipients} recipient
+                                    {recipients === 1 ? '' : 's'} will receive
+                                    this email.
+                                </p>
                             )}
-                            value={data.body}
-                            onChange={(e) => setData('body', e.target.value)}
-                            placeholder="Write the newsletter content. Line breaks are preserved in the email."
+                        </div>
+                    </div>
+
+                    {/* <div className="border-t border-border/60 bg-beta-white/50 p-4 lg:border-t-0 lg:p-5">
+                        <NewsletterEmailPreview
+                            subject={data.subject}
+                            body={data.body}
+                            audienceLabel={previewAudience}
                         />
-                        <InputError message={errors.body} />
-                    </div>
+                    </div> */}
+                </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="newsletter-locale">Audience</Label>
-                        <Select
-                            value={data.locale}
-                            onValueChange={(value) =>
-                                setData('locale', value)
-                            }
-                        >
-                            <SelectTrigger id="newsletter-locale">
-                                <SelectValue placeholder="Select audience" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {localeOptions.map((opt) => (
-                                    <SelectItem
-                                        key={opt.value}
-                                        value={opt.value}
-                                    >
-                                        {opt.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.locale} />
-                        <p className="text-xs text-tgray">
-                            {audienceCount(stats, data.locale) > 0
-                                ? `${audienceCount(stats, data.locale)} recipient(s) for this audience.`
-                                : 'No subscribers for this audience yet.'}
-                        </p>
-                    </div>
-
+                <div className="flex flex-col gap-3 border-t border-border/60 bg-muted/20 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                    <p className="text-xs text-tgray">
+                        Sends immediately to the selected audience. This cannot
+                        be undone.
+                    </p>
                     <Button
                         type="button"
-                        className="w-full gap-2 bg-beta-blue text-twhite hover:bg-beta-blue/90 sm:w-auto"
-                        disabled={
-                            processing ||
-                            !data.subject.trim() ||
-                            !data.body.trim()
-                        }
+                        className="gap-2 bg-beta-blue text-twhite hover:bg-beta-blue/90 sm:shrink-0"
+                        disabled={processing || !canSend}
                         onClick={() => setConfirmOpen(true)}
                     >
                         <Send className="size-4" />
-                        Send newsletter
+                        {processing ? 'Sending…' : 'Send newsletter'}
                     </Button>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
-            <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            Send this newsletter?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            You are about to email &ldquo;{audienceLabel}
-                            &rdquo; with subject &ldquo;{data.subject}&rdquo;.
-                            This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel type="button">
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            type="button"
-                            className="bg-beta-blue text-twhite hover:bg-beta-blue/90"
-                            disabled={processing}
-                            onClick={submitSend}
-                        >
-                            {processing ? 'Sending…' : 'Confirm send'}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <ConfirmationModal
+                open={confirmOpen}
+                onOpenChange={setConfirmOpen}
+                title="Send this newsletter?"
+                description={
+                    <>
+                        You are about to email <strong>{audienceLabel}</strong> (
+                        {recipients} recipient{recipients === 1 ? '' : 's'}).
+                    </>
+                }
+                confirmLabel="Confirm send"
+                onConfirm={submitSend}
+                processing={processing}
+                confirmVariant="primary"
+            >
+                <p className="rounded-md border border-border bg-muted/40 px-3 py-2 font-medium text-foreground">
+                    {data.subject}
+                </p>
+            </ConfirmationModal>
         </>
     );
 }

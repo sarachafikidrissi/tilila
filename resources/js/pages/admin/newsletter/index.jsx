@@ -1,10 +1,13 @@
 import { Head, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
+import ErrorModal from '@/components/modals/ErrorModal';
+import SuccessModal from '@/components/modals/SuccessModal';
 import AppLayout from '@/layouts/app-layout';
 
+import NewsletterAudienceOverview from './partials/NewsletterAudienceOverview';
 import NewsletterComposeForm from './partials/NewsletterComposeForm';
 import NewsletterPageHeader from './partials/NewsletterPageHeader';
-import NewsletterStatsCards from './partials/NewsletterStatsCards';
 import NewsletterSubscribersTable from './partials/NewsletterSubscribersTable';
 
 export default function AdminNewsletterIndex({
@@ -14,6 +17,18 @@ export default function AdminNewsletterIndex({
     localeOptions = [],
 }) {
     const { flash } = usePage().props;
+    const [activeView, setActiveView] = useState('compose');
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+
+    useEffect(() => {
+        if (flash?.success) {
+            setSuccessOpen(true);
+        }
+        if (flash?.warning) {
+            setErrorOpen(true);
+        }
+    }, [flash?.success, flash?.warning]);
 
     const exportCsv = () => {
         const params = new URLSearchParams();
@@ -31,36 +46,56 @@ export default function AdminNewsletterIndex({
         <>
             <Head title="Newsletter" />
 
-            <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col gap-8 px-4 py-6 sm:gap-10 sm:px-6 sm:py-8 lg:px-10 lg:pb-10">
+            <SuccessModal
+                open={successOpen}
+                onOpenChange={setSuccessOpen}
+                message={flash?.success}
+                title="Done"
+            />
+
+            <ErrorModal
+                open={errorOpen}
+                onOpenChange={setErrorOpen}
+                message={flash?.warning}
+                variant="warning"
+                title="Notice"
+            />
+
+            <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:pb-10">
                 <NewsletterPageHeader
-                    filters={filters}
+                    total={stats?.total ?? 0}
                     onExport={exportCsv}
+                    activeView={activeView}
+                    onViewChange={setActiveView}
                 />
 
-                {(flash?.success || flash?.warning) && (
-                    <div
-                        className={
-                            flash?.warning
-                                ? 'rounded-lg border border-alpha-yellow/50 bg-beta-yellow px-4 py-3 text-sm text-alpha-yellow'
-                                : 'rounded-lg border border-alpha-green/40 bg-beta-green px-4 py-3 text-sm text-alpha-green'
-                        }
-                        role="status"
-                    >
-                        {flash.success ?? flash.warning}
-                    </div>
-                )}
+                <NewsletterAudienceOverview stats={stats} />
 
-                <NewsletterStatsCards stats={stats} />
-
-                <div className="grid gap-8 xl:grid-cols-[minmax(0,22rem)_1fr] xl:items-start">
-                    <NewsletterComposeForm
-                        localeOptions={localeOptions}
-                        stats={stats}
-                    />
+                <div className="hidden gap-8 xl:grid xl:grid-cols-5 xl:items-start">
                     <NewsletterSubscribersTable
                         subscribers={subscribers}
                         filters={filters}
+                        className="xl:col-span-2"
                     />
+                    <NewsletterComposeForm
+                        localeOptions={localeOptions}
+                        stats={stats}
+                        className="xl:col-span-3"
+                    />
+                </div>
+
+                <div className="xl:hidden">
+                    {activeView === 'compose' ? (
+                        <NewsletterComposeForm
+                            localeOptions={localeOptions}
+                            stats={stats}
+                        />
+                    ) : (
+                        <NewsletterSubscribersTable
+                            subscribers={subscribers}
+                            filters={filters}
+                        />
+                    )}
                 </div>
             </div>
         </>
