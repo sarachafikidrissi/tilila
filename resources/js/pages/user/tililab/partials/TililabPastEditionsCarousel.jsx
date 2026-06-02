@@ -23,10 +23,34 @@ function openEdition(edition) {
     router.visit(edition.details_url);
 }
 
-export default function TililabPastEditionsCarousel({ editions = [] }) {
+export default function TililabPastEditionsCarousel({
+    editions = [],
+    excludeEditionId = null,
+    excludeYear = null,
+}) {
     const rows = useMemo(() => {
+        const shouldExclude = (edition) => {
+            if (!edition) return true;
+            if (edition.is_current) return true;
+            if (
+                excludeEditionId != null &&
+                String(edition.id) === String(excludeEditionId)
+            ) {
+                return true;
+            }
+            if (
+                excludeYear != null &&
+                String(edition.year) === String(excludeYear)
+            ) {
+                return true;
+            }
+            return false;
+        };
+
         const fromApi = Array.isArray(editions)
-            ? editions.map(normalizeEdition).filter(Boolean)
+            ? editions
+                  .map(normalizeEdition)
+                  .filter((edition) => edition && !shouldExclude(edition))
             : [];
         if (fromApi.length > 0) {
             return [...fromApi].sort(
@@ -35,8 +59,9 @@ export default function TililabPastEditionsCarousel({ editions = [] }) {
         }
         return [...TILILAB_EDITIONS_HISTORY]
             .map(editionRowFromHistory)
+            .filter((edition) => !shouldExclude(edition))
             .sort((a, b) => Number(b.year) - Number(a.year));
-    }, [editions]);
+    }, [editions, excludeEditionId, excludeYear]);
 
     const trackRef = useRef(null);
     const [paused, setPaused] = useState(false);

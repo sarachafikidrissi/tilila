@@ -141,14 +141,22 @@ Route::get('/contact', function () {
     return Inertia::render('contact/index');
 })->name('contact');
 Route::get('/tililab', function () {
-    $editions = TililabEdition::query()
+    $currentEdition = TililabEdition::current();
+
+    $pastEditions = TililabEdition::query()
+        ->where('is_current', false)
+        ->when(
+            $currentEdition,
+            fn ($q) => $q->where('id', '!=', $currentEdition->id),
+        )
         ->orderByDesc('year')
         ->orderBy('sort')
         ->orderByDesc('id')
         ->get();
 
     return Inertia::render('user/tililab/index', [
-        'editions' => $editions,
+        'currentEdition' => $currentEdition,
+        'editions' => $pastEditions,
     ]);
 });
 Route::get('/tilila', function () {

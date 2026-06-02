@@ -19,6 +19,7 @@ export default function AdminTililabEditionsEdit({ edition }) {
             ar: edition?.theme?.ar ?? '',
         },
         has_gallery: Boolean(edition?.has_gallery),
+        is_current: Boolean(edition?.is_current),
         gallery_images: Array.isArray(edition?.gallery_images)
             ? edition.gallery_images
             : [],

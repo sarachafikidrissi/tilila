@@ -1,7 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import TililabCurrentEditionSection from '@/pages/user/tililab/partials/CurrentEditionSection';
 import TililabHowToApply from '@/pages/user/tililab/partials/TililabHowToApply';
 import TililabPastEditionsCarousel from '@/pages/user/tililab/partials/TililabPastEditionsCarousel';
+import TransText from '@/components/TransText';
 import {
     TililabConceptSection,
     TililabCriteriaSection,
@@ -13,16 +15,37 @@ import {
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililabIndex() {
-    const { editions } = usePage().props;
+    const { currentEdition, editions } = usePage().props;
 
     return (
         <>
             <TililabHead />
             <div>
-                <TililabPastEditionsCarousel editions={editions ?? []} />
+                <TililabCurrentEditionSection edition={currentEdition} />
+
+                <TililabPastEditionsCarousel
+                    editions={editions ?? []}
+                    excludeEditionId={currentEdition?.id ?? null}
+                    excludeYear={currentEdition?.year ?? null}
+                />
 
                 <nav className="bg-background/70 backdrop-blur">
                     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-4 text-sm font-semibold text-beta-blue">
+                        {currentEdition ? (
+                            <>
+                                <a
+                                    href="#current-edition"
+                                    className="hover:underline"
+                                >
+                                    <TransText
+                                        en="Current edition"
+                                        fr="Édition en cours"
+                                        ar="الدورة الحالية"
+                                    />
+                                </a>
+                                <span className="text-tgray">·</span>
+                            </>
+                        ) : null}
                         <a href="#past-editions" className="hover:underline">
                             Éditions
                         </a>
@@ -43,7 +66,14 @@ export default function TililabIndex() {
                             Critères
                         </a>
                         <span className="text-tgray">·</span>
-                        <a href="#jury" className="hover:underline">
+                        <a
+                            href={
+                                currentEdition
+                                    ? '#current-edition-jury'
+                                    : '#jury'
+                            }
+                            className="hover:underline"
+                        >
                             Jury
                         </a>
                         <span className="text-tgray">·</span>
@@ -61,7 +91,7 @@ export default function TililabIndex() {
                     <TililabConceptSection />
                     <TililabPrizesSection />
                     <TililabCriteriaSection />
-                    <TililabJurySection editions={editions ?? []} />
+                    {/* <TililabJurySection editions={editions ?? []} /> */}
                 </div>
 
                 <div className="bg-background">

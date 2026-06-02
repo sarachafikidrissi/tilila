@@ -3,64 +3,7 @@ import { ChevronLeft, GalleryHorizontal, Gavel, Trophy } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
-
-function PeopleGrid({ title, people }) {
-    const rows = Array.isArray(people) ? people : [];
-    return (
-        <div className="mt-8">
-            <h2 className="text-xl font-semibold text-tblack">{title}</h2>
-            {rows.length === 0 ? (
-                <div className="mt-4 rounded-2xl border border-border bg-beta-white p-10 text-center text-sm text-tgray">
-                    <TransText
-                        en="No entries yet."
-                        fr="Aucune entrée pour le moment."
-                        ar="لا توجد إدخالات بعد."
-                    />
-                </div>
-            ) : (
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {rows.map((p, idx) => {
-                        const img = p?.photo_path
-                            ? `/storage/${p.photo_path}`
-                            : '';
-                        return (
-                            <div
-                                key={`${p?.full_name ?? 'person'}-${idx}`}
-                                className="rounded-2xl border border-border bg-white p-5 shadow-sm"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="size-16 overflow-hidden rounded-xl border border-border bg-muted">
-                                        {img ? (
-                                            <img
-                                                src={img}
-                                                alt=""
-                                                className="h-full w-full object-cover"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        ) : null}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <div className="text-base font-semibold text-foreground">
-                                            {p?.full_name ?? ''}
-                                        </div>
-                                        <div className="mt-2 text-sm text-muted-foreground">
-                                            <TransText
-                                                en={p?.bio?.en ?? ''}
-                                                fr={p?.bio?.fr ?? ''}
-                                                ar={p?.bio?.ar ?? ''}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-}
+import TililaPeopleGrid from '@/components/TililaPeopleGrid';
 
 function GalleryGrid({ images }) {
     const rows = Array.isArray(images) ? images : [];
@@ -111,7 +54,12 @@ function GalleryGrid({ images }) {
 
 export default function TililabEditionDetails() {
     const { edition } = usePage().props;
-    const winners = Array.isArray(edition?.winners) ? edition.winners : [];
+    const isCurrent = Boolean(edition?.is_current);
+    const winners = isCurrent
+        ? []
+        : Array.isArray(edition?.winners)
+          ? edition.winners
+          : [];
     const jury = Array.isArray(edition?.jury) ? edition.jury : [];
     const images = Array.isArray(edition?.gallery_images)
         ? edition.gallery_images
@@ -191,10 +139,18 @@ export default function TililabEditionDetails() {
                     className="mt-8 flex flex-wrap gap-2 text-sm font-semibold text-beta-blue"
                     aria-label="Edition sections"
                 >
-                    <a href="#winners" className="hover:underline">
-                        <TransText en="Winners" fr="Lauréats" ar="الفائزون" />
-                    </a>
-                    <span className="text-tgray">·</span>
+                    {!isCurrent ? (
+                        <>
+                            <a href="#winners" className="hover:underline">
+                                <TransText
+                                    en="Winners"
+                                    fr="Lauréats"
+                                    ar="الفائزون"
+                                />
+                            </a>
+                            <span className="text-tgray">·</span>
+                        </>
+                    ) : null}
                     <a href="#jury" className="hover:underline">
                         <TransText en="Jury" fr="Jury" ar="لجنة التحكيم" />
                     </a>
@@ -204,20 +160,30 @@ export default function TililabEditionDetails() {
                     </a>
                 </nav>
 
-                <div id="winners">
-                    <PeopleGrid
-                        title={
-                            <TransText
-                                en="Winners"
-                                fr="Lauréats"
-                                ar="الفائزون"
-                            />
-                        }
-                        people={winners}
-                    />
-                </div>
+                {!isCurrent ? (
+                    <div id="winners">
+                        <TililaPeopleGrid
+                            title={
+                                <TransText
+                                    en="Winners"
+                                    fr="Lauréats"
+                                    ar="الفائزون"
+                                />
+                            }
+                            people={winners}
+                        />
+                    </div>
+                ) : (
+                    <div className="mt-10 rounded-2xl border border-border bg-beta-white p-8 text-center text-sm text-tgray">
+                        <TransText
+                            en="Winners for this edition will be announced after the national final."
+                            fr="Les lauréats de cette édition seront annoncés après la finale nationale."
+                            ar="يُعلَن عن فائزي هذه الدورة بعد النهائي الوطني."
+                        />
+                    </div>
+                )}
                 <div id="jury">
-                    <PeopleGrid
+                    <TililaPeopleGrid
                         title={
                             <TransText
                                 en="Jury"

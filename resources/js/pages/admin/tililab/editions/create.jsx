@@ -10,6 +10,7 @@ export default function AdminTililabEditionsCreate() {
         edition_label: { en: '', fr: '', ar: '' },
         theme: { en: '', fr: '', ar: '' },
         has_gallery: false,
+        is_current: false,
         gallery_images: [],
         gallery_images_files: [],
         remove_gallery_images: [],

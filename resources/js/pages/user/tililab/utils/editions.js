@@ -1,8 +1,14 @@
 import { TILILAB_EDITIONS_HISTORY } from '@/pages/user/tililab/data/tililab-editions-history';
 
-function coverImageSrc(galleryImages) {
+export function coverImageSrc(galleryImages, winners) {
     if (Array.isArray(galleryImages) && galleryImages[0]) {
         return `/storage/${galleryImages[0]}`;
+    }
+
+    const rows = Array.isArray(winners) ? winners : [];
+    const primaryWinner = rows[0] ?? null;
+    if (primaryWinner?.photo_path) {
+        return `/storage/${primaryWinner.photo_path}`;
     }
 
     return '';
@@ -22,7 +28,7 @@ return null;
         ? `/storage/${primaryWinner.photo_path}`
         : '';
 
-    const coverFromGallery = coverImageSrc(galleryImages);
+    const coverFromGallery = coverImageSrc(galleryImages, winners);
 
     return {
         id: raw.id ?? `tililab-${raw.year ?? ''}`,
@@ -36,6 +42,7 @@ return null;
         has_gallery:
             Boolean(raw.has_gallery) ||
             (galleryImages.length > 0),
+        is_current: Boolean(raw.is_current),
     };
 }
 
