@@ -126,9 +126,11 @@ export function buildLanguageOptions(locale = 'en') {
         .sort((a, b) => {
             const aIndex = PREFERRED_LANGUAGE_ORDER.indexOf(a.value);
             const bIndex = PREFERRED_LANGUAGE_ORDER.indexOf(b.value);
+
             if (aIndex !== -1 || bIndex !== -1) {
                 return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex);
             }
+
             return a.label.localeCompare(b.label);
         });
 }

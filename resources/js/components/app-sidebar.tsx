@@ -3,6 +3,7 @@ import {
     Calendar,
     Images,
     LayoutGrid,
+    Mail,
     Megaphone,
     Newspaper,
     Trophy,
@@ -223,6 +224,12 @@ export function AppSidebar() {
                                         title: 'Hero Carousel',
                                         href: '/admin/hero-slides',
                                         icon: Images,
+                                    },
+                                    {
+                                        title: 'Newsletter',
+                                        href: '/admin/newsletter',
+                                        icon: Mail,
+
                                     },
                                 ]}
                             />
