@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\TililaParticipationReceipt;
 use App\Models\TililaContestParticipant;
+use App\Models\TililaEdition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class TililaParticipationController extends Controller
@@ -35,6 +36,13 @@ class TililaParticipationController extends Controller
             'locale' => ['nullable', 'string', 'max:8'],
         ]);
 
+        $currentEdition = TililaEdition::current();
+        if ($currentEdition === null) {
+            throw ValidationException::withMessages([
+                'submission_title' => 'Submissions are not open for any edition at the moment.',
+            ]);
+        }
+
         $videoPath = null;
         if ($request->hasFile('submission_video')) {
             $videoPath = $request->file('submission_video')->storePublicly(
@@ -45,6 +53,7 @@ class TililaParticipationController extends Controller
 
         /** @var TililaContestParticipant $participant */
         $participant = TililaContestParticipant::query()->create([
+            'tilila_edition_id' => $currentEdition->id,
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
@@ -70,4 +79,3 @@ class TililaParticipationController extends Controller
         return back()->with('success', 'Participation submitted.');
     }
 }
-

@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TililaEdition;
 use App\Support\YoutubeVideo;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -68,6 +68,10 @@ class TililaEditionController extends Controller
 
         $this->applyGalleryUploads($request, $edition, []);
 
+        if (! empty($data['is_current'])) {
+            TililaEdition::markAsCurrent($edition);
+        }
+
         return redirect()->route('admin.tilila.editions.index')->with('success', 'Edition created.');
     }
 
@@ -115,6 +119,12 @@ class TililaEditionController extends Controller
 
         $existing = is_array($edition->gallery_images) ? $edition->gallery_images : [];
         $this->applyGalleryUploads($request, $edition, $existing);
+
+        if (! empty($data['is_current'])) {
+            TililaEdition::markAsCurrent($edition->fresh());
+        } elseif ($edition->is_current) {
+            $edition->update(['is_current' => false]);
+        }
 
         return redirect()->route('admin.tilila.editions.index')->with('success', 'Edition updated.');
     }
@@ -196,6 +206,7 @@ class TililaEditionController extends Controller
             'gallery_url' => ['nullable', 'url', 'max:2048'],
             'ceremony_video_url' => ['nullable', 'string', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
+            'is_current' => ['sometimes', 'boolean'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
@@ -247,6 +258,7 @@ class TililaEditionController extends Controller
 
         // Checkbox can be absent in requests.
         $data['has_gallery'] = (bool) ($data['has_gallery'] ?? false);
+        $data['is_current'] = (bool) ($data['is_current'] ?? false);
 
         return $data;
     }
@@ -266,6 +278,7 @@ class TililaEditionController extends Controller
             }
             if (in_array($path, $toRemove, true)) {
                 Storage::disk('public')->delete($path);
+
                 continue;
             }
             $kept[] = $path;
@@ -370,4 +383,3 @@ class TililaEditionController extends Controller
         return $rows;
     }
 }
-

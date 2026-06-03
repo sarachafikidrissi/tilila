@@ -13,6 +13,11 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
+
+const selectClassName = cn(
+    'flex h-10 min-w-[140px] rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none',
+);
 
 function KpiCard({ icon: Icon, label, value }) {
     return (
@@ -36,23 +41,66 @@ function KpiCard({ icon: Icon, label, value }) {
     );
 }
 
+function buildQueryParams(filters, searchOverride) {
+    const params = {
+        search:
+            searchOverride !== undefined
+                ? searchOverride
+                : (filters?.search ?? ''),
+        edition_id: filters?.edition_id ?? '',
+        country: filters?.country ?? '',
+        from: filters?.from ?? '',
+        to: filters?.to ?? '',
+    };
+
+    return Object.fromEntries(
+        Object.entries(params).filter(([, value]) => value !== ''),
+    );
+}
+
 export default function AdminTililaSubmissionsIndex({
     participants,
     filters,
     kpis,
+    editions = [],
+    countries = [],
 }) {
     const [search, setSearch] = useState(filters?.search ?? '');
     const data = participants?.data ?? [];
     const links = participants?.links ?? [];
 
-    const submitSearch = (e) => {
-        e.preventDefault();
+    const applyFilters = (overrides = {}, searchValue) => {
+        const next = {
+            ...filters,
+            ...overrides,
+        };
+        const searchParam =
+            searchValue !== undefined ? searchValue : search.trim();
+
         router.get(
             '/admin/tilila/participants',
-            { search },
+            buildQueryParams(next, searchParam),
             { preserveState: true, replace: true },
         );
     };
+
+    const submitSearch = (e) => {
+        e.preventDefault();
+        applyFilters({}, search.trim());
+    };
+
+    const resetFilters = () => {
+        setSearch('');
+        router.get('/admin/tilila/participants', {}, { replace: true });
+    };
+
+    const hasActiveFilters = Boolean(
+        filters?.search ||
+            filters?.edition_id ||
+            filters?.country ||
+            filters?.from ||
+            filters?.to,
+    );
 
     return (
         <>
@@ -79,9 +127,9 @@ export default function AdminTililaSubmissionsIndex({
                             variant="outline"
                             className="gap-2"
                             onClick={() => {
-                                const params = new URLSearchParams();
-                                if (search?.trim())
-                                    params.set('search', search.trim());
+                                const params = new URLSearchParams(
+                                    buildQueryParams(filters, search.trim()),
+                                );
                                 const qs = params.toString();
                                 window.location.href = `/admin/tilila/participants/export.csv${qs ? `?${qs}` : ''}`;
                             }}
@@ -113,33 +161,89 @@ export default function AdminTililaSubmissionsIndex({
 
                 <form
                     onSubmit={submitSearch}
-                    className="flex flex-col gap-4 lg:flex-row lg:items-center"
+                    className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card p-4 shadow-sm sm:p-5"
                 >
+                    <div className="text-sm font-semibold text-foreground">
+                        Filters
+                    </div>
+
                     <div className="relative min-w-0 flex-1">
                         <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email, title…"
+                            placeholder="Search by name, email, title, city…"
                             className="h-10 pl-10"
                             name="search"
                         />
                     </div>
-                    <div className="flex gap-2">
+
+                    <div className="flex flex-wrap gap-2">
+                        <select
+                            value={filters?.edition_id ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ edition_id: e.target.value })
+                            }
+                            className={selectClassName}
+                            aria-label="Filter by edition"
+                        >
+                            <option value="">All editions</option>
+                            <option value="none">No edition</option>
+                            {editions.map((edition) => (
+                                <option key={edition.id} value={String(edition.id)}>
+                                    {edition.year}
+                                    {edition.is_current ? ' (current)' : ''}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={filters?.country ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ country: e.target.value })
+                            }
+                            className={selectClassName}
+                            aria-label="Filter by country"
+                        >
+                            <option value="">All countries</option>
+                            {countries.map((code) => (
+                                <option key={code} value={code}>
+                                    {code.toUpperCase()}
+                                </option>
+                            ))}
+                        </select>
+
+                        <Input
+                            type="date"
+                            value={filters?.from ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ from: e.target.value })
+                            }
+                            className="h-10 w-auto"
+                            aria-label="Submitted from"
+                        />
+                        <Input
+                            type="date"
+                            value={filters?.to ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ to: e.target.value })
+                            }
+                            className="h-10 w-auto"
+                            aria-label="Submitted to"
+                        />
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
                         <Button type="submit" variant="secondary">
                             Search
                         </Button>
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => {
-                                setSearch('');
-                                router.get('/admin/tilila/participants', {
-                                    search: '',
-                                });
-                            }}
+                            onClick={resetFilters}
+                            disabled={!hasActiveFilters && !search.trim()}
                         >
-                            Reset
+                            Reset filters
                         </Button>
                     </div>
                 </form>
@@ -152,7 +256,13 @@ export default function AdminTililaSubmissionsIndex({
                                     Participant
                                 </TableHead>
                                 <TableHead className="py-3 text-tgray uppercase sm:px-3">
+                                    Edition
+                                </TableHead>
+                                <TableHead className="py-3 text-tgray uppercase sm:px-3">
                                     Submission
+                                </TableHead>
+                                <TableHead className="py-3 text-tgray uppercase sm:px-3">
+                                    Submitted
                                 </TableHead>
                                 <TableHead className="py-3 text-right text-tgray uppercase sm:px-3">
                                     Actions
@@ -163,7 +273,7 @@ export default function AdminTililaSubmissionsIndex({
                             {data.length === 0 ? (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={3}
+                                        colSpan={5}
                                         className="py-14 text-center text-sm text-muted-foreground"
                                     >
                                         No submissions found.
@@ -194,12 +304,51 @@ export default function AdminTililaSubmissionsIndex({
                                                 <div className="truncate text-xs text-muted-foreground">
                                                     {p.email ?? '—'}
                                                 </div>
+                                                {p.country ? (
+                                                    <div className="text-xs text-muted-foreground">
+                                                        {String(
+                                                            p.country,
+                                                        ).toUpperCase()}
+                                                        {p.city
+                                                            ? ` · ${p.city}`
+                                                            : ''}
+                                                    </div>
+                                                ) : null}
                                             </div>
+                                        </TableCell>
+                                        <TableCell className="py-4 sm:px-3">
+                                            <div className="text-sm font-medium text-foreground">
+                                                {p.edition?.year ?? '—'}
+                                            </div>
+                                            {p.edition?.is_current ? (
+                                                <div className="text-xs text-beta-blue">
+                                                    Current
+                                                </div>
+                                            ) : null}
                                         </TableCell>
                                         <TableCell className="py-4 sm:px-3">
                                             <div className="truncate text-sm text-foreground">
                                                 {p.submission_title ?? '—'}
                                             </div>
+                                            <div className="mt-1 flex flex-wrap gap-1">
+                                                {p.submission_link ? (
+                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
+                                                        Link
+                                                    </span>
+                                                ) : null}
+                                                {p.submission_video_url ? (
+                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
+                                                        Video
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="py-4 text-sm text-muted-foreground sm:px-3">
+                                            {p.created_at
+                                                ? new Date(
+                                                      p.created_at,
+                                                  ).toLocaleDateString()
+                                                : '—'}
                                         </TableCell>
                                         <TableCell className="py-4 text-right sm:px-3">
                                             <div className="inline-flex items-center justify-end gap-2">

@@ -59,6 +59,10 @@ class TililabEditionController extends Controller
 
         $this->applyGalleryUploads($request, $edition, []);
 
+        if (! empty($data['is_current'])) {
+            TililabEdition::markAsCurrent($edition);
+        }
+
         return redirect()->route('admin.tililab.editions.index')->with('success', 'Edition created.');
     }
 
@@ -93,6 +97,12 @@ class TililabEditionController extends Controller
 
         $existing = is_array($edition->gallery_images) ? $edition->gallery_images : [];
         $this->applyGalleryUploads($request, $edition, $existing);
+
+        if (! empty($data['is_current'])) {
+            TililabEdition::markAsCurrent($edition->fresh());
+        } elseif ($edition->is_current) {
+            $edition->update(['is_current' => false]);
+        }
 
         return redirect()->route('admin.tililab.editions.index')->with('success', 'Edition updated.');
     }
@@ -165,6 +175,7 @@ class TililabEditionController extends Controller
             'jury_url' => ['nullable', 'url', 'max:2048'],
             'gallery_url' => ['nullable', 'url', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
+            'is_current' => ['sometimes', 'boolean'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
@@ -200,6 +211,7 @@ class TililabEditionController extends Controller
         $data['gallery_url'] = ($data['gallery_url'] ?? null) ?: null;
 
         $data['has_gallery'] = (bool) ($data['has_gallery'] ?? false);
+        $data['is_current'] = (bool) ($data['is_current'] ?? false);
 
         return $data;
     }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TililabEdition;
 use App\Models\TililabParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class TililabInscriptionController extends Controller
 {
@@ -39,6 +41,13 @@ class TililabInscriptionController extends Controller
             ],
         ]);
 
+        $currentEdition = TililabEdition::current();
+        if ($currentEdition === null) {
+            throw ValidationException::withMessages([
+                'email' => 'Applications are not open for any edition at the moment.',
+            ]);
+        }
+
         $videoPath = null;
         if ($request->hasFile('original_video')) {
             $videoPath = $request->file('original_video')->storePublicly(
@@ -48,6 +57,7 @@ class TililabInscriptionController extends Controller
         }
 
         TililabParticipant::query()->create([
+            'tililab_edition_id' => $currentEdition->id,
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],

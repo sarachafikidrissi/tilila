@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class TililaContestParticipant extends Model
@@ -10,6 +11,7 @@ class TililaContestParticipant extends Model
     protected $table = 'tilila_contest_participants';
 
     protected $fillable = [
+        'tilila_edition_id',
         'first_name',
         'last_name',
         'email',
@@ -32,6 +34,11 @@ class TililaContestParticipant extends Model
 
     protected $appends = ['submission_video_url'];
 
+    public function edition(): BelongsTo
+    {
+        return $this->belongsTo(TililaEdition::class, 'tilila_edition_id');
+    }
+
     public function getSubmissionVideoUrlAttribute(): ?string
     {
         if (! $this->submission_video_path) {
@@ -41,4 +48,3 @@ class TililaContestParticipant extends Model
         return Storage::url($this->submission_video_path);
     }
 }
-

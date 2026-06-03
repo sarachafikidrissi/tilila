@@ -7,7 +7,12 @@ import TililaPeopleGrid from '@/components/TililaPeopleGrid';
 
 export default function TililaEditionWinners() {
     const { edition } = usePage().props;
-    const winners = Array.isArray(edition?.winners) ? edition.winners : [];
+    const isCurrent = Boolean(edition?.is_current);
+    const winners = isCurrent
+        ? []
+        : Array.isArray(edition?.winners)
+          ? edition.winners
+          : [];
 
     return (
         <>
@@ -52,13 +57,27 @@ export default function TililaEditionWinners() {
                     </Link>
                 </div>
 
-                <TililaPeopleGrid
-                    title={
-                        <TransText en="Winners" fr="Lauréats" ar="الفائزون" />
-                    }
-                    people={winners}
-                    showTrophy
-                />
+                {isCurrent ? (
+                    <div className="mt-8 rounded-2xl border border-border bg-beta-white p-10 text-center text-sm text-tgray">
+                        <TransText
+                            en="Winners for the current edition will be published after the awards ceremony."
+                            fr="Les lauréats de l’édition en cours seront publiés après la cérémonie."
+                            ar="يُعلَن عن فائزي الدورة الحالية بعد حفل التوزيع."
+                        />
+                    </div>
+                ) : (
+                    <TililaPeopleGrid
+                        title={
+                            <TransText
+                                en="Winners"
+                                fr="Lauréats"
+                                ar="الفائزون"
+                            />
+                        }
+                        people={winners}
+                        showTrophy
+                    />
+                )}
             </section>
         </>
     );
