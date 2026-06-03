@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\HeroSlide;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -46,6 +47,12 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'warning' => $request->session()->get('warning'),
             ],
+            'hero_slides' => fn () => HeroSlide::query()
+                ->active()
+                ->ordered()
+                ->get()
+                ->map(fn (HeroSlide $s) => $s->toCarouselArray())
+                ->all(),
         ];
     }
 }
