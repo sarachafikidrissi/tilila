@@ -81,8 +81,7 @@ const TILILAB_PARTNERS_ALL = [
     {
         id: 'uradio',
         name: 'U Radio',
-        logoUrl:
-            '/assets/partenairesMedia/Logo-URadio-def-3-01-1-141x100.png',
+        logoUrl: '/assets/partenairesMedia/Logo-URadio-def-3-01-1-141x100.png',
         role: {
             en: 'Media partner',
             fr: 'Partenaire média',
@@ -112,8 +111,7 @@ const TILILAB_PARTNERS_ALL = [
     {
         id: 'media-marketing',
         name: 'Media Marketing',
-        logoUrl:
-            '/assets/partenairesMedia/Logo-Media-Marketing-200x76.png',
+        logoUrl: '/assets/partenairesMedia/Logo-Media-Marketing-200x76.png',
         role: {
             en: 'Media partner',
             fr: 'Partenaire média',

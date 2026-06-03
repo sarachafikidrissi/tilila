@@ -223,8 +223,7 @@ function TililaFaqAnswer({ item }) {
     if (item.email) {
         return (
             <div className={bodyClass}>
-                <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />
-                {' '}
+                <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />{' '}
                 <a
                     href={`mailto:${item.email}`}
                     className="font-semibold text-beta-blue hover:underline"
@@ -440,7 +439,7 @@ export function TililaSponsorsSection() {
                     </p>
                 </PartnerTier>
             </div>
-{/* 
+            {/* 
             <div className="mt-8 rounded-2xl border border-border bg-tblack px-6 py-5 text-sm text-twhite">
                 <div className="text-xs font-bold tracking-[0.2em] text-gold uppercase">
                     <TransText en="Summary" fr="Synthèse" ar="ملخص" />
@@ -493,4 +492,3 @@ export function TililaSponsorsSection() {
         </SectionShell>
     );
 }
-

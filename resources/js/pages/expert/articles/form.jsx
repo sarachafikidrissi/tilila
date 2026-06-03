@@ -84,7 +84,10 @@ export default function ExpertArticleForm({ article = null }) {
                             >
                                 {lang.label}
                                 {lang.required ? (
-                                    <span className="text-alpha-danger"> *</span>
+                                    <span className="text-alpha-danger">
+                                        {' '}
+                                        *
+                                    </span>
                                 ) : null}
                             </button>
                         ))}
@@ -93,20 +96,23 @@ export default function ExpertArticleForm({ article = null }) {
                     <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
                         <div className="space-y-1.5">
                             <Label htmlFor="title">
-                                <TransText
-                                    en="Title"
-                                    fr="Titre"
-                                    ar="العنوان"
-                                />
+                                <TransText en="Title" fr="Titre" ar="العنوان" />
                                 {langTab === 'fr' ? (
-                                    <span className="text-alpha-danger"> *</span>
+                                    <span className="text-alpha-danger">
+                                        {' '}
+                                        *
+                                    </span>
                                 ) : null}
                             </Label>
                             <Input
                                 id="title"
                                 value={data.title[langTab] ?? ''}
                                 onChange={(e) =>
-                                    setTriField('title', langTab, e.target.value)
+                                    setTriField(
+                                        'title',
+                                        langTab,
+                                        e.target.value,
+                                    )
                                 }
                                 required={langTab === 'fr'}
                             />
@@ -126,7 +132,10 @@ export default function ExpertArticleForm({ article = null }) {
                                     ar="المحتوى"
                                 />
                                 {langTab === 'fr' ? (
-                                    <span className="text-alpha-danger"> *</span>
+                                    <span className="text-alpha-danger">
+                                        {' '}
+                                        *
+                                    </span>
                                 ) : null}
                             </Label>
                             <RichTextEditor
@@ -182,11 +191,7 @@ export default function ExpertArticleForm({ article = null }) {
                             variant="outline"
                             onClick={() => router.visit('/expert/articles')}
                         >
-                            <TransText
-                                en="Cancel"
-                                fr="Annuler"
-                                ar="إلغاء"
-                            />
+                            <TransText en="Cancel" fr="Annuler" ar="إلغاء" />
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing

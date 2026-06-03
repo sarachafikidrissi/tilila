@@ -80,8 +80,8 @@ export default function ExpertPublicProfileDetails({ details, onChange }) {
             <CardHeader className="px-5 sm:px-8">
                 <CardTitle>Public profile content</CardTitle>
                 <CardDescription>
-                    Biography, social links, and expertise sections shown on
-                    the expert detail page.
+                    Biography, social links, and expertise sections shown on the
+                    expert detail page.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-10 px-5 sm:px-8">

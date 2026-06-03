@@ -14,8 +14,7 @@ function formatEventDate(iso, locale) {
         return iso;
     }
     const date = new Date(Date.UTC(y, m - 1, d));
-    const tag =
-        locale === 'ar' ? 'ar' : locale === 'fr' ? 'fr-FR' : 'en-US';
+    const tag = locale === 'ar' ? 'ar' : locale === 'fr' ? 'fr-FR' : 'en-US';
     try {
         return date.toLocaleDateString(tag, {
             weekday: 'short',
@@ -38,8 +37,7 @@ function dateParts(iso, locale) {
         return { month: '', day: '' };
     }
     const date = new Date(Date.UTC(y, m - 1, d));
-    const tag =
-        locale === 'ar' ? 'ar' : locale === 'fr' ? 'fr-FR' : 'en-US';
+    const tag = locale === 'ar' ? 'ar' : locale === 'fr' ? 'fr-FR' : 'en-US';
     try {
         return {
             month: date
@@ -102,7 +100,7 @@ function AgendaCard({ row, locale }) {
                     <span className="text-[10px] font-bold tracking-wider">
                         {month}
                     </span>
-                    <span className="text-xl font-extrabold leading-none tabular-nums">
+                    <span className="text-xl leading-none font-extrabold tabular-nums">
                         {day}
                     </span>
                 </div>
@@ -114,7 +112,7 @@ function AgendaCard({ row, locale }) {
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
                 <StatusBadge status={row.status} />
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                <span className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                     {typeLabel(row.type)}
                 </span>
             </div>

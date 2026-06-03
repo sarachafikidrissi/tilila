@@ -62,8 +62,8 @@ export default function LearnComingSoon({
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,151,170,0.14),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.06),transparent_38%)]"
                 aria-hidden
             />
-            <div className="pointer-events-none absolute -top-24 end-0 h-72 w-72 rounded-full bg-beta-blue/10 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-20 start-0 h-64 w-64 rounded-full bg-alpha-blue/80 blur-3xl" />
+            <div className="pointer-events-none absolute end-0 -top-24 h-72 w-72 rounded-full bg-beta-blue/10 blur-3xl" />
+            <div className="pointer-events-none absolute start-0 -bottom-20 h-64 w-64 rounded-full bg-alpha-blue/80 blur-3xl" />
 
             <div className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
                 {showBackLink ? (
@@ -90,10 +90,7 @@ export default function LearnComingSoon({
                 <div className="mt-8 overflow-hidden rounded-3xl border border-border bg-card shadow-[0_24px_60px_-16px_rgba(15,23,42,0.12)] ring-1 ring-border">
                     <div className="border-b border-border bg-linear-to-br from-alpha-blue/90 via-card to-card px-6 py-10 text-center sm:px-10 sm:py-12">
                         <span className="inline-flex items-center gap-2 rounded-full border border-beta-blue/25 bg-beta-blue/10 px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.22em] text-beta-blue uppercase">
-                            <span
-                                className="relative flex size-2"
-                                aria-hidden
-                            >
+                            <span className="relative flex size-2" aria-hidden>
                                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-beta-blue opacity-60" />
                                 <span className="relative inline-flex size-2 rounded-full bg-beta-blue" />
                             </span>

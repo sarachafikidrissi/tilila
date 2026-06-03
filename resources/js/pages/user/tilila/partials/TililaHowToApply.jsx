@@ -88,7 +88,7 @@ export default function TililaHowToApply({ onOpenForm }) {
                             key={step.title.en}
                             className="relative rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border/50"
                         >
-                            <div className="absolute -top-3 start-6 flex size-8 items-center justify-center rounded-full bg-beta-blue text-xs font-bold text-white">
+                            <div className="absolute start-6 -top-3 flex size-8 items-center justify-center rounded-full bg-beta-blue text-xs font-bold text-white">
                                 {idx + 1}
                             </div>
                             <div className="mt-4 flex size-11 items-center justify-center rounded-xl bg-alpha-blue text-beta-blue">
@@ -131,11 +131,7 @@ export default function TililaHowToApply({ onOpenForm }) {
                     onClick={() => onOpenForm?.()}
                     className="inline-flex w-full items-center justify-center rounded-xl bg-beta-blue px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-tblack/15 transition hover:bg-beta-blue/90 sm:w-auto"
                 >
-                    <TransText
-                        en="participate"
-                        fr="Participer"
-                        ar="شارك"
-                    />
+                    <TransText en="participate" fr="Participer" ar="شارك" />
                 </button>
                 <a
                     href="#faq"

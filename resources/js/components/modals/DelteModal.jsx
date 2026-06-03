@@ -46,7 +46,10 @@ export default function DelteModal({
             confirmVariant="destructive"
         >
             <p className="flex items-center gap-2 text-xs text-tgray">
-                <Trash2 className="size-3.5 shrink-0 text-alpha-danger" aria-hidden />
+                <Trash2
+                    className="size-3.5 shrink-0 text-alpha-danger"
+                    aria-hidden
+                />
                 Deleted data cannot be recovered from the admin panel.
             </p>
         </ConfirmationModal>

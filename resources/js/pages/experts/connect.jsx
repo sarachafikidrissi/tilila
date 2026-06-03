@@ -200,19 +200,13 @@ export default function ExpertsConnect({ requestTypes = [] }) {
 
                     <div className="space-y-2">
                         <Label htmlFor="message">
-                            <TransText
-                                en="Message"
-                                fr="Message"
-                                ar="الرسالة"
-                            />
+                            <TransText en="Message" fr="Message" ar="الرسالة" />
                         </Label>
                         <textarea
                             id="message"
                             rows={6}
                             value={data.message}
-                            onChange={(e) =>
-                                setData('message', e.target.value)
-                            }
+                            onChange={(e) => setData('message', e.target.value)}
                             className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         />
                         {errors.message ? (

@@ -236,7 +236,7 @@ html {
 
 .article-editor.tiptap blockquote,
 .article-content blockquote {
-    @apply my-4 border-l-4 border-beta-blue/40 pl-4 text-sm italic text-muted-foreground;
+    @apply my-4 border-l-4 border-beta-blue/40 pl-4 text-sm text-muted-foreground italic;
 }
 
 .article-editor.tiptap strong,

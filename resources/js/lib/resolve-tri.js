@@ -11,11 +11,5 @@ export function resolveTri(value, locale) {
     const preferred =
         locale === 'ar' ? value.ar : locale === 'fr' ? value.fr : value.en;
 
-    return (
-        preferred ||
-        value.fr ||
-        value.en ||
-        value.ar ||
-        ''
-    );
+    return preferred || value.fr || value.en || value.ar || '';
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TililaContestParticipant;
+use App\Models\TililaEdition;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,19 +17,7 @@ class TililaContestParticipantController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = TililaContestParticipant::query()->orderByDesc('created_at');
-
-        if ($search = trim((string) $request->query('search', ''))) {
-            $like = '%'.$search.'%';
-            $query->where(function ($q) use ($like) {
-                $q->where('first_name', 'like', $like)
-                    ->orWhere('last_name', 'like', $like)
-                    ->orWhere('email', 'like', $like)
-                    ->orWhere('submission_title', 'like', $like)
-                    ->orWhere('country', 'like', $like)
-                    ->orWhere('city', 'like', $like);
-            });
-        }
+        $query = $this->filteredQuery($request);
 
         $total = TililaContestParticipant::query()->count();
         $last7Days = TililaContestParticipant::query()
@@ -39,14 +30,26 @@ class TililaContestParticipantController extends Controller
                 'total' => $total,
                 'last7Days' => $last7Days,
             ],
-            'filters' => [
-                'search' => $request->query('search', ''),
-            ],
+            'filters' => $this->filterState($request),
+            'editions' => TililaEdition::query()
+                ->orderByDesc('year')
+                ->orderBy('sort')
+                ->orderByDesc('id')
+                ->get(['id', 'year', 'is_current', 'edition_label']),
+            'countries' => TililaContestParticipant::query()
+                ->whereNotNull('country')
+                ->where('country', '!=', '')
+                ->distinct()
+                ->orderBy('country')
+                ->pluck('country')
+                ->values(),
         ]);
     }
 
     public function show(TililaContestParticipant $participant): Response
     {
+        $participant->load('edition:id,year,edition_label,is_current');
+
         return Inertia::render('admin/tilila/participants/show', [
             'participant' => $participant,
         ]);
@@ -62,19 +65,7 @@ class TililaContestParticipantController extends Controller
 
     public function exportCsv(Request $request): StreamedResponse
     {
-        $query = TililaContestParticipant::query()->orderByDesc('created_at');
-
-        if ($search = trim((string) $request->query('search', ''))) {
-            $like = '%'.$search.'%';
-            $query->where(function ($q) use ($like) {
-                $q->where('first_name', 'like', $like)
-                    ->orWhere('last_name', 'like', $like)
-                    ->orWhere('email', 'like', $like)
-                    ->orWhere('submission_title', 'like', $like)
-                    ->orWhere('country', 'like', $like)
-                    ->orWhere('city', 'like', $like);
-            });
-        }
+        $query = $this->filteredQuery($request);
 
         $filename = 'tilila-submissions-'.now()->format('Ymd-His').'.csv';
 
@@ -89,6 +80,7 @@ class TililaContestParticipantController extends Controller
 
             fputcsv($out, [
                 'id',
+                'edition_year',
                 'first_name',
                 'last_name',
                 'email',
@@ -102,11 +94,12 @@ class TililaContestParticipantController extends Controller
                 'created_at',
             ], $delimiter);
 
-            $query->chunkById(200, function ($rows) use ($out, $delimiter): void {
+            $query->with('edition:id,year')->chunkById(200, function ($rows) use ($out, $delimiter): void {
                 foreach ($rows as $p) {
                     /** @var TililaContestParticipant $p */
                     fputcsv($out, [
                         $p->id,
+                        (string) ($p->edition?->year ?? ''),
                         (string) ($p->first_name ?? ''),
                         (string) ($p->last_name ?? ''),
                         (string) ($p->email ?? ''),
@@ -127,5 +120,82 @@ class TililaContestParticipantController extends Controller
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
-}
 
+    /**
+     * @return Builder<TililaContestParticipant>
+     */
+    private function filteredQuery(Request $request): Builder
+    {
+        $query = TililaContestParticipant::query()
+            ->with('edition:id,year,edition_label,is_current')
+            ->orderByDesc('created_at');
+
+        $this->applyListFilters($request, $query);
+
+        return $query;
+    }
+
+    /**
+     * @param  Builder<TililaContestParticipant>  $query
+     */
+    private function applyListFilters(Request $request, Builder $query): void
+    {
+        if ($search = trim((string) $request->query('search', ''))) {
+            $like = '%'.$search.'%';
+            $query->where(function ($q) use ($like) {
+                $q->where('first_name', 'like', $like)
+                    ->orWhere('last_name', 'like', $like)
+                    ->orWhere('email', 'like', $like)
+                    ->orWhere('submission_title', 'like', $like)
+                    ->orWhere('country', 'like', $like)
+                    ->orWhere('city', 'like', $like);
+            });
+        }
+
+        $editionId = (string) $request->query('edition_id', '');
+        if ($editionId === 'none') {
+            $query->whereNull('tilila_edition_id');
+        } elseif ($editionId !== '' && ctype_digit($editionId)) {
+            $query->where('tilila_edition_id', (int) $editionId);
+        }
+
+        if ($country = trim((string) $request->query('country', ''))) {
+            $query->where('country', $country);
+        }
+
+        if ($from = $this->parseFilterDate($request->query('from'))) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to = $this->parseFilterDate($request->query('to'))) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function filterState(Request $request): array
+    {
+        return [
+            'search' => (string) $request->query('search', ''),
+            'edition_id' => (string) $request->query('edition_id', ''),
+            'country' => (string) $request->query('country', ''),
+            'from' => (string) $request->query('from', ''),
+            'to' => (string) $request->query('to', ''),
+        ];
+    }
+
+    private function parseFilterDate(mixed $value): ?Carbon
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value)->startOfDay();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+}

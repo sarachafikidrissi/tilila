@@ -12,10 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    EVENT_TYPE_OTHER,
-    EVENT_TYPE_PRESETS,
-} from '@/lib/eventOptions';
+import { EVENT_TYPE_OTHER, EVENT_TYPE_PRESETS } from '@/lib/eventOptions';
 import { cn } from '@/lib/utils';
 
 function SpeakerListAvatar({ speaker }) {
@@ -533,9 +530,8 @@ export default function EventForm({
                                                 </div>
                                                 <p className="text-sm text-muted-foreground">
                                                     Add photos after the event
-                                                    is finished. New
-                                                    files are appended when you
-                                                    save.
+                                                    is finished. New files are
+                                                    appended when you save.
                                                 </p>
                                                 {existingMedia.length > 0 ? (
                                                     <div>

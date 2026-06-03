@@ -187,6 +187,10 @@ export default function Navbar() {
         router.flushAll();
     };
 
+        auth?.user?.role === 'expert'
+            ? '/expert/dashboard'
+            : '/admin/dashboard';
+
     return (
         <header
             ref={headerRef}
@@ -208,7 +212,7 @@ export default function Navbar() {
                     <TransText en="Tilila" fr="Tilila" ar="تيليلا" />
                 </Link>
 
-                <nav className="hidden flex-1 items-center justify-center gap-6 lg:gap-8 md:flex">
+                <nav className="hidden flex-1 items-center justify-center gap-6 md:flex lg:gap-8">
                     {navItems.slice(0, 1).map((item) => (
                         <Link
                             key={item.href}
@@ -252,7 +256,10 @@ export default function Navbar() {
                                 />
                             ) : null}
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="center" className="min-w-52">
+                        <DropdownMenuContent
+                            align="center"
+                            className="min-w-52"
+                        >
                             {aboutMenuItems.map((item) => (
                                 <DropdownMenuItem key={item.hash} asChild>
                                     <Link
@@ -435,9 +442,7 @@ export default function Navbar() {
                                     <ChevronDown
                                         className={[
                                             'size-4 transition-transform',
-                                            aboutMobileOpen
-                                                ? 'rotate-180'
-                                                : '',
+                                            aboutMobileOpen ? 'rotate-180' : '',
                                         ].join(' ')}
                                     />
                                 </button>

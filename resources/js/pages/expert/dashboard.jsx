@@ -44,11 +44,7 @@ function expertiseLabels(expertise, locale) {
             }
 
             return (
-                resolveTri(item, locale) ||
-                item.fr ||
-                item.en ||
-                item.ar ||
-                ''
+                resolveTri(item, locale) || item.fr || item.en || item.ar || ''
             );
         })
         .filter(Boolean);
@@ -91,12 +87,15 @@ export default function ExpertDashboard({ expert }) {
     const countryLabel =
         buildCountryOptions(locale).find(
             (option) => option.value === expert?.country,
-        )?.label || expert?.country || '';
+        )?.label ||
+        expert?.country ||
+        '';
     const languageLabels = (expert?.languages ?? [])
         .map(
             (code) =>
-                buildLanguageOptions(locale).find((option) => option.value === code)
-                    ?.label,
+                buildLanguageOptions(locale).find(
+                    (option) => option.value === code,
+                )?.label,
         )
         .filter(Boolean);
     const tags = expertiseLabels(expert?.expertise, locale);
@@ -151,7 +150,9 @@ export default function ExpertDashboard({ expert }) {
                                         />
                                     ) : (
                                         <div className="flex h-full w-full items-center justify-center bg-beta-blue/10 text-3xl font-bold text-beta-blue">
-                                            {displayName.charAt(0).toUpperCase()}
+                                            {displayName
+                                                .charAt(0)
+                                                .toUpperCase()}
                                         </div>
                                     )}
                                 </div>
@@ -227,7 +228,9 @@ export default function ExpertDashboard({ expert }) {
                                         ar="اكتمال الملف"
                                     />
                                 </span>
-                                <span className="text-beta-blue">{completion}%</span>
+                                <span className="text-beta-blue">
+                                    {completion}%
+                                </span>
                             </div>
                             <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                                 <div
@@ -245,14 +248,18 @@ export default function ExpertDashboard({ expert }) {
                             <Shield className="size-4 text-beta-blue" />
                             <TransText en="Status" fr="Statut" ar="الحالة" />
                         </div>
-                        <p className="mt-2 text-lg font-semibold capitalize text-tblack">
+                        <p className="mt-2 text-lg font-semibold text-tblack capitalize">
                             {expert?.status || '—'}
                         </p>
                     </div>
                     <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm">
                         <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase">
                             <Languages className="size-4 text-alpha-green" />
-                            <TransText en="Languages" fr="Langues" ar="اللغات" />
+                            <TransText
+                                en="Languages"
+                                fr="Langues"
+                                ar="اللغات"
+                            />
                         </div>
                         <p className="mt-2 text-sm font-semibold text-tblack">
                             {languageLabels.length > 0
@@ -339,7 +346,7 @@ export default function ExpertDashboard({ expert }) {
                                     <dt className="text-xs font-semibold text-muted-foreground uppercase">
                                         Email
                                     </dt>
-                                    <dd className="mt-0.5 font-medium text-foreground wrap-break-word">
+                                    <dd className="mt-0.5 font-medium wrap-break-word text-foreground">
                                         {expert?.email || '—'}
                                     </dd>
                                 </div>
@@ -364,7 +371,9 @@ export default function ExpertDashboard({ expert }) {
                                     href={withHttps(socials.linkedin)}
                                     label="LinkedIn"
                                 >
-                                    <span className="text-xs font-bold">in</span>
+                                    <span className="text-xs font-bold">
+                                        in
+                                    </span>
                                 </SocialButton>
                                 <SocialButton
                                     href={withHttps(socials.twitter)}
@@ -376,7 +385,9 @@ export default function ExpertDashboard({ expert }) {
                                     href={withHttps(socials.instagram)}
                                     label="Instagram"
                                 >
-                                    <span className="text-xs font-bold">Ig</span>
+                                    <span className="text-xs font-bold">
+                                        Ig
+                                    </span>
                                 </SocialButton>
                                 <SocialButton
                                     href={withHttps(socials.portfolio)}

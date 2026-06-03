@@ -71,10 +71,7 @@ function isAudienceActive(locales, value) {
     return !locales.includes('all') && locales.includes(value);
 }
 
-export default function NewsletterComposeForm({
-    stats = {},
-    className,
-}) {
+export default function NewsletterComposeForm({ stats = {}, className }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -142,9 +139,10 @@ export default function NewsletterComposeForm({
                     </h2>
                     <p className="mt-0.5 text-sm text-tgray">
                         Draft your message and pick your audience. Choosing a
-                        language deselects <strong className="text-tblack">All</strong>;
-                        choosing <strong className="text-tblack">All</strong>{' '}
-                        clears the others.
+                        language deselects{' '}
+                        <strong className="text-tblack">All</strong>; choosing{' '}
+                        <strong className="text-tblack">All</strong> clears the
+                        others.
                     </p>
                 </div>
 
@@ -154,9 +152,7 @@ export default function NewsletterComposeForm({
                         <Input
                             id="newsletter-subject"
                             value={data.subject}
-                            onChange={(e) =>
-                                setData('subject', e.target.value)
-                            }
+                            onChange={(e) => setData('subject', e.target.value)}
                             placeholder="e.g. This week on TILILA"
                             maxLength={255}
                         />
@@ -166,7 +162,7 @@ export default function NewsletterComposeForm({
                     <div className="space-y-2">
                         <div className="flex items-center justify-between gap-2">
                             <Label htmlFor="newsletter-body">Message</Label>
-                            <span className="text-xs tabular-nums text-tgray">
+                            <span className="text-xs text-tgray tabular-nums">
                                 {bodyLength} / 50 000
                             </span>
                         </div>
@@ -248,17 +244,14 @@ export default function NewsletterComposeForm({
                         </div>
 
                         <InputError
-                            message={
-                                errors.locales ??
-                                errors['locales.0']
-                            }
+                            message={errors.locales ?? errors['locales.0']}
                         />
 
                         {data.locales.includes('all') ? (
                             <p className="text-xs text-tgray">
                                 All subscribers are selected. Click English,
-                                French, or Arabic to switch to specific
-                                locales — All will be deselected automatically.
+                                French, or Arabic to switch to specific locales
+                                — All will be deselected automatically.
                             </p>
                         ) : null}
 

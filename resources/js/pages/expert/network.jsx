@@ -21,7 +21,9 @@ function getLocaleValue(value) {
 
 export default function ExpertNetwork({ expert, experts, currentExpertId }) {
     const currentName = getLocaleValue(expert?.name) || 'Expert';
-    const others = (experts ?? []).filter((item) => item.id !== currentExpertId);
+    const others = (experts ?? []).filter(
+        (item) => item.id !== currentExpertId,
+    );
 
     setLayoutProps({
         breadcrumbs: [
@@ -58,7 +60,9 @@ export default function ExpertNetwork({ expert, experts, currentExpertId }) {
                             </p>
                         </div>
                         <Button asChild variant="outline">
-                            <Link href="/expert/profile">Update my profile</Link>
+                            <Link href="/expert/profile">
+                                Update my profile
+                            </Link>
                         </Button>
                     </div>
                 </section>

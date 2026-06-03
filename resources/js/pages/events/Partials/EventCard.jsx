@@ -142,7 +142,7 @@ export default function EventCard({ event, activeTab }) {
         <Link
             href={href}
             className={[
-                'group block overflow-hidden rounded-2xl bg-card shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-beta-blue',
+                'group block overflow-hidden rounded-2xl bg-card shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-beta-blue focus-visible:outline-none',
                 isLive
                     ? 'shadow-md ring-2 shadow-red-500/10 ring-red-500/70'
                     : 'ring-border',

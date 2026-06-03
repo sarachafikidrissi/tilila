@@ -71,7 +71,9 @@ export default function AppSidebarLayout({
                         <div className="flex flex-col gap-3">
                             <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                 <SidebarTrigger className="-ml-1" />
-                                <Breadcrumbs breadcrumbs={resolvedBreadcrumbs} />
+                                <Breadcrumbs
+                                    breadcrumbs={resolvedBreadcrumbs}
+                                />
                             </div>
                             <div>
                                 <h1 className="text-2xl font-semibold tracking-tight text-tblack">

@@ -15,7 +15,16 @@ function emptyCta() {
     return { label: emptyTri(), url: '', style: 'primary', is_active: true };
 }
 
-function TriLangInputs({ idPrefix, label, value, onChange, required = false, requiredAll = false, error, errors }) {
+function TriLangInputs({
+    idPrefix,
+    label,
+    value,
+    onChange,
+    required = false,
+    requiredAll = false,
+    error,
+    errors,
+}) {
     return (
         <div className="space-y-2">
             <p className="text-sm font-medium text-foreground">{label}</p>
@@ -26,13 +35,18 @@ function TriLangInputs({ idPrefix, label, value, onChange, required = false, req
                         <div key={lang} className="space-y-1.5">
                             <Label htmlFor={`${idPrefix}-${lang}`}>
                                 {lang.toUpperCase()}
-                                {(requiredAll || (required && lang === 'en')) ? ' *' : ''}
+                                {requiredAll || (required && lang === 'en')
+                                    ? ' *'
+                                    : ''}
                             </Label>
                             <Input
                                 id={`${idPrefix}-${lang}`}
                                 value={value?.[lang] ?? ''}
                                 onChange={(e) =>
-                                    onChange({ ...(value ?? {}), [lang]: e.target.value })
+                                    onChange({
+                                        ...(value ?? {}),
+                                        [lang]: e.target.value,
+                                    })
                                 }
                             />
                             {langError && <InputError message={langError} />}
@@ -63,7 +77,10 @@ function TriLangTextareas({ idPrefix, label, value, onChange }) {
                             )}
                             value={value?.[lang] ?? ''}
                             onChange={(e) =>
-                                onChange({ ...(value ?? {}), [lang]: e.target.value })
+                                onChange({
+                                    ...(value ?? {}),
+                                    [lang]: e.target.value,
+                                })
                             }
                         />
                     </div>
@@ -82,7 +99,9 @@ export default function HeroSlideForm({
     processing = false,
     onSubmit,
 }) {
-    const [imagePreview, setImagePreview] = React.useState(data.image_url ?? null);
+    const [imagePreview, setImagePreview] = React.useState(
+        data.image_url ?? null,
+    );
 
     const handleImageChange = (e) => {
         const file = e.target.files?.[0];
@@ -98,17 +117,37 @@ export default function HeroSlideForm({
 
     // CTA helpers
     const addCta = () => setData('ctas', [...(data.ctas ?? []), emptyCta()]);
-    const removeCta = (i) => setData('ctas', (data.ctas ?? []).filter((_, idx) => idx !== i));
+    const removeCta = (i) =>
+        setData(
+            'ctas',
+            (data.ctas ?? []).filter((_, idx) => idx !== i),
+        );
     const updateCta = (i, patch) =>
-        setData('ctas', (data.ctas ?? []).map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
+        setData(
+            'ctas',
+            (data.ctas ?? []).map((c, idx) =>
+                idx === i ? { ...c, ...patch } : c,
+            ),
+        );
 
     const KNOWN_SLIDE_KEYS = [
-        'home', 'about', 'tililab', 'tilila', 'gouvernance',
-        'experts', 'events', 'opportunities', 'media',
+        'home',
+        'about',
+        'tililab',
+        'tilila',
+        'gouvernance',
+        'experts',
+        'events',
+        'opportunities',
+        'media',
     ];
 
     return (
-        <form onSubmit={onSubmit} className="flex flex-col gap-6" encType="multipart/form-data">
+        <form
+            onSubmit={onSubmit}
+            className="flex flex-col gap-6"
+            encType="multipart/form-data"
+        >
             {/* Identity */}
             <Card>
                 <CardHeader>
@@ -118,25 +157,32 @@ export default function HeroSlideForm({
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
                             <Label htmlFor="slide_key">
-                                Slide key <span className="text-destructive">*</span>
+                                Slide key{' '}
+                                <span className="text-destructive">*</span>
                             </Label>
                             <Input
                                 id="slide_key"
                                 value={data.slide_key ?? ''}
-                                onChange={(e) => setData('slide_key', e.target.value)}
+                                onChange={(e) =>
+                                    setData('slide_key', e.target.value)
+                                }
                                 disabled={mode === 'edit'}
                                 placeholder="e.g. experts"
                             />
                             {mode === 'edit' && (
                                 <p className="text-xs text-muted-foreground">
-                                    The slide key cannot be changed after creation — it is the routing anchor.
+                                    The slide key cannot be changed after
+                                    creation — it is the routing anchor.
                                 </p>
                             )}
-                            {KNOWN_SLIDE_KEYS.includes(data.slide_key ?? '') && mode === 'edit' && (
-                                <p className="text-xs text-amber-600">
-                                    This is a built-in slide key. Deleting this slide will blank the hero on its route.
-                                </p>
-                            )}
+                            {KNOWN_SLIDE_KEYS.includes(data.slide_key ?? '') &&
+                                mode === 'edit' && (
+                                    <p className="text-xs text-amber-600">
+                                        This is a built-in slide key. Deleting
+                                        this slide will blank the hero on its
+                                        route.
+                                    </p>
+                                )}
                             <InputError message={errors?.slide_key} />
                         </div>
 
@@ -147,7 +193,12 @@ export default function HeroSlideForm({
                                 type="number"
                                 min="0"
                                 value={data.sort_order ?? 0}
-                                onChange={(e) => setData('sort_order', Number(e.target.value))}
+                                onChange={(e) =>
+                                    setData(
+                                        'sort_order',
+                                        Number(e.target.value),
+                                    )
+                                }
                             />
                         </div>
                     </div>
@@ -157,11 +208,16 @@ export default function HeroSlideForm({
                         <Input
                             id="path_prefix"
                             value={data.path_prefix ?? ''}
-                            onChange={(e) => setData('path_prefix', e.target.value || null)}
+                            onChange={(e) =>
+                                setData('path_prefix', e.target.value || null)
+                            }
                             placeholder="/about"
                         />
                         <p className="text-xs text-muted-foreground">
-                            The URL prefix of the page where this slide should appear (e.g. <code>/about</code>, <code>/experts</code>). Use <code>/</code> for the home page. Leave blank to hide from all pages.
+                            The URL prefix of the page where this slide should
+                            appear (e.g. <code>/about</code>,{' '}
+                            <code>/experts</code>). Use <code>/</code> for the
+                            home page. Leave blank to hide from all pages.
                         </p>
                         <InputError message={errors?.path_prefix} />
                     </div>
@@ -171,10 +227,14 @@ export default function HeroSlideForm({
                             type="checkbox"
                             id="is_active"
                             checked={Boolean(data.is_active)}
-                            onChange={(e) => setData('is_active', e.target.checked)}
+                            onChange={(e) =>
+                                setData('is_active', e.target.checked)
+                            }
                             className="h-4 w-4 rounded border-input accent-beta-blue"
                         />
-                        <Label htmlFor="is_active">Active (visible on site)</Label>
+                        <Label htmlFor="is_active">
+                            Active (visible on site)
+                        </Label>
                     </div>
                 </CardContent>
             </Card>
@@ -191,10 +251,16 @@ export default function HeroSlideForm({
                             id="display_mode"
                             className="flex h-9 w-full max-w-xs rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                             value={data.display_mode ?? 'normal'}
-                            onChange={(e) => setData('display_mode', e.target.value)}
+                            onChange={(e) =>
+                                setData('display_mode', e.target.value)
+                            }
                         >
-                            <option value="normal">Normal (image + text overlay)</option>
-                            <option value="banner_image">Banner image (image only)</option>
+                            <option value="normal">
+                                Normal (image + text overlay)
+                            </option>
+                            <option value="banner_image">
+                                Banner image (image only)
+                            </option>
                         </select>
                         <InputError message={errors?.display_mode} />
                     </div>
@@ -206,10 +272,17 @@ export default function HeroSlideForm({
                                     type="checkbox"
                                     id="image_contain"
                                     checked={Boolean(data.image_contain)}
-                                    onChange={(e) => setData('image_contain', e.target.checked)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'image_contain',
+                                            e.target.checked,
+                                        )
+                                    }
                                     className="h-4 w-4 rounded border-input accent-beta-blue"
                                 />
-                                <Label htmlFor="image_contain">Image contain (don't crop)</Label>
+                                <Label htmlFor="image_contain">
+                                    Image contain (don't crop)
+                                </Label>
                             </div>
                         )}
 
@@ -219,20 +292,34 @@ export default function HeroSlideForm({
                                     type="checkbox"
                                     id="banner_image_contain"
                                     checked={Boolean(data.banner_image_contain)}
-                                    onChange={(e) => setData('banner_image_contain', e.target.checked)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'banner_image_contain',
+                                            e.target.checked,
+                                        )
+                                    }
                                     className="h-4 w-4 rounded border-input accent-beta-blue"
                                 />
-                                <Label htmlFor="banner_image_contain">Contain banner image</Label>
+                                <Label htmlFor="banner_image_contain">
+                                    Contain banner image
+                                </Label>
                             </div>
                         )}
 
                         <div className="space-y-2">
-                            <Label htmlFor="image_position">Image position</Label>
+                            <Label htmlFor="image_position">
+                                Image position
+                            </Label>
                             <select
                                 id="image_position"
                                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                                 value={data.image_position ?? ''}
-                                onChange={(e) => setData('image_position', e.target.value || null)}
+                                onChange={(e) =>
+                                    setData(
+                                        'image_position',
+                                        e.target.value || null,
+                                    )
+                                }
                             >
                                 <option value="">Center (default)</option>
                                 <option value="right">Right</option>
@@ -245,7 +332,9 @@ export default function HeroSlideForm({
                                 id="image_bg"
                                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                                 value={data.image_bg ?? ''}
-                                onChange={(e) => setData('image_bg', e.target.value || null)}
+                                onChange={(e) =>
+                                    setData('image_bg', e.target.value || null)
+                                }
                             >
                                 <option value="">Dark (default)</option>
                                 <option value="white">White</option>
@@ -278,12 +367,22 @@ export default function HeroSlideForm({
                             accept="image/*"
                             onChange={handleImageChange}
                         />
-                        <p className="text-xs text-muted-foreground">Max 8 MB. Accepted: JPEG, PNG, WebP, GIF.</p>
+                        <p className="text-xs text-muted-foreground">
+                            Max 8 MB. Accepted: JPEG, PNG, WebP, GIF.
+                        </p>
                         <InputError message={errors?.image} />
                     </div>
                     {data.image_url && !data.image && (
                         <p className="text-xs text-muted-foreground">
-                            Current: <a href={data.image_url} target="_blank" rel="noreferrer" className="underline">{data.image_url}</a>
+                            Current:{' '}
+                            <a
+                                href={data.image_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                            >
+                                {data.image_url}
+                            </a>
                         </p>
                     )}
                 </CardContent>
@@ -357,14 +456,21 @@ export default function HeroSlideForm({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Call-to-action buttons</CardTitle>
-                    <Button type="button" variant="outline" size="sm" onClick={addCta}>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={addCta}
+                    >
                         <Plus className="size-4" />
                         Add CTA
                     </Button>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-5">
                     {(data.ctas ?? []).length === 0 && (
-                        <p className="text-sm text-muted-foreground">No CTAs yet. Click "Add CTA" to add one.</p>
+                        <p className="text-sm text-muted-foreground">
+                            No CTAs yet. Click "Add CTA" to add one.
+                        </p>
                     )}
                     {(data.ctas ?? []).map((cta, i) => (
                         <div
@@ -379,7 +485,7 @@ export default function HeroSlideForm({
                                 <button
                                     type="button"
                                     onClick={() => removeCta(i)}
-                                    className="text-muted-foreground hover:text-destructive transition-colors"
+                                    className="text-muted-foreground transition-colors hover:text-destructive"
                                     aria-label={`Remove CTA ${i + 1}`}
                                 >
                                     <Trash2 className="size-4" />
@@ -405,21 +511,35 @@ export default function HeroSlideForm({
                                     <Input
                                         id={`cta-${i}-url`}
                                         value={cta.url ?? ''}
-                                        onChange={(e) => updateCta(i, { url: e.target.value })}
+                                        onChange={(e) =>
+                                            updateCta(i, {
+                                                url: e.target.value,
+                                            })
+                                        }
                                         placeholder="/experts"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor={`cta-${i}-style`}>Style</Label>
+                                    <Label htmlFor={`cta-${i}-style`}>
+                                        Style
+                                    </Label>
                                     <select
                                         id={`cta-${i}-style`}
                                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                                         value={cta.style ?? 'primary'}
-                                        onChange={(e) => updateCta(i, { style: e.target.value })}
+                                        onChange={(e) =>
+                                            updateCta(i, {
+                                                style: e.target.value,
+                                            })
+                                        }
                                     >
-                                        <option value="primary">Primary (blue)</option>
-                                        <option value="secondary">Secondary (outline)</option>
+                                        <option value="primary">
+                                            Primary (blue)
+                                        </option>
+                                        <option value="secondary">
+                                            Secondary (outline)
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -429,10 +549,16 @@ export default function HeroSlideForm({
                                     type="checkbox"
                                     id={`cta-${i}-active`}
                                     checked={Boolean(cta.is_active)}
-                                    onChange={(e) => updateCta(i, { is_active: e.target.checked })}
+                                    onChange={(e) =>
+                                        updateCta(i, {
+                                            is_active: e.target.checked,
+                                        })
+                                    }
                                     className="h-4 w-4 rounded border-input accent-beta-blue"
                                 />
-                                <Label htmlFor={`cta-${i}-active`}>Active</Label>
+                                <Label htmlFor={`cta-${i}-active`}>
+                                    Active
+                                </Label>
                             </div>
                         </div>
                     ))}

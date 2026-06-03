@@ -108,308 +108,286 @@ export default function ParticipateModal({ open, onOpenChange }) {
 
                     <div className="p-5 sm:p-6">
                         <form
-                                onSubmit={submit}
-                                className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6"
-                            >
-                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                            onSubmit={submit}
+                            className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6"
+                        >
+                            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <Field
+                                    label={
+                                        <TransText
+                                            en="First name"
+                                            fr="Prénom"
+                                            ar="الاسم الأول"
+                                        />
+                                    }
+                                    error={errors.first_name}
+                                >
+                                    <Input
+                                        value={data.first_name}
+                                        onChange={(e) =>
+                                            setData(
+                                                'first_name',
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                </Field>
+                                <Field
+                                    label={
+                                        <TransText
+                                            en="Last name"
+                                            fr="Nom"
+                                            ar="اسم العائلة"
+                                        />
+                                    }
+                                    error={errors.last_name}
+                                >
+                                    <Input
+                                        value={data.last_name}
+                                        onChange={(e) =>
+                                            setData('last_name', e.target.value)
+                                        }
+                                    />
+                                </Field>
+
+                                <div className="sm:col-span-2">
                                     <Field
                                         label={
                                             <TransText
-                                                en="First name"
-                                                fr="Prénom"
-                                                ar="الاسم الأول"
+                                                en="Email"
+                                                fr="E-mail"
+                                                ar="البريد الإلكتروني"
                                             />
                                         }
-                                        error={errors.first_name}
+                                        error={errors.email}
                                     >
                                         <Input
-                                            value={data.first_name}
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData('email', e.target.value)
+                                            }
+                                        />
+                                    </Field>
+                                </div>
+
+                                <Field
+                                    label={
+                                        <TransText
+                                            en="Phone"
+                                            fr="Téléphone"
+                                            ar="الهاتف"
+                                        />
+                                    }
+                                    error={errors.phone}
+                                >
+                                    <Input
+                                        value={data.phone}
+                                        onChange={(e) =>
+                                            setData('phone', e.target.value)
+                                        }
+                                    />
+                                </Field>
+                                <Field
+                                    label={
+                                        <TransText
+                                            en="Country"
+                                            fr="Pays"
+                                            ar="البلد"
+                                        />
+                                    }
+                                    error={errors.country}
+                                >
+                                    <Input
+                                        value={data.country}
+                                        onChange={(e) =>
+                                            setData('country', e.target.value)
+                                        }
+                                        placeholder="ma"
+                                    />
+                                </Field>
+
+                                <div className="sm:col-span-2">
+                                    <Field
+                                        label={
+                                            <TransText
+                                                en="City"
+                                                fr="Ville"
+                                                ar="المدينة"
+                                            />
+                                        }
+                                        error={errors.city}
+                                    >
+                                        <Input
+                                            value={data.city}
+                                            onChange={(e) =>
+                                                setData('city', e.target.value)
+                                            }
+                                        />
+                                    </Field>
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                    <Field
+                                        label={
+                                            <TransText
+                                                en="Submission title"
+                                                fr="Titre de la candidature"
+                                                ar="عنوان المشاركة"
+                                            />
+                                        }
+                                        error={errors.submission_title}
+                                    >
+                                        <Input
+                                            value={data.submission_title}
                                             onChange={(e) =>
                                                 setData(
-                                                    'first_name',
+                                                    'submission_title',
                                                     e.target.value,
                                                 )
                                             }
                                         />
                                     </Field>
+                                </div>
+
+                                <div className="sm:col-span-2">
                                     <Field
                                         label={
                                             <TransText
-                                                en="Last name"
-                                                fr="Nom"
-                                                ar="اسم العائلة"
+                                                en="Short description"
+                                                fr="Description (courte)"
+                                                ar="وصف مختصر"
                                             />
                                         }
-                                        error={errors.last_name}
+                                        error={errors.submission_description}
                                     >
-                                        <Input
-                                            value={data.last_name}
+                                        <textarea
+                                            className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                            value={data.submission_description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'last_name',
+                                                    'submission_description',
                                                     e.target.value,
                                                 )
                                             }
                                         />
                                     </Field>
+                                </div>
 
-                                    <div className="sm:col-span-2">
-                                        <Field
-                                            label={
-                                                <TransText
-                                                    en="Email"
-                                                    fr="E-mail"
-                                                    ar="البريد الإلكتروني"
-                                                />
-                                            }
-                                            error={errors.email}
-                                        >
-                                            <Input
-                                                type="email"
-                                                value={data.email}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'email',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </Field>
-                                    </div>
-
+                                <div className="sm:col-span-2">
                                     <Field
                                         label={
                                             <TransText
-                                                en="Phone"
-                                                fr="Téléphone"
-                                                ar="الهاتف"
+                                                en="Submission video (upload)"
+                                                fr="Vidéo de soumission (upload)"
+                                                ar="فيديو المشاركة (رفع)"
                                             />
                                         }
-                                        error={errors.phone}
+                                        error={errors.submission_video}
                                     >
                                         <Input
-                                            value={data.phone}
+                                            type="file"
+                                            accept="video/*"
                                             onChange={(e) =>
                                                 setData(
-                                                    'phone',
-                                                    e.target.value,
+                                                    'submission_video',
+                                                    e.target.files?.[0] ?? null,
                                                 )
                                             }
                                         />
-                                    </Field>
-                                    <Field
-                                        label={
+                                        <div className="mt-2 text-xs text-muted-foreground">
                                             <TransText
-                                                en="Country"
-                                                fr="Pays"
-                                                ar="البلد"
+                                                en="Upload your video (recommended). You may also use a file-sharing link if indicated by the team."
+                                                fr="Téléversez votre vidéo (recommandé). Un lien de partage peut aussi convenir selon les consignes."
+                                                ar="ارفع الفيديو (موصى به). أو رابط مشاركة حسب التعليمات."
                                             />
-                                        }
-                                        error={errors.country}
-                                    >
-                                        <Input
-                                            value={data.country}
-                                            onChange={(e) =>
+                                        </div>
+                                    </Field>
+                                </div>
+
+                                <div className="rounded-xl bg-muted/30 p-4 ring-1 ring-border sm:col-span-2">
+                                    <div className="flex items-start gap-3">
+                                        <Checkbox
+                                            id="accepted_rules_modal"
+                                            checked={Boolean(
+                                                data.accepted_rules,
+                                            )}
+                                            onCheckedChange={(v) =>
                                                 setData(
-                                                    'country',
-                                                    e.target.value,
+                                                    'accepted_rules',
+                                                    Boolean(v),
                                                 )
                                             }
-                                            placeholder="ma"
                                         />
-                                    </Field>
-
-                                    <div className="sm:col-span-2">
-                                        <Field
-                                            label={
+                                        <div className="min-w-0">
+                                            <Label
+                                                htmlFor="accepted_rules_modal"
+                                                className="text-sm font-semibold text-foreground"
+                                            >
                                                 <TransText
-                                                    en="City"
-                                                    fr="Ville"
-                                                    ar="المدينة"
+                                                    en="I accept the contest rules"
+                                                    fr="J’accepte le règlement du concours"
+                                                    ar="أوافق على نظام المسابقة"
                                                 />
-                                            }
-                                            error={errors.city}
-                                        >
-                                            <Input
-                                                value={data.city}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'city',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </Field>
-                                    </div>
-
-                                    <div className="sm:col-span-2">
-                                        <Field
-                                            label={
+                                            </Label>
+                                            <div className="mt-1 text-xs text-muted-foreground">
                                                 <TransText
-                                                    en="Submission title"
-                                                    fr="Titre de la candidature"
-                                                    ar="عنوان المشاركة"
-                                                />
-                                            }
-                                            error={errors.submission_title}
-                                        >
-                                            <Input
-                                                value={data.submission_title}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'submission_title',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </Field>
-                                    </div>
-
-                                    <div className="sm:col-span-2">
-                                        <Field
-                                            label={
-                                                <TransText
-                                                    en="Short description"
-                                                    fr="Description (courte)"
-                                                    ar="وصف مختصر"
-                                                />
-                                            }
-                                            error={
-                                                errors.submission_description
-                                            }
-                                        >
-                                            <textarea
-                                                className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                                                value={
-                                                    data.submission_description
-                                                }
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'submission_description',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                            />
-                                        </Field>
-                                    </div>
-
-                                    <div className="sm:col-span-2">
-                                        <Field
-                                            label={
-                                                <TransText
-                                                    en="Submission video (upload)"
-                                                    fr="Vidéo de soumission (upload)"
-                                                    ar="فيديو المشاركة (رفع)"
-                                                />
-                                            }
-                                            error={errors.submission_video}
-                                        >
-                                            <Input
-                                                type="file"
-                                                accept="video/*"
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'submission_video',
-                                                        e.target.files?.[0] ??
-                                                            null,
-                                                    )
-                                                }
-                                            />
-                                            <div className="mt-2 text-xs text-muted-foreground">
-                                                <TransText
-                                                    en="Upload your video (recommended). You may also use a file-sharing link if indicated by the team."
-                                                    fr="Téléversez votre vidéo (recommandé). Un lien de partage peut aussi convenir selon les consignes."
-                                                    ar="ارفع الفيديو (موصى به). أو رابط مشاركة حسب التعليمات."
+                                                    en="You must accept the rules to submit."
+                                                    fr="Vous devez accepter le règlement pour soumettre."
+                                                    ar="يجب قبول النظام للإرسال."
                                                 />
                                             </div>
-                                        </Field>
-                                    </div>
-
-                                    <div className="rounded-xl bg-muted/30 p-4 ring-1 ring-border sm:col-span-2">
-                                        <div className="flex items-start gap-3">
-                                            <Checkbox
-                                                id="accepted_rules_modal"
-                                                checked={Boolean(
-                                                    data.accepted_rules,
-                                                )}
-                                                onCheckedChange={(v) =>
-                                                    setData(
-                                                        'accepted_rules',
-                                                        Boolean(v),
-                                                    )
-                                                }
-                                            />
-                                            <div className="min-w-0">
-                                                <Label
-                                                    htmlFor="accepted_rules_modal"
-                                                    className="text-sm font-semibold text-foreground"
-                                                >
-                                                    <TransText
-                                                        en="I accept the contest rules"
-                                                        fr="J’accepte le règlement du concours"
-                                                        ar="أوافق على نظام المسابقة"
-                                                    />
-                                                </Label>
-                                                <div className="mt-1 text-xs text-muted-foreground">
-                                                    <TransText
-                                                        en="You must accept the rules to submit."
-                                                        fr="Vous devez accepter le règlement pour soumettre."
-                                                        ar="يجب قبول النظام للإرسال."
-                                                    />
+                                            {errors.accepted_rules ? (
+                                                <div className="mt-2 text-xs text-alpha-danger">
+                                                    {errors.accepted_rules}
                                                 </div>
-                                                {errors.accepted_rules ? (
-                                                    <div className="mt-2 text-xs text-alpha-danger">
-                                                        {errors.accepted_rules}
-                                                    </div>
-                                                ) : null}
-                                            </div>
+                                            ) : null}
                                         </div>
                                     </div>
-
-                                    <div className="flex items-center justify-end gap-3 pt-2 sm:col-span-2">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                onOpenChange?.(false)
-                                            }
-                                            className="rounded-md border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-muted"
-                                        >
-                                            <TransText
-                                                en="Cancel"
-                                                fr="Annuler"
-                                                ar="إلغاء"
-                                            />
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className={[
-                                                'inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold text-white shadow-sm',
-                                                !processing
-                                                    ? 'bg-beta-blue hover:opacity-90'
-                                                    : 'cursor-not-allowed bg-muted text-muted-foreground',
-                                            ].join(' ')}
-                                        >
-                                            <TransText
-                                                en={
-                                                    processing
-                                                        ? 'Submitting…'
-                                                        : 'Submit participation'
-                                                }
-                                                fr={
-                                                    processing
-                                                        ? 'Envoi…'
-                                                        : 'Envoyer la participation'
-                                                }
-                                                ar={
-                                                    processing
-                                                        ? 'جارٍ الإرسال…'
-                                                        : 'إرسال المشاركة'
-                                                }
-                                            />
-                                        </button>
-                                    </div>
                                 </div>
+
+                                <div className="flex items-center justify-end gap-3 pt-2 sm:col-span-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => onOpenChange?.(false)}
+                                        className="rounded-md border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-muted"
+                                    >
+                                        <TransText
+                                            en="Cancel"
+                                            fr="Annuler"
+                                            ar="إلغاء"
+                                        />
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className={[
+                                            'inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold text-white shadow-sm',
+                                            !processing
+                                                ? 'bg-beta-blue hover:opacity-90'
+                                                : 'cursor-not-allowed bg-muted text-muted-foreground',
+                                        ].join(' ')}
+                                    >
+                                        <TransText
+                                            en={
+                                                processing
+                                                    ? 'Submitting…'
+                                                    : 'Submit participation'
+                                            }
+                                            fr={
+                                                processing
+                                                    ? 'Envoi…'
+                                                    : 'Envoyer la participation'
+                                            }
+                                            ar={
+                                                processing
+                                                    ? 'جارٍ الإرسال…'
+                                                    : 'إرسال المشاركة'
+                                            }
+                                        />
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

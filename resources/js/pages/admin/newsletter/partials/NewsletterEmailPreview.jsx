@@ -2,7 +2,11 @@ import { Eye, Mail } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-export default function NewsletterEmailPreview({ subject, body, audienceLabel }) {
+export default function NewsletterEmailPreview({
+    subject,
+    body,
+    audienceLabel,
+}) {
     const hasContent = subject.trim() || body.trim();
 
     return (
@@ -32,7 +36,7 @@ export default function NewsletterEmailPreview({ subject, body, audienceLabel })
                     <div className="space-y-3 p-4">
                         {hasContent ? (
                             <>
-                                <p className="text-sm font-bold leading-snug text-tblack">
+                                <p className="text-sm leading-snug font-bold text-tblack">
                                     {subject.trim() || (
                                         <span className="font-normal text-tgray">
                                             Subject line…
@@ -42,11 +46,11 @@ export default function NewsletterEmailPreview({ subject, body, audienceLabel })
                                 <div
                                     className={cn(
                                         'text-sm leading-relaxed text-tgray',
-                                        'whitespace-pre-wrap break-words',
+                                        'break-words whitespace-pre-wrap',
                                     )}
                                 >
                                     {body.trim() || (
-                                        <span className="italic text-tgray/80">
+                                        <span className="text-tgray/80 italic">
                                             Your message will appear here…
                                         </span>
                                     )}
@@ -54,8 +58,8 @@ export default function NewsletterEmailPreview({ subject, body, audienceLabel })
                             </>
                         ) : (
                             <p className="py-8 text-center text-xs leading-relaxed text-tgray">
-                                Start typing to preview how your newsletter
-                                will look in the inbox.
+                                Start typing to preview how your newsletter will
+                                look in the inbox.
                             </p>
                         )}
                     </div>

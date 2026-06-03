@@ -50,8 +50,7 @@ export default function RichTextEditor({
         content: value || '',
         editorProps: {
             attributes: {
-                class:
-                    'article-editor tiptap min-h-[260px] px-3 py-3 focus:outline-none',
+                class: 'article-editor tiptap min-h-[260px] px-3 py-3 focus:outline-none',
             },
         },
         onUpdate: ({ editor: current }) => {
@@ -112,7 +111,10 @@ export default function RichTextEditor({
                 >
                     <Strikethrough className="size-4" />
                 </ToolbarButton>
-                <span className="mx-1 w-px self-stretch bg-border" aria-hidden />
+                <span
+                    className="mx-1 w-px self-stretch bg-border"
+                    aria-hidden
+                />
                 <ToolbarButton
                     label="Heading 1"
                     active={editor.isActive('heading', { level: 1 })}
@@ -140,7 +142,10 @@ export default function RichTextEditor({
                 >
                     <Heading3 className="size-4" />
                 </ToolbarButton>
-                <span className="mx-1 w-px self-stretch bg-border" aria-hidden />
+                <span
+                    className="mx-1 w-px self-stretch bg-border"
+                    aria-hidden
+                />
                 <ToolbarButton
                     label="Bullet list"
                     active={editor.isActive('bulletList')}

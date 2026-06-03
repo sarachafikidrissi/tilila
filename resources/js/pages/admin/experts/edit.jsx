@@ -55,19 +55,15 @@ function normalizeDetails(raw) {
  * @param {Record<string, unknown>} data
  */
 function buildExpertPayload(data) {
-    const {
-        languagesStr,
-        remove_image,
-        profile_image,
-        ...rest
-    } = data;
+    const { languagesStr, remove_image, profile_image, ...rest } = data;
 
     const payload = {
         name: rest.name,
         title: rest.title,
         country: rest.country,
         region_scope:
-            typeof rest.region_scope === 'string' && rest.region_scope.trim() !== ''
+            typeof rest.region_scope === 'string' &&
+            rest.region_scope.trim() !== ''
                 ? rest.region_scope.trim()
                 : null,
         industries: String(industriesStr ?? '')
@@ -111,8 +107,7 @@ const STEPS = [
         id: 2,
         title: 'Classification',
         short: 'Filters & card',
-        description:
-            'Country, status, and languages.',
+        description: 'Country, status, and languages.',
     },
     {
         id: 3,
@@ -125,8 +120,7 @@ const STEPS = [
         id: 4,
         title: 'Public profile',
         short: 'Bio & sections',
-        description:
-            'Biography, social links, and expertise sections.',
+        description: 'Biography, social links, and expertise sections.',
     },
 ];
 
@@ -278,9 +272,7 @@ export default function AdminExpertsEdit({ expert, statuses = [] }) {
 
                     const step1 = has('name') || has('title') || has('tags');
                     const step2 =
-                        has('country') ||
-                        has('status') ||
-                        has('languages');
+                        has('country') || has('status') || has('languages');
                     const step3 =
                         has('email') ||
                         has('profile_image') ||

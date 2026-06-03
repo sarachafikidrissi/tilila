@@ -68,7 +68,11 @@ export default function ConfirmationModal({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel asChild>
-                        <Button type="button" variant="outline" disabled={processing}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled={processing}
+                        >
                             {cancelLabel}
                         </Button>
                     </AlertDialogCancel>

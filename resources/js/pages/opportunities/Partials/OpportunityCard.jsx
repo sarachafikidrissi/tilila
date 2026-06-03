@@ -42,10 +42,7 @@ function StatusPill({ status }) {
     );
 }
 
-export default function OpportunityCard({
-    item,
-    basePath = '/opportunities',
-}) {
+export default function OpportunityCard({ item, basePath = '/opportunities' }) {
     const { locale, t } = useTranslation();
 
     const resolvedOrg =

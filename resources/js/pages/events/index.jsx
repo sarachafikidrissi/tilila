@@ -167,59 +167,59 @@ export default function EventsIndex({
                 {topPanel === 'calendar' ? (
                     <div className="bg-twhite py-10">
                         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-                            <div className="lg:col-span-4 xl:col-span-3">
-                                <EventsSidebar
-                                    categories={categories}
-                                    setCategories={setCategories}
-                                    selectedDayIso={selectedDayIso}
-                                    setSelectedDayIso={setSelectedDayIso}
-                                    events={events}
-                                    eventStatuses={
-                                        eventStatuses?.length
-                                            ? eventStatuses
-                                            : [
-                                                  'upcoming',
-                                                  'live',
-                                                  'finished',
-                                              ]
-                                    }
-                                    statusFilters={statusFilters}
-                                    setStatusFilters={setStatusFilters}
-                                />
-                            </div>
-
-                            <div className="lg:col-span-8 xl:col-span-9">
-                                <div className="space-y-4">
-                                    {filteredEvents.map((event) => (
-                                        <EventCard
-                                            key={event.id}
-                                            event={event}
-                                            activeTab={activeTab}
-                                        />
-                                    ))}
+                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                                <div className="lg:col-span-4 xl:col-span-3">
+                                    <EventsSidebar
+                                        categories={categories}
+                                        setCategories={setCategories}
+                                        selectedDayIso={selectedDayIso}
+                                        setSelectedDayIso={setSelectedDayIso}
+                                        events={events}
+                                        eventStatuses={
+                                            eventStatuses?.length
+                                                ? eventStatuses
+                                                : [
+                                                      'upcoming',
+                                                      'live',
+                                                      'finished',
+                                                  ]
+                                        }
+                                        statusFilters={statusFilters}
+                                        setStatusFilters={setStatusFilters}
+                                    />
                                 </div>
 
-                                {filteredEvents.length === 0 ? (
-                                    <div className="mt-6 rounded-2xl bg-card p-8 text-center shadow-sm ring-1 ring-border">
-                                        <div className="text-sm font-semibold text-foreground">
-                                            <TransText
-                                                en="No events found"
-                                                fr="Aucun événement trouvé"
-                                                ar="لا توجد فعاليات"
+                                <div className="lg:col-span-8 xl:col-span-9">
+                                    <div className="space-y-4">
+                                        {filteredEvents.map((event) => (
+                                            <EventCard
+                                                key={event.id}
+                                                event={event}
+                                                activeTab={activeTab}
                                             />
-                                        </div>
-                                        <div className="mt-2 text-sm text-muted-foreground">
-                                            <TransText
-                                                en="Try adjusting categories, status filters, or the selected date."
-                                                fr="Essayez de modifier les catégories, les statuts ou la date sélectionnée."
-                                                ar="جرّب تعديل الفئات أو حالات الفعالية أو التاريخ المحدد."
-                                            />
-                                        </div>
+                                        ))}
                                     </div>
-                                ) : null}
+
+                                    {filteredEvents.length === 0 ? (
+                                        <div className="mt-6 rounded-2xl bg-card p-8 text-center shadow-sm ring-1 ring-border">
+                                            <div className="text-sm font-semibold text-foreground">
+                                                <TransText
+                                                    en="No events found"
+                                                    fr="Aucun événement trouvé"
+                                                    ar="لا توجد فعاليات"
+                                                />
+                                            </div>
+                                            <div className="mt-2 text-sm text-muted-foreground">
+                                                <TransText
+                                                    en="Try adjusting categories, status filters, or the selected date."
+                                                    fr="Essayez de modifier les catégories, les statuts ou la date sélectionnée."
+                                                    ar="جرّب تعديل الفئات أو حالات الفعالية أو التاريخ المحدد."
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 ) : null}

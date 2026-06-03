@@ -16,12 +16,9 @@ const MODULES = [
         enTitle: 'Tilila Awards',
         frTitle: 'Tilila Awards',
         arTitle: 'جوائز تيليلا',
-        enBody:
-            'Concept · Prizes · Evaluation criteria · Jury · Apply · FAQ · Sponsors · Laureates',
-        frBody:
-            'Concept · Prix · Critères · Jury · Candidater · FAQ · Sponsors · Lauréats',
-        arBody:
-            'المفهوم · الجوائز · المعايير · لجنة التحكيم · الترشح · الأسئلة · الرعاة · الفائزات',
+        enBody: 'Concept · Prizes · Evaluation criteria · Jury · Apply · FAQ · Sponsors · Laureates',
+        frBody: 'Concept · Prix · Critères · Jury · Candidater · FAQ · Sponsors · Lauréats',
+        arBody: 'المفهوم · الجوائز · المعايير · لجنة التحكيم · الترشح · الأسئلة · الرعاة · الفائزات',
     },
     {
         href: '/tililab',
@@ -31,12 +28,9 @@ const MODULES = [
         enTitle: 'Tililab',
         frTitle: 'Tililab',
         arTitle: 'تيليلاب',
-        enBody:
-            'Concept · Prizes · Evaluation criteria · Jury · Apply · FAQ · Sponsors · Laureates',
-        frBody:
-            'Présentation · Prix · Critères · Jury · Candidater · FAQ · Sponsors · Lauréats',
-        arBody:
-            'عرض · جوائز · معايير · لجنة التحكيم · ترشح · أسئلة · رعاة · فائزات',
+        enBody: 'Concept · Prizes · Evaluation criteria · Jury · Apply · FAQ · Sponsors · Laureates',
+        frBody: 'Présentation · Prix · Critères · Jury · Candidater · FAQ · Sponsors · Lauréats',
+        arBody: 'عرض · جوائز · معايير · لجنة التحكيم · ترشح · أسئلة · رعاة · فائزات',
     },
     {
         href: '/events?view=calendar',
@@ -65,7 +59,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                     <Link
                         key={m.href}
                         href={m.href}
-                        className="group flex h-full cursor-pointer flex-col rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-beta-blue"
+                        className="group flex h-full cursor-pointer flex-col rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-beta-blue focus-visible:outline-none"
                     >
                         <div className="flex h-16 items-center">
                             <img
@@ -108,7 +102,7 @@ export default function EventsHub({ eventsByYear = {} }) {
 
             <div className="grid gap-6 lg:grid-cols-12">
                 <div className="rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border lg:col-span-7">
-                    <h3 className="text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
+                    <h3 className="text-sm font-extrabold tracking-wide text-muted-foreground uppercase">
                         <TransText
                             en="How it works"
                             fr="Comment ça marche"
@@ -144,7 +138,7 @@ export default function EventsHub({ eventsByYear = {} }) {
                 </div>
 
                 <div className="rounded-2xl border border-border bg-muted/30 p-6 lg:col-span-5">
-                    <h3 className="text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
+                    <h3 className="text-sm font-extrabold tracking-wide text-muted-foreground uppercase">
                         <TransText
                             en="Quick links"
                             fr="Liens rapides"

@@ -1,8 +1,14 @@
 import { TILILAB_EDITIONS_HISTORY } from '@/pages/user/tililab/data/tililab-editions-history';
 
-function coverImageSrc(galleryImages) {
+export function coverImageSrc(galleryImages, winners) {
     if (Array.isArray(galleryImages) && galleryImages[0]) {
         return `/storage/${galleryImages[0]}`;
+    }
+
+    const rows = Array.isArray(winners) ? winners : [];
+    const primaryWinner = rows[0] ?? null;
+    if (primaryWinner?.photo_path) {
+        return `/storage/${primaryWinner.photo_path}`;
     }
 
     return '';
@@ -10,8 +16,8 @@ function coverImageSrc(galleryImages) {
 
 export function normalizeEdition(raw) {
     if (!raw) {
-return null;
-}
+        return null;
+    }
 
     const galleryImages = Array.isArray(raw.gallery_images)
         ? raw.gallery_images
@@ -22,7 +28,7 @@ return null;
         ? `/storage/${primaryWinner.photo_path}`
         : '';
 
-    const coverFromGallery = coverImageSrc(galleryImages);
+    const coverFromGallery = coverImageSrc(galleryImages, winners);
 
     return {
         id: raw.id ?? `tililab-${raw.year ?? ''}`,
@@ -33,9 +39,8 @@ return null;
         details_url: raw.id ? `/tililab/editions/${raw.id}` : '/tililab',
         winners_url: raw.id ? `/tililab/editions/${raw.id}` : '/tililab',
         gallery_images: galleryImages,
-        has_gallery:
-            Boolean(raw.has_gallery) ||
-            (galleryImages.length > 0),
+        has_gallery: Boolean(raw.has_gallery) || galleryImages.length > 0,
+        is_current: Boolean(raw.is_current),
     };
 }
 

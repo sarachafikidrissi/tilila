@@ -7,8 +7,8 @@ function hasTrophyLabel(trophy) {
 
     return Boolean(
         String(trophy.en ?? '').trim() ||
-            String(trophy.fr ?? '').trim() ||
-            String(trophy.ar ?? '').trim(),
+        String(trophy.fr ?? '').trim() ||
+        String(trophy.ar ?? '').trim(),
     );
 }
 

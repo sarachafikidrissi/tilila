@@ -7,7 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { buildCountryOptions, buildLanguageOptions } from '@/components/helpers/expert-form-options';
+import {
+    buildCountryOptions,
+    buildLanguageOptions,
+} from '@/components/helpers/expert-form-options';
 import ExpertDomainsPicker from '@/components/expert/ExpertDomainsPicker';
 
 function FieldError({ error }) {
@@ -77,26 +80,28 @@ export default function ExpertProfileEdit({ expert }) {
             { title: 'My Profile', href: '#' },
         ],
         title: 'Edit My Information',
-        description: 'Update your profile using the same required fields as the expert application.',
+        description:
+            'Update your profile using the same required fields as the expert application.',
     });
 
-    const { data, setData, processing, errors, setError, clearErrors } = useForm({
-        email: expert?.email ?? '',
-        phone: expert?.phone ?? '',
-        name: expert?.name ?? { en: '', fr: '', ar: '' },
-        title: expert?.title ?? { en: '', fr: '', ar: '' },
-        expertise_domains: expert?.expertise_domains ?? [],
-        bio: expert?.bio ?? { en: '', fr: '', ar: '' },
-        country: expert?.country ?? 'Morocco',
-        city: expert?.city ?? { en: '', fr: '', ar: '' },
-        languages: expert?.languages ?? [],
-        linkedin_url: expert?.linkedin_url ?? '',
-        portfolio_url: expert?.portfolio_url ?? '',
-        instagram_url: expert?.instagram_url ?? '',
-        twitter_url: expert?.twitter_url ?? '',
-        profile_image: null,
-        cv: null,
-    });
+    const { data, setData, processing, errors, setError, clearErrors } =
+        useForm({
+            email: expert?.email ?? '',
+            phone: expert?.phone ?? '',
+            name: expert?.name ?? { en: '', fr: '', ar: '' },
+            title: expert?.title ?? { en: '', fr: '', ar: '' },
+            expertise_domains: expert?.expertise_domains ?? [],
+            bio: expert?.bio ?? { en: '', fr: '', ar: '' },
+            country: expert?.country ?? 'Morocco',
+            city: expert?.city ?? { en: '', fr: '', ar: '' },
+            languages: expert?.languages ?? [],
+            linkedin_url: expert?.linkedin_url ?? '',
+            portfolio_url: expert?.portfolio_url ?? '',
+            instagram_url: expert?.instagram_url ?? '',
+            twitter_url: expert?.twitter_url ?? '',
+            profile_image: null,
+            cv: null,
+        });
 
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(null);
     const avatarBlobRef = useRef(null);
@@ -132,14 +137,19 @@ export default function ExpertProfileEdit({ expert }) {
             : (expert?.image_url ?? null);
 
     const countryOptions = useMemo(() => buildCountryOptions(locale), [locale]);
-    const languageOptions = useMemo(() => buildLanguageOptions(locale), [locale]);
+    const languageOptions = useMemo(
+        () => buildLanguageOptions(locale),
+        [locale],
+    );
     const filteredLanguageOptions = useMemo(() => {
         const query = languageQuery.trim().toLowerCase();
         if (!query) {
             return languageOptions;
         }
 
-        return languageOptions.filter((language) => language.searchText.includes(query));
+        return languageOptions.filter((language) =>
+            language.searchText.includes(query),
+        );
     }, [languageOptions, languageQuery]);
 
     const submit = (e) => {
@@ -169,7 +179,9 @@ export default function ExpertProfileEdit({ expert }) {
                 <form onSubmit={submit} className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Required expert profile fields</CardTitle>
+                            <CardTitle>
+                                Required expert profile fields
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="grid gap-4 sm:grid-cols-2">
@@ -179,7 +191,9 @@ export default function ExpertProfileEdit({ expert }) {
                                         id="email"
                                         type="email"
                                         value={data.email}
-                                        onChange={(e) => setData('email', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('email', e.target.value)
+                                        }
                                     />
                                     <FieldError error={errors.email} />
                                 </div>
@@ -188,14 +202,18 @@ export default function ExpertProfileEdit({ expert }) {
                                     <Input
                                         id="phone"
                                         value={data.phone}
-                                        onChange={(e) => setData('phone', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('phone', e.target.value)
+                                        }
                                     />
                                     <FieldError error={errors.phone} />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="profile_image">Profile image</Label>
+                                <Label htmlFor="profile_image">
+                                    Profile image
+                                </Label>
                                 <div className="flex flex-wrap items-center gap-4">
                                     {displayAvatarSrc ? (
                                         <img
@@ -258,10 +276,15 @@ export default function ExpertProfileEdit({ expert }) {
                                         id="country"
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                         value={data.country}
-                                        onChange={(e) => setData('country', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('country', e.target.value)
+                                        }
                                     >
                                         {countryOptions.map((country) => (
-                                            <option key={country.value} value={country.value}>
+                                            <option
+                                                key={country.value}
+                                                value={country.value}
+                                            >
                                                 {country.label}
                                             </option>
                                         ))}
@@ -273,52 +296,76 @@ export default function ExpertProfileEdit({ expert }) {
                                         idPrefix="city"
                                         label="City"
                                         values={data.city}
-                                        setValues={(value) => setData('city', value)}
+                                        setValues={(value) =>
+                                            setData('city', value)
+                                        }
                                         errors={errors}
                                     />
                                 </div>
                                 <div className="space-y-2 sm:col-span-3">
-                                    <Label htmlFor="language-search">Languages</Label>
+                                    <Label htmlFor="language-search">
+                                        Languages
+                                    </Label>
                                     <Input
                                         id="language-search"
                                         value={languageQuery}
-                                        onChange={(e) => setLanguageQuery(e.target.value)}
+                                        onChange={(e) =>
+                                            setLanguageQuery(e.target.value)
+                                        }
                                         placeholder="Search language"
                                     />
                                     <div className="max-h-56 overflow-y-auto rounded-md border border-input bg-background p-3">
                                         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                            {filteredLanguageOptions.map((language) => {
-                                                const checked = data.languages.includes(language.value);
+                                            {filteredLanguageOptions.map(
+                                                (language) => {
+                                                    const checked =
+                                                        data.languages.includes(
+                                                            language.value,
+                                                        );
 
-                                                return (
-                                                    <label
-                                                        key={language.value}
-                                                        className={cn(
-                                                            'flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1.5 text-sm',
-                                                            checked
-                                                                ? 'border-beta-blue bg-beta-blue/10'
-                                                                : 'border-border bg-card',
-                                                        )}
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={checked}
-                                                            onChange={(e) => {
-                                                                setData(
-                                                                    'languages',
-                                                                    e.target.checked
-                                                                        ? [...data.languages, language.value]
-                                                                        : data.languages.filter(
-                                                                              (item) =>
-                                                                                  item !== language.value,
-                                                                          ),
-                                                                );
-                                                            }}
-                                                        />
-                                                        <span>{language.label}</span>
-                                                    </label>
-                                                );
-                                            })}
+                                                    return (
+                                                        <label
+                                                            key={language.value}
+                                                            className={cn(
+                                                                'flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1.5 text-sm',
+                                                                checked
+                                                                    ? 'border-beta-blue bg-beta-blue/10'
+                                                                    : 'border-border bg-card',
+                                                            )}
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={
+                                                                    checked
+                                                                }
+                                                                onChange={(
+                                                                    e,
+                                                                ) => {
+                                                                    setData(
+                                                                        'languages',
+                                                                        e.target
+                                                                            .checked
+                                                                            ? [
+                                                                                  ...data.languages,
+                                                                                  language.value,
+                                                                              ]
+                                                                            : data.languages.filter(
+                                                                                  (
+                                                                                      item,
+                                                                                  ) =>
+                                                                                      item !==
+                                                                                      language.value,
+                                                                              ),
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <span>
+                                                                {language.label}
+                                                            </span>
+                                                        </label>
+                                                    );
+                                                },
+                                            )}
                                         </div>
                                     </div>
                                     <p className="text-xs text-muted-foreground">
@@ -330,45 +377,65 @@ export default function ExpertProfileEdit({ expert }) {
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="linkedin_url">LinkedIn URL</Label>
+                                    <Label htmlFor="linkedin_url">
+                                        LinkedIn URL
+                                    </Label>
                                     <Input
                                         id="linkedin_url"
                                         value={data.linkedin_url}
                                         onChange={(e) =>
-                                            setData('linkedin_url', e.target.value)
+                                            setData(
+                                                'linkedin_url',
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <FieldError error={errors.linkedin_url} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="portfolio_url">Portfolio URL</Label>
+                                    <Label htmlFor="portfolio_url">
+                                        Portfolio URL
+                                    </Label>
                                     <Input
                                         id="portfolio_url"
                                         value={data.portfolio_url}
                                         onChange={(e) =>
-                                            setData('portfolio_url', e.target.value)
+                                            setData(
+                                                'portfolio_url',
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <FieldError error={errors.portfolio_url} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="instagram_url">Instagram URL</Label>
+                                    <Label htmlFor="instagram_url">
+                                        Instagram URL
+                                    </Label>
                                     <Input
                                         id="instagram_url"
                                         value={data.instagram_url}
                                         onChange={(e) =>
-                                            setData('instagram_url', e.target.value)
+                                            setData(
+                                                'instagram_url',
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <FieldError error={errors.instagram_url} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="twitter_url">Twitter/X URL</Label>
+                                    <Label htmlFor="twitter_url">
+                                        Twitter/X URL
+                                    </Label>
                                     <Input
                                         id="twitter_url"
                                         value={data.twitter_url}
                                         onChange={(e) =>
-                                            setData('twitter_url', e.target.value)
+                                            setData(
+                                                'twitter_url',
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <FieldError error={errors.twitter_url} />
@@ -376,13 +443,20 @@ export default function ExpertProfileEdit({ expert }) {
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="cv">CV (PDF/DOC, max 5 MB)</Label>
+                                <Label htmlFor="cv">
+                                    CV (PDF/DOC, max 5 MB)
+                                </Label>
                                 <input
                                     id="cv"
                                     type="file"
                                     accept=".pdf,.doc,.docx"
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm shadow-xs ring-offset-background file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-                                    onChange={(e) => setData('cv', e.target.files?.[0] ?? null)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'cv',
+                                            e.target.files?.[0] ?? null,
+                                        )
+                                    }
                                 />
                                 {expert?.cv_url ? (
                                     <a

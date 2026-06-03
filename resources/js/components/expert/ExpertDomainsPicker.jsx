@@ -62,10 +62,7 @@ export default function ExpertDomainsPicker({
             return;
         }
 
-        onChange([
-            ...current,
-            { en: domain.en, fr: domain.fr, ar: domain.ar },
-        ]);
+        onChange([...current, { en: domain.en, fr: domain.fr, ar: domain.ar }]);
     };
 
     const getFirstArrayError = (prefix) =>
@@ -134,10 +131,8 @@ export default function ExpertDomainsPicker({
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
                 <TransText en="Selected" fr="Sélection" ar="المحدد" />:{' '}
-                {selectedLabels.length > 0
-                    ? selectedLabels.join(', ')
-                    : '—'}{' '}
-                · {value?.length ?? 0}/{maxDomains}
+                {selectedLabels.length > 0 ? selectedLabels.join(', ') : '—'} ·{' '}
+                {value?.length ?? 0}/{maxDomains}
             </p>
             {errors.expertise_domains ? (
                 <p className="mt-1 text-xs text-alpha-danger">

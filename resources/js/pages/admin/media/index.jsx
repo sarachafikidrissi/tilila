@@ -83,7 +83,7 @@ export default function AdminMediaIndex({
                                 Media page sidebar
                             </Link>
                         </Button>
-                    
+
                         <Button
                             asChild
                             className="gap-2 bg-beta-blue text-twhite hover:bg-beta-blue/90"
@@ -195,33 +195,30 @@ export default function AdminMediaIndex({
                         </Button>
                     </div>
                     <Button
-                            type="button"
-                            variant="outline"
-                            className="gap-2 mb-1"
-                            onClick={() => {
-                                const params = new URLSearchParams();
-                                if (search?.trim())
-                                    params.set('search', search.trim());
-                                if (filters?.category)
-                                    params.set('category', filters.category);
-                                if (filters?.status)
-                                    params.set('status', filters.status);
-                                if (filters?.visibility)
-                                    params.set(
-                                        'visibility',
-                                        filters.visibility,
-                                    );
-                                const qs = params.toString();
-                                window.location.href = `/admin/media/export.csv${
-                                    qs ? `?${qs}` : ''
-                                }`;
-                            }}
-                        >
-                            <Download className="size-4" />
-                            Export CSV
-                        </Button>
+                        type="button"
+                        variant="outline"
+                        className="mb-1 gap-2"
+                        onClick={() => {
+                            const params = new URLSearchParams();
+                            if (search?.trim())
+                                params.set('search', search.trim());
+                            if (filters?.category)
+                                params.set('category', filters.category);
+                            if (filters?.status)
+                                params.set('status', filters.status);
+                            if (filters?.visibility)
+                                params.set('visibility', filters.visibility);
+                            const qs = params.toString();
+                            window.location.href = `/admin/media/export.csv${
+                                qs ? `?${qs}` : ''
+                            }`;
+                        }}
+                    >
+                        <Download className="size-4" />
+                        Export CSV
+                    </Button>
                 </form>
-                
+
                 <div className="overflow-hidden rounded-xl border border-border/70 bg-card p-4 shadow-sm sm:p-6">
                     <Table>
                         <TableHeader>

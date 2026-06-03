@@ -30,7 +30,9 @@ function ModeButton({ active, onClick, children, ariaLabel }) {
             aria-label={ariaLabel}
             className={[
                 'rounded-full px-4 py-2 text-sm font-semibold transition',
-                active ? 'bg-beta-blue text-twhite' : 'text-tgray hover:text-tblack',
+                active
+                    ? 'bg-beta-blue text-twhite'
+                    : 'text-tgray hover:text-tblack',
             ].join(' ')}
         >
             {children}
@@ -91,19 +93,33 @@ export default function FiltersBar({
 
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         <Select
-                            label={<TransText en="Region" fr="Region" ar="المنطقة" />}
+                            label={
+                                <TransText
+                                    en="Region"
+                                    fr="Region"
+                                    ar="المنطقة"
+                                />
+                            }
                             value={filters.region}
                             onChange={(region) =>
-                                setFilters((current) => ({ ...current, region }))
+                                setFilters((current) => ({
+                                    ...current,
+                                    region,
+                                }))
                             }
                             options={regionOptions}
                         />
 
                         <Select
-                            label={<TransText en="Country" fr="Pays" ar="البلد" />}
+                            label={
+                                <TransText en="Country" fr="Pays" ar="البلد" />
+                            }
                             value={filters.country}
                             onChange={(country) =>
-                                setFilters((current) => ({ ...current, country }))
+                                setFilters((current) => ({
+                                    ...current,
+                                    country,
+                                }))
                             }
                             options={countryOptions}
                         />
@@ -118,16 +134,28 @@ export default function FiltersBar({
                             }
                             value={filters.location}
                             onChange={(location) =>
-                                setFilters((current) => ({ ...current, location }))
+                                setFilters((current) => ({
+                                    ...current,
+                                    location,
+                                }))
                             }
                             options={locationOptions}
                         />
 
                         <Select
-                            label={<TransText en="Languages" fr="Langues" ar="اللغات" />}
+                            label={
+                                <TransText
+                                    en="Languages"
+                                    fr="Langues"
+                                    ar="اللغات"
+                                />
+                            }
                             value={filters.language}
                             onChange={(language) =>
-                                setFilters((current) => ({ ...current, language }))
+                                setFilters((current) => ({
+                                    ...current,
+                                    language,
+                                }))
                             }
                             options={languageOptions}
                         />
@@ -145,9 +173,18 @@ export default function FiltersBar({
                             value={sort}
                             onChange={setSort}
                             options={[
-                                { value: 'relevance', label: t('experts.sort.relevance') },
-                                { value: 'name_asc', label: t('experts.sort.nameAsc') },
-                                { value: 'name_desc', label: t('experts.sort.nameDesc') },
+                                {
+                                    value: 'relevance',
+                                    label: t('experts.sort.relevance'),
+                                },
+                                {
+                                    value: 'name_asc',
+                                    label: t('experts.sort.nameAsc'),
+                                },
+                                {
+                                    value: 'name_desc',
+                                    label: t('experts.sort.nameDesc'),
+                                },
                             ]}
                         />
 

@@ -37,7 +37,7 @@ export default function PartnersSection() {
     return (
         <section
             id="partners"
-            className="scroll-mt-16 mx-auto max-w-7xl px-4 py-12"
+            className="mx-auto max-w-7xl scroll-mt-16 px-4 py-12"
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>

@@ -48,7 +48,9 @@ export default function EditionsHistorySection() {
                                             src={edition.posterSrc}
                                             alt=""
                                             className="h-full w-full object-cover object-top"
-                                            loading={index < 2 ? 'eager' : 'lazy'}
+                                            loading={
+                                                index < 2 ? 'eager' : 'lazy'
+                                            }
                                             decoding="async"
                                         />
                                         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/45 via-transparent to-transparent" />
@@ -83,24 +85,26 @@ export default function EditionsHistorySection() {
                                         ) : null}
                                         {edition.lines.length > 0 ? (
                                             <ul className="mt-4 space-y-2 border-t border-border/80 pt-4 text-sm leading-relaxed text-tgray">
-                                                {edition.lines.map((line, i) => (
-                                                    <li
-                                                        key={`${edition.year}-${i}`}
-                                                        className="flex gap-2"
-                                                    >
-                                                        <span
-                                                            className="mt-2 size-1 shrink-0 rounded-full bg-beta-blue/80"
-                                                            aria-hidden
-                                                        />
-                                                        <span>
-                                                            <TransText
-                                                                en={line.en}
-                                                                fr={line.fr}
-                                                                ar={line.ar}
+                                                {edition.lines.map(
+                                                    (line, i) => (
+                                                        <li
+                                                            key={`${edition.year}-${i}`}
+                                                            className="flex gap-2"
+                                                        >
+                                                            <span
+                                                                className="mt-2 size-1 shrink-0 rounded-full bg-beta-blue/80"
+                                                                aria-hidden
                                                             />
-                                                        </span>
-                                                    </li>
-                                                ))}
+                                                            <span>
+                                                                <TransText
+                                                                    en={line.en}
+                                                                    fr={line.fr}
+                                                                    ar={line.ar}
+                                                                />
+                                                            </span>
+                                                        </li>
+                                                    ),
+                                                )}
                                             </ul>
                                         ) : null}
                                     </div>

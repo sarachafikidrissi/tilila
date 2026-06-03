@@ -33,14 +33,10 @@ export default function AreasOfExpertise({ items = [] }) {
                         className="rounded-xl bg-background p-4 ring-1 ring-border"
                     >
                         <div className="text-sm font-extrabold text-foreground">
-                            <TransText
-                                {...x.title}
-                            />
+                            <TransText {...x.title} />
                         </div>
                         <div className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                            <TransText
-                                {...x.description}
-                            />
+                            <TransText {...x.description} />
                         </div>
                     </div>
                 ))}

@@ -31,7 +31,7 @@ export default function CommitteeSection() {
     return (
         <section
             id="committee"
-            className="scroll-mt-16 mx-auto max-w-7xl px-4 py-12"
+            className="mx-auto max-w-7xl scroll-mt-16 px-4 py-12"
         >
             <div className="text-center">
                 <div className="text-xs font-semibold tracking-widest text-tgray">

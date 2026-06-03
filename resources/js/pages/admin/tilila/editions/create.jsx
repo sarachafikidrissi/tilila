@@ -23,6 +23,7 @@ export default function AdminTililaEditionsCreate() {
         gallery_images_files: [],
         remove_gallery_images: [],
         has_gallery: false,
+        is_current: false,
     });
 
     const submit = (e) => {

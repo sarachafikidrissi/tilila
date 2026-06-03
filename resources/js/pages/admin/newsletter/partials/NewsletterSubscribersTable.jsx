@@ -92,7 +92,11 @@ export default function NewsletterSubscribersTable({
     const clearFilters = () => {
         setSearch('');
         setLocaleFilter('');
-        router.get('/admin/newsletter', {}, { preserveState: true, replace: true });
+        router.get(
+            '/admin/newsletter',
+            {},
+            { preserveState: true, replace: true },
+        );
     };
 
     const confirmDelete = () => {
@@ -253,7 +257,7 @@ export default function NewsletterSubscribersTable({
                                                     {row.locale || '—'}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="whitespace-nowrap text-sm text-tgray">
+                                            <TableCell className="text-sm whitespace-nowrap text-tgray">
                                                 {formatDate(
                                                     row.subscribed_at ??
                                                         row.created_at,
@@ -264,7 +268,7 @@ export default function NewsletterSubscribersTable({
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="opacity-60 transition-opacity group-hover:opacity-100 text-alpha-danger hover:bg-beta-danger hover:text-alpha-danger"
+                                                    className="text-alpha-danger opacity-60 transition-opacity group-hover:opacity-100 hover:bg-beta-danger hover:text-alpha-danger"
                                                     onClick={() =>
                                                         setDeleteTarget(row)
                                                     }
@@ -293,9 +297,13 @@ export default function NewsletterSubscribersTable({
                                         disabled={!prevUrl}
                                         onClick={() =>
                                             prevUrl &&
-                                            router.get(prevUrl, {}, {
-                                                preserveState: true,
-                                            })
+                                            router.get(
+                                                prevUrl,
+                                                {},
+                                                {
+                                                    preserveState: true,
+                                                },
+                                            )
                                         }
                                     >
                                         <ChevronLeft className="size-4" />
@@ -309,9 +317,13 @@ export default function NewsletterSubscribersTable({
                                         disabled={!nextUrl}
                                         onClick={() =>
                                             nextUrl &&
-                                            router.get(nextUrl, {}, {
-                                                preserveState: true,
-                                            })
+                                            router.get(
+                                                nextUrl,
+                                                {},
+                                                {
+                                                    preserveState: true,
+                                                },
+                                            )
                                         }
                                     >
                                         Next

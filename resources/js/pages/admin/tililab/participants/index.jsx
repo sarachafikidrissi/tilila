@@ -13,6 +13,11 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
+
+const selectClassName = cn(
+    'flex h-10 min-w-[140px] rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none',
+);
 
 function KpiCard({ icon: Icon, label, value }) {
     return (
@@ -36,24 +41,63 @@ function KpiCard({ icon: Icon, label, value }) {
     );
 }
 
+function buildQueryParams(filters, searchOverride) {
+    const params = {
+        search:
+            searchOverride !== undefined
+                ? searchOverride
+                : (filters?.search ?? ''),
+        edition_id: filters?.edition_id ?? '',
+        country: filters?.country ?? '',
+        from: filters?.from ?? '',
+        to: filters?.to ?? '',
+    };
+
+    return Object.fromEntries(
+        Object.entries(params).filter(([, value]) => value !== ''),
+    );
+}
+
 export default function AdminTililabParticipantsIndex({
     participants,
     filters,
     kpis,
+    editions = [],
+    countries = [],
 }) {
     const [search, setSearch] = useState(filters?.search ?? '');
-
     const data = participants?.data ?? [];
     const links = participants?.links ?? [];
 
-    const submitSearch = (e) => {
-        e.preventDefault();
+    const applyFilters = (overrides = {}, searchValue) => {
+        const next = { ...filters, ...overrides };
+        const searchParam =
+            searchValue !== undefined ? searchValue : search.trim();
+
         router.get(
             '/admin/tililab/participants',
-            { search },
+            buildQueryParams(next, searchParam),
             { preserveState: true, replace: true },
         );
     };
+
+    const submitSearch = (e) => {
+        e.preventDefault();
+        applyFilters({}, search.trim());
+    };
+
+    const resetFilters = () => {
+        setSearch('');
+        router.get('/admin/tililab/participants', {}, { replace: true });
+    };
+
+    const hasActiveFilters = Boolean(
+        filters?.search ||
+        filters?.edition_id ||
+        filters?.country ||
+        filters?.from ||
+        filters?.to,
+    );
 
     return (
         <>
@@ -69,8 +113,8 @@ export default function AdminTililabParticipantsIndex({
                             Participant Management
                         </h1>
                         <p className="mt-1 max-w-2xl text-sm text-tgray">
-                            Review and manage Tililab participant inscriptions.
-                            Videos are stored as external links.
+                            Review Tililab inscriptions: contact details, bio,
+                            edition, and video submissions.
                         </p>
                     </div>
 
@@ -80,21 +124,22 @@ export default function AdminTililabParticipantsIndex({
                             variant="outline"
                             className="gap-2"
                             onClick={() => {
-                                const params = new URLSearchParams();
-                                if (search?.trim())
-                                    params.set('search', search.trim());
+                                const params = new URLSearchParams(
+                                    buildQueryParams(filters, search.trim()),
+                                );
                                 const qs = params.toString();
-                                window.location.href = `/admin/tililab/participants/export.csv${
-                                    qs ? `?${qs}` : ''
-                                }`;
+                                window.location.href = `/admin/tililab/participants/export.csv${qs ? `?${qs}` : ''}`;
                             }}
                         >
                             <Download className="size-4" />
                             Export CSV
                         </Button>
-                        <Button asChild variant="secondary" className="gap-2">
+                        <Button asChild variant="secondary">
+                            <Link href="/admin/tililab/editions">Editions</Link>
+                        </Button>
+                        <Button asChild variant="outline" className="gap-2">
                             <Link href="/admin/tililab/analytics">
-                                View analytics
+                                Analytics
                             </Link>
                         </Button>
                     </div>
@@ -118,18 +163,81 @@ export default function AdminTililabParticipantsIndex({
 
                 <form
                     onSubmit={submitSearch}
-                    className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-4"
+                    className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card p-4 shadow-sm sm:p-5"
                 >
+                    <div className="text-sm font-semibold text-foreground">
+                        Filters
+                    </div>
+
                     <div className="relative min-w-0 flex-1">
                         <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email, org, country…"
+                            placeholder="Search by name, email, phone, bio, city…"
                             className="h-10 pl-10"
                             name="search"
                         />
                     </div>
+
+                    <div className="flex flex-wrap gap-2">
+                        <select
+                            value={filters?.edition_id ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ edition_id: e.target.value })
+                            }
+                            className={selectClassName}
+                            aria-label="Filter by edition"
+                        >
+                            <option value="">All editions</option>
+                            <option value="none">No edition</option>
+                            {editions.map((edition) => (
+                                <option
+                                    key={edition.id}
+                                    value={String(edition.id)}
+                                >
+                                    {edition.year}
+                                    {edition.is_current ? ' (current)' : ''}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={filters?.country ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ country: e.target.value })
+                            }
+                            className={selectClassName}
+                            aria-label="Filter by country"
+                        >
+                            <option value="">All countries</option>
+                            {countries.map((code) => (
+                                <option key={code} value={code}>
+                                    {code.toUpperCase()}
+                                </option>
+                            ))}
+                        </select>
+
+                        <Input
+                            type="date"
+                            value={filters?.from ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ from: e.target.value })
+                            }
+                            className="h-10 w-auto"
+                            aria-label="Submitted from"
+                        />
+                        <Input
+                            type="date"
+                            value={filters?.to ?? ''}
+                            onChange={(e) =>
+                                applyFilters({ to: e.target.value })
+                            }
+                            className="h-10 w-auto"
+                            aria-label="Submitted to"
+                        />
+                    </div>
+
                     <div className="flex flex-wrap gap-2">
                         <Button type="submit" variant="secondary">
                             Search
@@ -137,14 +245,10 @@ export default function AdminTililabParticipantsIndex({
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => {
-                                setSearch('');
-                                router.get('/admin/tililab/participants', {
-                                    search: '',
-                                });
-                            }}
+                            onClick={resetFilters}
+                            disabled={!hasActiveFilters && !search.trim()}
                         >
-                            Reset
+                            Reset filters
                         </Button>
                     </div>
                 </form>
@@ -153,14 +257,17 @@ export default function AdminTililabParticipantsIndex({
                     <Table>
                         <TableHeader>
                             <TableRow className="hover:bg-transparent">
-                                <TableHead className="w-[32%] py-3 text-tgray uppercase sm:px-3">
+                                <TableHead className="w-[28%] py-3 text-tgray uppercase sm:px-3">
                                     Participant
                                 </TableHead>
                                 <TableHead className="py-3 text-tgray uppercase sm:px-3">
-                                    Organization
+                                    Contact
                                 </TableHead>
                                 <TableHead className="py-3 text-tgray uppercase sm:px-3">
-                                    Country
+                                    Edition
+                                </TableHead>
+                                <TableHead className="py-3 text-tgray uppercase sm:px-3">
+                                    Bio
                                 </TableHead>
                                 <TableHead className="py-3 text-tgray uppercase sm:px-3">
                                     Submitted
@@ -174,7 +281,7 @@ export default function AdminTililabParticipantsIndex({
                             {data.length === 0 ? (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={5}
+                                        colSpan={6}
                                         className="px-4 py-14 text-center text-sm text-tgray sm:px-6"
                                     >
                                         No participants found.
@@ -182,42 +289,69 @@ export default function AdminTililabParticipantsIndex({
                                 </TableRow>
                             ) : (
                                 data.map((p) => (
-                                    <TableRow key={p.id}>
+                                    <TableRow
+                                        key={p.id}
+                                        className="cursor-pointer hover:bg-muted/40"
+                                        onClick={() =>
+                                            router.visit(
+                                                `/admin/tililab/participants/${p.id}`,
+                                            )
+                                        }
+                                    >
                                         <TableCell className="py-4 sm:px-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-muted text-xs font-semibold text-muted-foreground">
-                                                    {`${p.first_name ?? ''} ${p.last_name ?? ''}`
-                                                        .trim()
-                                                        .split(/\s+/)
-                                                        .filter(Boolean)
-                                                        .map((w) => w[0])
-                                                        .join('')
-                                                        .slice(0, 2)
-                                                        .toUpperCase() || '—'}
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="truncate font-semibold text-tblack">
-                                                        {p.first_name}{' '}
-                                                        {p.last_name}
-                                                    </div>
-                                                    <div className="truncate text-xs text-tgray">
-                                                        {p.email ?? '—'}
-                                                    </div>
+                                            <div className="min-w-0">
+                                                <Link
+                                                    href={`/admin/tililab/participants/${p.id}`}
+                                                    className="font-semibold text-foreground hover:underline"
+                                                    onClick={(e) =>
+                                                        e.stopPropagation()
+                                                    }
+                                                >
+                                                    {p.first_name} {p.last_name}
+                                                </Link>
+                                                <div className="truncate text-xs text-muted-foreground">
+                                                    {p.email ?? '—'}
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="py-4 sm:px-3">
-                                            <div className="text-sm text-foreground">
-                                                {p.organization ?? '—'}
+                                        <TableCell className="py-4 text-sm sm:px-3">
+                                            <div className="text-foreground">
+                                                {p.phone ?? '—'}
                                             </div>
                                             <div className="text-xs text-muted-foreground">
-                                                {p.job_title ?? ''}
+                                                {[p.city, p.country]
+                                                    .filter(Boolean)
+                                                    .join(', ') || '—'}
                                             </div>
                                         </TableCell>
-                                        <TableCell className="py-4 text-sm text-foreground sm:px-3">
-                                            {p.country ?? '—'}
+                                        <TableCell className="py-4 sm:px-3">
+                                            <div className="text-sm font-medium text-foreground">
+                                                {p.edition?.year ?? '—'}
+                                            </div>
+                                            {p.edition?.is_current ? (
+                                                <div className="text-xs text-beta-blue">
+                                                    Current
+                                                </div>
+                                            ) : null}
                                         </TableCell>
-                                        <TableCell className="py-4 text-sm text-foreground sm:px-3">
+                                        <TableCell className="py-4 sm:px-3">
+                                            <p className="line-clamp-2 text-sm text-foreground">
+                                                {p.bio ?? '—'}
+                                            </p>
+                                            <div className="mt-1 flex flex-wrap gap-1">
+                                                {p.original_video_link ? (
+                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
+                                                        Link
+                                                    </span>
+                                                ) : null}
+                                                {p.original_video_url ? (
+                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
+                                                        Upload
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="py-4 text-sm text-muted-foreground sm:px-3">
                                             {p.created_at
                                                 ? new Date(
                                                       p.created_at,
@@ -228,8 +362,11 @@ export default function AdminTililabParticipantsIndex({
                                             <div className="inline-flex items-center justify-end gap-2">
                                                 <Button
                                                     asChild
-                                                    variant="outline"
                                                     size="sm"
+                                                    variant="outline"
+                                                    onClick={(e) =>
+                                                        e.stopPropagation()
+                                                    }
                                                 >
                                                     <Link
                                                         href={`/admin/tililab/participants/${p.id}`}
@@ -240,30 +377,49 @@ export default function AdminTililabParticipantsIndex({
                                                 {p.original_video_link ? (
                                                     <Button
                                                         type="button"
-                                                        variant="outline"
                                                         size="sm"
-                                                        className="gap-2"
-                                                        onClick={() =>
+                                                        variant="outline"
+                                                        className="gap-1"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
                                                             window.open(
                                                                 p.original_video_link,
                                                                 '_blank',
                                                                 'noopener,noreferrer',
-                                                            )
-                                                        }
+                                                            );
+                                                        }}
                                                     >
                                                         <ExternalLink className="size-4" />
-                                                        Video link
+                                                    </Button>
+                                                ) : null}
+                                                {p.original_video_url ? (
+                                                    <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="gap-1"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            window.open(
+                                                                p.original_video_url,
+                                                                '_blank',
+                                                                'noopener,noreferrer',
+                                                            );
+                                                        }}
+                                                    >
+                                                        <ExternalLink className="size-4" />
                                                     </Button>
                                                 ) : null}
                                                 <Button
                                                     type="button"
-                                                    variant="ghost"
                                                     size="sm"
+                                                    variant="ghost"
                                                     className="text-alpha-danger"
-                                                    onClick={() => {
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         if (
                                                             confirm(
-                                                                'Delete this participant? This cannot be undone.',
+                                                                'Delete this participant?',
                                                             )
                                                         ) {
                                                             router.delete(

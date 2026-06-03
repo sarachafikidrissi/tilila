@@ -35,7 +35,10 @@ export default function Register() {
                         <>
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="name" className="text-tblack">
+                                    <Label
+                                        htmlFor="name"
+                                        className="text-tblack"
+                                    >
                                         {t('auth.register.nameLabel')}
                                     </Label>
                                     <Input

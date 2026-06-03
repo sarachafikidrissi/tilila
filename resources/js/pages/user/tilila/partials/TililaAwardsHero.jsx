@@ -5,11 +5,11 @@ export default function TililaAwardsHero() {
     return (
         <section className="relative overflow-hidden border-b border-gold/20 bg-tblack text-twhite">
             <div
-                className="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full bg-gold/15 blur-3xl"
+                className="pointer-events-none absolute top-0 -right-24 h-96 w-96 rounded-full bg-gold/15 blur-3xl"
                 aria-hidden
             />
             <div
-                className="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-beta-blue/20 blur-3xl"
+                className="pointer-events-none absolute bottom-0 -left-20 h-72 w-72 rounded-full bg-beta-blue/20 blur-3xl"
                 aria-hidden
             />
 

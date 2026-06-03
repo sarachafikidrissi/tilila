@@ -300,7 +300,9 @@ export default function EventsSidebar({
                     />
                     <CategoryCheckbox
                         id="cat-tililab"
-                        label={<TransText en="Tililab" fr="Tililab" ar="تيليلاب" />}
+                        label={
+                            <TransText en="Tililab" fr="Tililab" ar="تيليلاب" />
+                        }
                         checked={Boolean(categories?.tililab)}
                         onChange={(checked) =>
                             setCategories((c) => ({ ...c, tililab: checked }))

@@ -5,7 +5,9 @@ import TransText from '@/components/TransText';
 function Card({ title, body, href, cta }) {
     return (
         <div className="rounded-2xl border border-border bg-background p-6 shadow-sm ring-1 ring-border/60">
-            <h3 className="text-base font-extrabold text-foreground">{title}</h3>
+            <h3 className="text-base font-extrabold text-foreground">
+                {title}
+            </h3>
             <div className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {body}
             </div>
@@ -27,7 +29,7 @@ export default function AboutOverviewSection() {
     return (
         <section
             id="overview"
-            className="scroll-mt-16 mx-auto max-w-7xl px-4 pb-14 pt-4"
+            className="mx-auto max-w-7xl scroll-mt-16 px-4 pt-4 pb-14"
         >
             <div className="mx-auto max-w-3xl text-center">
                 <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
@@ -48,9 +50,7 @@ export default function AboutOverviewSection() {
 
             <div className="mt-12 grid gap-5 sm:grid-cols-2">
                 <Card
-                    title={
-                        <TransText en="Vision" fr="Vision" ar="الرؤية" />
-                    }
+                    title={<TransText en="Vision" fr="Vision" ar="الرؤية" />}
                     body={
                         <TransText
                             en="To contribute to a more just, respectful, and inclusive society through advertising and media. Tilila aims to make advertising a driver of positive social change by fighting stereotypes—especially gender stereotypes—and giving visibility to all parts of Moroccan society, including women, rural communities, and diversity."
@@ -60,9 +60,7 @@ export default function AboutOverviewSection() {
                     }
                 />
                 <Card
-                    title={
-                        <TransText en="Mission" fr="Mission" ar="المهمة" />
-                    }
+                    title={<TransText en="Mission" fr="Mission" ar="المهمة" />}
                     body={
                         <ul className="list-disc space-y-2 ps-5">
                             <li>
@@ -122,9 +120,7 @@ export default function AboutOverviewSection() {
                     }
                 />
                 <Card
-                    title={
-                        <TransText en="Values" fr="Valeurs" ar="القيم" />
-                    }
+                    title={<TransText en="Values" fr="Valeurs" ar="القيم" />}
                     body={
                         <ul className="list-disc space-y-1.5 ps-5">
                             <li>

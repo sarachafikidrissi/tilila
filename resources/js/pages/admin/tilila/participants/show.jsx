@@ -117,6 +117,14 @@ export default function AdminTililaSubmissionShow({ participant }) {
                 </div>
 
                 <div className="space-y-4 rounded-xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
+                    <Row
+                        label="Edition"
+                        value={
+                            p.edition?.year
+                                ? `${p.edition.year}${p.edition.is_current ? ' (current)' : ''}`
+                                : '—'
+                        }
+                    />
                     <Row label="Email" value={p.email} />
                     <Row label="Phone" value={p.phone} />
                     <Row label="City" value={p.city} />

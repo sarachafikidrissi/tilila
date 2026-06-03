@@ -5,10 +5,11 @@ import { TILITALKS_LOGO } from '@/data/tilila-brand-logos';
 
 function Section({ id, title, subtitle, children }) {
     return (
-        <section id={id} className="rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border">
-            <h2 className="text-lg font-extrabold text-foreground">
-                {title}
-            </h2>
+        <section
+            id={id}
+            className="rounded-2xl border border-border bg-card p-6 shadow-sm ring-1 ring-border"
+        >
+            <h2 className="text-lg font-extrabold text-foreground">{title}</h2>
             {subtitle ? (
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {subtitle}
@@ -43,7 +44,13 @@ export default function TiliTalksLanding() {
                 <div className="space-y-6 lg:col-span-8">
                     <Section
                         id="concept"
-                        title={<TransText en="TiliTalks — Concept" fr="TiliTalks — Concept" ar="تيلي توكس — المفهوم" />}
+                        title={
+                            <TransText
+                                en="TiliTalks — Concept"
+                                fr="TiliTalks — Concept"
+                                ar="تيلي توكس — المفهوم"
+                            />
+                        }
                         subtitle={
                             <TransText
                                 en="Public conversations: talks, workshops, and webinars — designed to share stories, insights, and practical learning."
@@ -57,20 +64,30 @@ export default function TiliTalksLanding() {
                                 href="/events?view=calendar"
                                 className="inline-flex items-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-white transition hover:bg-beta-blue/90"
                             >
-                                <TransText en="Open agenda" fr="Ouvrir l’agenda" ar="افتح الأجندة" />
+                                <TransText
+                                    en="Open agenda"
+                                    fr="Ouvrir l’agenda"
+                                    ar="افتح الأجندة"
+                                />
                             </Link>
                             <a
                                 href="#register"
                                 className="inline-flex items-center rounded-full border border-border bg-card px-5 py-2 text-sm font-semibold text-foreground transition hover:bg-muted"
                             >
-                                <TransText en="Register" fr="S’inscrire" ar="التسجيل" />
+                                <TransText
+                                    en="Register"
+                                    fr="S’inscrire"
+                                    ar="التسجيل"
+                                />
                             </a>
                         </div>
                     </Section>
 
                     <Section
                         id="agenda"
-                        title={<TransText en="Agenda" fr="Agenda" ar="الأجندة" />}
+                        title={
+                            <TransText en="Agenda" fr="Agenda" ar="الأجندة" />
+                        }
                         subtitle={
                             <TransText
                                 en="Explore upcoming sessions and filter by status and category."
@@ -83,13 +100,23 @@ export default function TiliTalksLanding() {
                             href="/events?view=calendar"
                             className="text-sm font-semibold text-beta-blue hover:underline"
                         >
-                            <TransText en="Go to the annual calendar →" fr="Aller au calendrier annuel →" ar="اذهب إلى التقويم السنوي →" />
+                            <TransText
+                                en="Go to the annual calendar →"
+                                fr="Aller au calendrier annuel →"
+                                ar="اذهب إلى التقويم السنوي →"
+                            />
                         </Link>
                     </Section>
 
                     <Section
                         id="speakers"
-                        title={<TransText en="Speakers" fr="Speakers" ar="المتحدثون" />}
+                        title={
+                            <TransText
+                                en="Speakers"
+                                fr="Speakers"
+                                ar="المتحدثون"
+                            />
+                        }
                         subtitle={
                             <TransText
                                 en="Speaker profiles can be displayed per session."
@@ -111,7 +138,13 @@ export default function TiliTalksLanding() {
                 <div className="space-y-6 lg:col-span-4">
                     <Section
                         id="replays"
-                        title={<TransText en="Replays" fr="Replays" ar="الإعادات" />}
+                        title={
+                            <TransText
+                                en="Replays"
+                                fr="Replays"
+                                ar="الإعادات"
+                            />
+                        }
                         subtitle={
                             <TransText
                                 en="Watch past sessions and highlights."
@@ -124,7 +157,11 @@ export default function TiliTalksLanding() {
                             href="/events?view=calendar"
                             className="text-sm font-semibold text-beta-blue hover:underline"
                         >
-                            <TransText en="Browse past events →" fr="Voir les événements passés →" ar="تصفح الفعاليات الماضية →" />
+                            <TransText
+                                en="Browse past events →"
+                                fr="Voir les événements passés →"
+                                ar="تصفح الفعاليات الماضية →"
+                            />
                         </Link>
                     </Section>
 
@@ -150,7 +187,13 @@ export default function TiliTalksLanding() {
 
                     <Section
                         id="register"
-                        title={<TransText en="Registration" fr="Inscription" ar="التسجيل" />}
+                        title={
+                            <TransText
+                                en="Registration"
+                                fr="Inscription"
+                                ar="التسجيل"
+                            />
+                        }
                         subtitle={
                             <TransText
                                 en="Reserve your spot for upcoming sessions."
@@ -163,7 +206,11 @@ export default function TiliTalksLanding() {
                             href="/events?view=calendar"
                             className="inline-flex w-full items-center justify-center rounded-full bg-beta-blue px-5 py-2 text-sm font-semibold text-white transition hover:bg-beta-blue/90"
                         >
-                            <TransText en="See sessions & register" fr="Voir les sessions & s’inscrire" ar="عرض الجلسات والتسجيل" />
+                            <TransText
+                                en="See sessions & register"
+                                fr="Voir les sessions & s’inscrire"
+                                ar="عرض الجلسات والتسجيل"
+                            />
                         </Link>
                     </Section>
                 </div>
@@ -171,4 +218,3 @@ export default function TiliTalksLanding() {
         </div>
     );
 }
-

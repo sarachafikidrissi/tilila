@@ -56,7 +56,12 @@ function GalleryGrid({ images }) {
 
 export default function TililaEditionDetails() {
     const { edition } = usePage().props;
-    const winners = Array.isArray(edition?.winners) ? edition.winners : [];
+    const isCurrent = Boolean(edition?.is_current);
+    const winners = isCurrent
+        ? []
+        : Array.isArray(edition?.winners)
+          ? edition.winners
+          : [];
     const jury = Array.isArray(edition?.jury) ? edition.jury : [];
     const images = Array.isArray(edition?.gallery_images)
         ? edition.gallery_images
@@ -112,17 +117,19 @@ export default function TililaEditionDetails() {
                                 ar="العودة للأرشيف"
                             />
                         </Link>
-                        <Link
-                            href={`/tilila/editions/${edition?.id}/winners`}
-                            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                        >
-                            <Trophy className="size-4 text-tgray" />
-                            <TransText
-                                en="Winners"
-                                fr="Lauréats"
-                                ar="الفائزون"
-                            />
-                        </Link>
+                        {!isCurrent ? (
+                            <Link
+                                href={`/tilila/editions/${edition?.id}/winners`}
+                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
+                            >
+                                <Trophy className="size-4 text-tgray" />
+                                <TransText
+                                    en="Winners"
+                                    fr="Lauréats"
+                                    ar="الفائزون"
+                                />
+                            </Link>
+                        ) : null}
                         <Link
                             href={`/tilila/editions/${edition?.id}/jury`}
                             className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
@@ -177,10 +184,18 @@ export default function TililaEditionDetails() {
                             <span className="text-tgray">·</span>
                         </>
                     ) : null}
-                    <a href="#winners" className="hover:underline">
-                        <TransText en="Winners" fr="Lauréats" ar="الفائزون" />
-                    </a>
-                    <span className="text-tgray">·</span>
+                    {!isCurrent ? (
+                        <>
+                            <a href="#winners" className="hover:underline">
+                                <TransText
+                                    en="Winners"
+                                    fr="Lauréats"
+                                    ar="الفائزون"
+                                />
+                            </a>
+                            <span className="text-tgray">·</span>
+                        </>
+                    ) : null}
                     <a href="#jury" className="hover:underline">
                         <TransText en="Jury" fr="Jury" ar="لجنة التحكيم" />
                     </a>
@@ -190,27 +205,33 @@ export default function TililaEditionDetails() {
                     </a>
                 </nav>
 
-                <div id="winners">
-                    <TililaPeopleGrid
-                        title={
-                            <TransText
-                                en="Winners"
-                                fr="Lauréats"
-                                ar="الفائزون"
-                            />
-                        }
-                        people={winners}
-                        showTrophy
-                    />
-                </div>
+                {!isCurrent ? (
+                    <div id="winners">
+                        <TililaPeopleGrid
+                            title={
+                                <TransText
+                                    en="Winners"
+                                    fr="Lauréats"
+                                    ar="الفائزون"
+                                />
+                            }
+                            people={winners}
+                            showTrophy
+                        />
+                    </div>
+                ) : (
+                    <div className="mt-10 rounded-2xl border border-border bg-beta-white p-8 text-center text-sm text-tgray">
+                        <TransText
+                            en="Winners for this edition will be announced after the awards ceremony."
+                            fr="Les lauréats de cette édition seront annoncés après la cérémonie."
+                            ar="يُعلَن عن فائزي هذه الدورة بعد حفل التوزيع."
+                        />
+                    </div>
+                )}
                 <div id="jury">
                     <TililaPeopleGrid
                         title={
-                            <TransText
-                                en="Jury"
-                                fr="Jury"
-                                ar="لجنة التحكيم"
-                            />
+                            <TransText en="Jury" fr="Jury" ar="لجنة التحكيم" />
                         }
                         people={jury}
                     />

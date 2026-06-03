@@ -3,6 +3,7 @@ import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import ParticipateModal from '@/pages/user/tilila/partials/ParticipateModal';
 import TililaHowToApply from '@/pages/user/tilila/partials/TililaHowToApply';
+import CurrentEditionSection from '@/pages/user/tilila/partials/CurrentEditionSection';
 import TililaPastEditionsCarousel from '@/pages/user/tilila/partials/TililaPastEditionsCarousel';
 import {
     TililaApplySection,
@@ -12,10 +13,11 @@ import {
     TililaPrizesSection,
     TililaSponsorsSection,
 } from '@/pages/user/tilila/partials/ProgramSections';
+import TransText from '@/components/TransText';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililaIndex() {
-    const { editions, flash } = usePage().props;
+    const { currentEdition, editions, flash } = usePage().props;
     const [formOpen, setFormOpen] = useState(false);
 
     return (
@@ -28,10 +30,34 @@ export default function TililaIndex() {
                     </div>
                 ) : null}
 
-                <TililaPastEditionsCarousel editions={editions ?? []} />
+                <CurrentEditionSection
+                    edition={currentEdition}
+                    onOpenParticipate={() => setFormOpen(true)}
+                />
+
+                <TililaPastEditionsCarousel
+                    editions={editions ?? []}
+                    excludeEditionId={currentEdition?.id ?? null}
+                    excludeYear={currentEdition?.year ?? null}
+                />
 
                 <nav className="bg-background/70 backdrop-blur">
                     <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-4 text-sm font-semibold text-beta-blue">
+                        {currentEdition ? (
+                            <>
+                                <a
+                                    href="#current-edition"
+                                    className="hover:underline"
+                                >
+                                    <TransText
+                                        en="Current edition"
+                                        fr="Édition en cours"
+                                        ar="الدورة الحالية"
+                                    />
+                                </a>
+                                <span className="text-tgray">·</span>
+                            </>
+                        ) : null}
                         <a href="#past-editions" className="hover:underline">
                             Éditions
                         </a>

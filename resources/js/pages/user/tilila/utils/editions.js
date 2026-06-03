@@ -1,4 +1,4 @@
-function coverImageSrc(coverPath, galleryImages) {
+export function coverImageSrc(coverPath, galleryImages) {
     if (coverPath) {
         if (
             coverPath.startsWith('assets/') ||
@@ -22,8 +22,8 @@ function coverImageSrc(coverPath, galleryImages) {
  */
 export function normalizeEdition(raw) {
     if (!raw) {
-return null;
-}
+        return null;
+    }
 
     const coverPath = raw.cover_image_path ?? null;
     const galleryImages = Array.isArray(raw.gallery_images)
@@ -54,6 +54,7 @@ return null;
             Boolean(raw.has_gallery) ||
             (Array.isArray(raw.gallery_images) &&
                 raw.gallery_images.length > 0),
+        is_current: Boolean(raw.is_current),
     };
 }
 

@@ -12,7 +12,7 @@ export default function ContactSection() {
     return (
         <section
             id="contact"
-            className="scroll-mt-16 mx-auto max-w-7xl px-4 py-14"
+            className="mx-auto max-w-7xl scroll-mt-16 px-4 py-14"
         >
             <div className="grid gap-10 lg:grid-cols-12">
                 <div className="lg:col-span-5">

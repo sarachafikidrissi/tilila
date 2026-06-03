@@ -125,7 +125,14 @@ export default function AdminTililabEditionsIndex({ editions, filters }) {
                                 data.map((e) => (
                                     <TableRow key={e.id}>
                                         <TableCell className="font-semibold sm:px-3">
-                                            {e.year}
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                {e.year}
+                                                {e.is_current ? (
+                                                    <span className="rounded-full bg-beta-blue/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-beta-blue uppercase">
+                                                        Current
+                                                    </span>
+                                                ) : null}
+                                            </div>
                                         </TableCell>
                                         <TableCell className="sm:px-3">
                                             <div className="font-semibold text-foreground">

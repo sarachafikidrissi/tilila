@@ -3,7 +3,10 @@ import AppLayout from '@/layouts/app-layout';
 import { useTranslation } from '@/contexts/TranslationContext';
 import { useEffect, useMemo, useState } from 'react';
 import TransText from '@/components/TransText';
-import { buildCountryOptions, buildLanguageOptions } from '@/components/helpers/expert-form-options';
+import {
+    buildCountryOptions,
+    buildLanguageOptions,
+} from '@/components/helpers/expert-form-options';
 import { EXPERT_DOMAINS } from '@/constans';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -13,11 +16,60 @@ export default function BecomeExpert() {
     const maxCvSizeBytes = 5 * 1024 * 1024;
     const baseLanguageValues = ['ar', 'fr', 'en'];
     const africaCountryCodes = [
-        'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM', 'CG',
-        'CD', 'CI', 'DJ', 'EG', 'GQ', 'ER', 'SZ', 'ET', 'GA', 'GM', 'GH', 'GN',
-        'GW', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU', 'MA', 'MZ',
-        'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO', 'ZA', 'SS', 'SD',
-        'TZ', 'TG', 'TN', 'UG', 'ZM', 'ZW',
+        'DZ',
+        'AO',
+        'BJ',
+        'BW',
+        'BF',
+        'BI',
+        'CM',
+        'CV',
+        'CF',
+        'TD',
+        'KM',
+        'CG',
+        'CD',
+        'CI',
+        'DJ',
+        'EG',
+        'GQ',
+        'ER',
+        'SZ',
+        'ET',
+        'GA',
+        'GM',
+        'GH',
+        'GN',
+        'GW',
+        'KE',
+        'LS',
+        'LR',
+        'LY',
+        'MG',
+        'MW',
+        'ML',
+        'MR',
+        'MU',
+        'MA',
+        'MZ',
+        'NA',
+        'NE',
+        'NG',
+        'RW',
+        'ST',
+        'SN',
+        'SC',
+        'SL',
+        'SO',
+        'ZA',
+        'SS',
+        'SD',
+        'TZ',
+        'TG',
+        'TN',
+        'UG',
+        'ZM',
+        'ZW',
     ];
 
     const {
@@ -55,7 +107,10 @@ export default function BecomeExpert() {
     const [expertiseQuery, setExpertiseQuery] = useState('');
     const maxExpertiseDomains = 6;
     const countryOptions = useMemo(() => buildCountryOptions(locale), [locale]);
-    const languageOptions = useMemo(() => buildLanguageOptions(locale), [locale]);
+    const languageOptions = useMemo(
+        () => buildLanguageOptions(locale),
+        [locale],
+    );
     const regionOptions = useMemo(
         () => [
             { value: 'maroc', en: 'Morocco', fr: 'Maroc', ar: 'المغرب' },
@@ -84,9 +139,10 @@ export default function BecomeExpert() {
         }
 
         if (data.region_scope === 'afrique') {
-            return countryOptions.filter((country) =>
-                africaCountryNames.has(country.value) &&
-                country.value !== 'Morocco',
+            return countryOptions.filter(
+                (country) =>
+                    africaCountryNames.has(country.value) &&
+                    country.value !== 'Morocco',
             );
         }
 
@@ -225,7 +281,10 @@ export default function BecomeExpert() {
             return;
         }
 
-        if (data.profile_image instanceof File && data.profile_image.size > maxCvSizeBytes) {
+        if (
+            data.profile_image instanceof File &&
+            data.profile_image.size > maxCvSizeBytes
+        ) {
             setImageSizeError('The image must be 5 MB or smaller.');
             return;
         }
@@ -443,7 +502,9 @@ export default function BecomeExpert() {
                                                     ar="الاسم الكامل"
                                                 />{' '}
                                                 ({lang.toUpperCase()}){' '}
-                                                {lang === 'fr' ? requiredMark : null}
+                                                {lang === 'fr'
+                                                    ? requiredMark
+                                                    : null}
                                             </label>
                                             <input
                                                 value={
@@ -492,7 +553,9 @@ export default function BecomeExpert() {
                                                     ar="الصفة الحالية"
                                                 />{' '}
                                                 ({lang.toUpperCase()}){' '}
-                                                {lang === 'fr' ? requiredMark : null}
+                                                {lang === 'fr'
+                                                    ? requiredMark
+                                                    : null}
                                             </label>
                                             <input
                                                 value={
@@ -558,7 +621,8 @@ export default function BecomeExpert() {
                                                     key={option.value}
                                                     value={option.value}
                                                 >
-                                                    {option[locale] ?? option.en}
+                                                    {option[locale] ??
+                                                        option.en}
                                                 </option>
                                             ))}
                                         </select>
@@ -588,7 +652,9 @@ export default function BecomeExpert() {
                                             }
                                             className={inputClass}
                                             required
-                                            disabled={data.region_scope === 'maroc'}
+                                            disabled={
+                                                data.region_scope === 'maroc'
+                                            }
                                         >
                                             <option value="" disabled>
                                                 {locale === 'fr'
@@ -597,14 +663,16 @@ export default function BecomeExpert() {
                                                       ? 'اختر بلدا'
                                                       : 'Select a country'}
                                             </option>
-                                            {regionCountryOptions.map((country) => (
-                                                <option
-                                                    key={country.value}
-                                                    value={country.value}
-                                                >
-                                                    {country.label}
-                                                </option>
-                                            ))}
+                                            {regionCountryOptions.map(
+                                                (country) => (
+                                                    <option
+                                                        key={country.value}
+                                                        value={country.value}
+                                                    >
+                                                        {country.label}
+                                                    </option>
+                                                ),
+                                            )}
                                         </select>
                                         {errors.country ? (
                                             <p className="mt-1 text-xs text-alpha-danger">
@@ -622,7 +690,9 @@ export default function BecomeExpert() {
                                                     ar="المدينة"
                                                 />{' '}
                                                 ({lang.toUpperCase()}){' '}
-                                                {lang === 'fr' ? requiredMark : null}
+                                                {lang === 'fr'
+                                                    ? requiredMark
+                                                    : null}
                                             </label>
                                             <input
                                                 value={data.city?.[lang] ?? ''}
@@ -638,11 +708,7 @@ export default function BecomeExpert() {
                                             />
                                             {errors[`city.${lang}`] ? (
                                                 <p className="mt-1 text-xs text-alpha-danger">
-                                                    {
-                                                        errors[
-                                                            `city.${lang}`
-                                                        ]
-                                                    }
+                                                    {errors[`city.${lang}`]}
                                                 </p>
                                             ) : null}
                                         </div>
@@ -690,11 +756,13 @@ export default function BecomeExpert() {
                                                                 'languages',
                                                                 e.target.checked
                                                                     ? [
-                                                                          ...(data.languages ?? []),
+                                                                          ...(data.languages ??
+                                                                              []),
                                                                           language.value,
                                                                       ]
                                                                     : (
-                                                                          data.languages ?? []
+                                                                          data.languages ??
+                                                                          []
                                                                       ).filter(
                                                                           (
                                                                               item,
@@ -705,7 +773,9 @@ export default function BecomeExpert() {
                                                             );
                                                         }}
                                                     />
-                                                    <span>{language.label}</span>
+                                                    <span>
+                                                        {language.label}
+                                                    </span>
                                                 </label>
                                             );
                                         })}
@@ -722,9 +792,7 @@ export default function BecomeExpert() {
                                         <input
                                             value={languageQuery}
                                             onChange={(e) =>
-                                                setLanguageQuery(
-                                                    e.target.value,
-                                                )
+                                                setLanguageQuery(e.target.value)
                                             }
                                             className={inputClass}
                                             placeholder="Search language"
@@ -733,13 +801,11 @@ export default function BecomeExpert() {
                                             <div className="grid gap-2 sm:grid-cols-2">
                                                 {filteredLanguageOptions.map(
                                                     (language) => {
-                                                        const checked =
-                                                            (
-                                                                data.languages ??
-                                                                []
-                                                            ).includes(
-                                                                language.value,
-                                                            );
+                                                        const checked = (
+                                                            data.languages ?? []
+                                                        ).includes(
+                                                            language.value,
+                                                        );
 
                                                         return (
                                                             <label
@@ -761,24 +827,25 @@ export default function BecomeExpert() {
                                                                     onChange={(
                                                                         e,
                                                                     ) => {
-                                                                        const nextLanguages = e
-                                                                            .target
-                                                                            .checked
-                                                                            ? [
-                                                                                  ...(data.languages ??
-                                                                                      []),
-                                                                                  language.value,
-                                                                              ]
-                                                                            : (
-                                                                                  data.languages ??
-                                                                                  []
-                                                                              ).filter(
-                                                                                  (
-                                                                                      item,
-                                                                                  ) =>
-                                                                                      item !==
+                                                                        const nextLanguages =
+                                                                            e
+                                                                                .target
+                                                                                .checked
+                                                                                ? [
+                                                                                      ...(data.languages ??
+                                                                                          []),
                                                                                       language.value,
-                                                                              );
+                                                                                  ]
+                                                                                : (
+                                                                                      data.languages ??
+                                                                                      []
+                                                                                  ).filter(
+                                                                                      (
+                                                                                          item,
+                                                                                      ) =>
+                                                                                          item !==
+                                                                                          language.value,
+                                                                                  );
 
                                                                         setData(
                                                                             'languages',
@@ -800,7 +867,9 @@ export default function BecomeExpert() {
                                         <p className="mt-2 text-xs text-muted-foreground">
                                             Selected:{' '}
                                             {selectedLanguageLabels.length > 0
-                                                ? selectedLanguageLabels.join(', ')
+                                                ? selectedLanguageLabels.join(
+                                                      ', ',
+                                                  )
                                                 : '—'}
                                         </p>
                                         {errors.languages ? (
@@ -870,7 +939,8 @@ export default function BecomeExpert() {
                                                                 key,
                                                             );
                                                         const atLimit =
-                                                            (data.expertise_domains
+                                                            (data
+                                                                .expertise_domains
                                                                 ?.length ??
                                                                 0) >=
                                                                 maxExpertiseDomains &&
@@ -956,7 +1026,9 @@ export default function BecomeExpert() {
                                                     ar="نبذة قصيرة"
                                                 />{' '}
                                                 ({lang.toUpperCase()}){' '}
-                                                {lang === 'fr' ? requiredMark : null}
+                                                {lang === 'fr'
+                                                    ? requiredMark
+                                                    : null}
                                             </label>
                                             <textarea
                                                 value={
@@ -1113,9 +1185,13 @@ export default function BecomeExpert() {
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp,image/gif"
                                     onChange={(e) => {
-                                        const file = e.target.files?.[0] ?? null;
+                                        const file =
+                                            e.target.files?.[0] ?? null;
 
-                                        if (file && file.size > maxCvSizeBytes) {
+                                        if (
+                                            file &&
+                                            file.size > maxCvSizeBytes
+                                        ) {
                                             setImageSizeError(
                                                 'The image must be 5 MB or smaller.',
                                             );
@@ -1146,7 +1222,8 @@ export default function BecomeExpert() {
                                     </p>
                                 ) : null}
                                 <p className={helperClass}>
-                                    Required. JPEG, PNG, WebP, or GIF. Max size: 5 MB.
+                                    Required. JPEG, PNG, WebP, or GIF. Max size:
+                                    5 MB.
                                 </p>
                             </div>
 

@@ -9,14 +9,16 @@ function LocaleBar({ label, count, total, colorClass }) {
         <div className="space-y-1.5">
             <div className="flex items-center justify-between gap-2 text-xs">
                 <span className="font-medium text-tblack">{label}</span>
-                <span className="tabular-nums text-tgray">
-                    {count}{' '}
-                    <span className="text-tgray/80">({pct}%)</span>
+                <span className="text-tgray tabular-nums">
+                    {count} <span className="text-tgray/80">({pct}%)</span>
                 </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-muted">
                 <div
-                    className={cn('h-full rounded-full transition-all', colorClass)}
+                    className={cn(
+                        'h-full rounded-full transition-all',
+                        colorClass,
+                    )}
                     style={{ width: `${pct}%` }}
                 />
             </div>
@@ -39,17 +41,15 @@ export default function NewsletterAudienceOverview({ stats = {} }) {
                         <Users className="size-7" />
                     </span>
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-tgray">
+                        <p className="text-xs font-semibold tracking-wider text-tgray uppercase">
                             Audience overview
                         </p>
-                        <p className="text-3xl font-bold tabular-nums tracking-tight text-tblack">
+                        <p className="text-3xl font-bold tracking-tight text-tblack tabular-nums">
                             {total}
                         </p>
                         <p className="mt-0.5 text-sm text-tgray">
                             active subscriber{total === 1 ? '' : 's'}
-                            {unknown > 0
-                                ? ` · ${unknown} without locale`
-                                : ''}
+                            {unknown > 0 ? ` · ${unknown} without locale` : ''}
                         </p>
                     </div>
                 </div>
@@ -58,10 +58,10 @@ export default function NewsletterAudienceOverview({ stats = {} }) {
                     <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-beta-white px-3 py-2.5">
                         <Mail className="size-4 shrink-0 text-alpha-green" />
                         <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wide text-tgray">
+                            <p className="text-[10px] font-semibold tracking-wide text-tgray uppercase">
                                 EN
                             </p>
-                            <p className="text-lg font-bold tabular-nums text-tblack">
+                            <p className="text-lg font-bold text-tblack tabular-nums">
                                 {en}
                             </p>
                         </div>
@@ -69,10 +69,10 @@ export default function NewsletterAudienceOverview({ stats = {} }) {
                     <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-beta-white px-3 py-2.5">
                         <Globe2 className="size-4 shrink-0 text-alpha-yellow" />
                         <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wide text-tgray">
+                            <p className="text-[10px] font-semibold tracking-wide text-tgray uppercase">
                                 FR
                             </p>
-                            <p className="text-lg font-bold tabular-nums text-tblack">
+                            <p className="text-lg font-bold text-tblack tabular-nums">
                                 {fr}
                             </p>
                         </div>
@@ -80,10 +80,10 @@ export default function NewsletterAudienceOverview({ stats = {} }) {
                     <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-beta-white px-3 py-2.5">
                         <Globe2 className="size-4 shrink-0 text-alpha-purple" />
                         <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wide text-tgray">
+                            <p className="text-[10px] font-semibold tracking-wide text-tgray uppercase">
                                 AR
                             </p>
-                            <p className="text-lg font-bold tabular-nums text-tblack">
+                            <p className="text-lg font-bold text-tblack tabular-nums">
                                 {ar}
                             </p>
                         </div>

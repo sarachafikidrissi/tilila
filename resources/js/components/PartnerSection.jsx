@@ -30,7 +30,9 @@ export function PartnerLogoTile({ name, logoUrl, subtitle, tall = false }) {
                 </span>
             ) : null}
             {subtitle ? (
-                <p className="mt-1 text-center text-xs text-tgray">{subtitle}</p>
+                <p className="mt-1 text-center text-xs text-tgray">
+                    {subtitle}
+                </p>
             ) : null}
         </div>
     );

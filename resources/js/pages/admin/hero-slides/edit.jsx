@@ -54,15 +54,18 @@ export default function AdminHeroSlideEdit({ slide }) {
             <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:pb-10">
                 <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-start sm:justify-between sm:pb-8">
                     <div>
-                        <p className="text-sm font-medium text-tgray">Hero Carousel</p>
+                        <p className="text-sm font-medium text-tgray">
+                            Hero Carousel
+                        </p>
                         <h1 className="text-2xl font-bold tracking-tight text-tblack">
                             Edit slide
-                            <code className="ml-2 rounded bg-muted px-2 py-0.5 text-base font-mono">
+                            <code className="ml-2 rounded bg-muted px-2 py-0.5 font-mono text-base">
                                 {slide.slide_key}
                             </code>
                         </h1>
                         <p className="mt-1 max-w-2xl text-sm text-tgray">
-                            Update this hero carousel slide's content and settings.
+                            Update this hero carousel slide's content and
+                            settings.
                         </p>
                     </div>
                     <Button asChild variant="outline">

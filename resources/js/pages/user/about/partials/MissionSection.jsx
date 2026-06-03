@@ -34,7 +34,7 @@ export default function MissionSection() {
     return (
         <section
             id="mission"
-            className="scroll-mt-16 mx-auto max-w-7xl px-4 py-10"
+            className="mx-auto max-w-7xl scroll-mt-16 px-4 py-10"
         >
             <div className="grid items-center gap-10 lg:grid-cols-12">
                 <div className="lg:col-span-6">
@@ -95,7 +95,7 @@ export default function MissionSection() {
                                 <div className="text-2xl font-semibold text-tblack">
                                     {item.value}
                                 </div>
-                                <div className="mt-1 text-xs font-medium leading-snug text-tgray">
+                                <div className="mt-1 text-xs leading-snug font-medium text-tgray">
                                     <TransText
                                         en={item.en}
                                         fr={item.fr}

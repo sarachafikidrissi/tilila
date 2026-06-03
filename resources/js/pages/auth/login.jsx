@@ -134,14 +134,13 @@ export default function Login({
                                     {t('auth.login.submit')}
                                 </Button>
                             </div>
-
                         </>
                     )}
                 </Form>
 
                 {showDemoLogins && (
                     <div className="flex flex-col gap-3 border-t border-border pt-6">
-                        <p className="text-center text-xs font-medium uppercase tracking-wide text-tgray">
+                        <p className="text-center text-xs font-medium tracking-wide text-tgray uppercase">
                             {t('auth.login.demoDivider')}
                         </p>
                         <div className="grid gap-3 sm:grid-cols-2">

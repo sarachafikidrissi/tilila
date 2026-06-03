@@ -38,6 +38,16 @@ class TililaEditionSeeder extends Seeder
                 $payload,
             );
         }
+
+        TililaEdition::query()->update(['is_current' => false]);
+
+        $currentYear = (string) now()->year;
+        $current = TililaEdition::query()->where('year', $currentYear)->first()
+            ?? TililaEdition::query()->orderByDesc('year')->orderByDesc('id')->first();
+
+        if ($current !== null) {
+            $current->update(['is_current' => true]);
+        }
     }
 
     private function sortForYear(string $year): int
@@ -50,6 +60,7 @@ class TililaEditionSeeder extends Seeder
             '2023' => 6,
             '2024' => 7,
             '2025' => 8,
+            '2026' => 9,
             default => max(1, (int) $year - 2017),
         };
     }
@@ -381,6 +392,18 @@ class TililaEditionSeeder extends Seeder
                     $this->juror('Abdellah Tourabi', 'Journalist & TV presenter', 'Journaliste & présentateur TV', 'صحفي ومقدم تلفزيوني'),
                 ],
             ],
+            [
+                'year' => '2026',
+                'edition_label' => $this->label(8, 2026),
+                'theme' => $this->triple(
+                    'Current edition — submissions are open until the awards ceremony.',
+                    'Édition en cours — les candidatures sont ouvertes jusqu’à la cérémonie.',
+                    'الدورة الحالية — الترشيحات مفتوحة حتى حفل التوزيع.',
+                ),
+                'cover_image_path' => null,
+                'winners' => [],
+                'jury' => [],
+            ],
         ];
     }
 
@@ -397,6 +420,7 @@ class TililaEditionSeeder extends Seeder
             5 => ['en' => '5th', 'fr' => '5e', 'ar' => 'الخامسة'],
             6 => ['en' => '6th', 'fr' => '6e', 'ar' => 'السادسة'],
             7 => ['en' => '7th', 'fr' => '7e', 'ar' => 'السابعة'],
+            8 => ['en' => '8th', 'fr' => '8e', 'ar' => 'الثامنة'],
         ];
 
         $o = $ordinals[$n] ?? ['en' => (string) $n, 'fr' => (string) $n, 'ar' => (string) $n];

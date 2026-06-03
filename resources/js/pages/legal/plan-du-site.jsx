@@ -29,7 +29,12 @@ const TREE = [
         fr: 'Événements',
         ar: 'الفعاليات',
         children: [
-            { href: '/tilila', en: 'Tilila Awards', fr: 'Tilila Awards', ar: 'جوائز تيليلا' },
+            {
+                href: '/tilila',
+                en: 'Tilila Awards',
+                fr: 'Tilila Awards',
+                ar: 'جوائز تيليلا',
+            },
             { href: '/tililab', en: 'Tililab', fr: 'Tililab', ar: 'تيليلاب' },
             {
                 href: '/events?view=calendar',
@@ -120,7 +125,7 @@ export default function PlanDuSite() {
                                 />
                             </Link>
                             {item.children ? (
-                                <ul className="mt-2 ms-4 list-disc space-y-1 text-muted-foreground">
+                                <ul className="ms-4 mt-2 list-disc space-y-1 text-muted-foreground">
                                     {item.children.map((ch) => (
                                         <li key={ch.href}>
                                             <Link

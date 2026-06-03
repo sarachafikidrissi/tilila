@@ -51,7 +51,7 @@ export default function AdminTililaConnectRequestsIndex({ requests = [] }) {
                             ) : (
                                 rows.map((r) => (
                                     <TableRow key={r.id}>
-                                        <TableCell className="whitespace-nowrap text-xs text-tgray">
+                                        <TableCell className="text-xs whitespace-nowrap text-tgray">
                                             {r.created_at
                                                 ? new Date(
                                                       r.created_at,

@@ -15,8 +15,7 @@ export const TILILA_INSTITUTIONAL_PARTNERS = [
             fr: 'Union des Agences Conseil en Communication',
             ar: 'اتحاد وكالات الاستشارة في الاتصال',
         },
-        logoUrl:
-            '/assets/PartenairesInstitutionnels/Logo-UACC-01-200x200.png',
+        logoUrl: '/assets/PartenairesInstitutionnels/Logo-UACC-01-200x200.png',
     },
     {
         id: 'gam',
@@ -26,8 +25,7 @@ export const TILILA_INSTITUTIONAL_PARTNERS = [
             fr: 'Groupement des Annonceurs du Maroc',
             ar: 'تجمع المعلنين في المغرب',
         },
-        logoUrl:
-            '/assets/PartenairesInstitutionnels/Logo-GAM-01-200x200.png',
+        logoUrl: '/assets/PartenairesInstitutionnels/Logo-GAM-01-200x200.png',
     },
 ];
 
@@ -77,13 +75,11 @@ export const TILILA_MEDIA_PARTNERS = [
     {
         id: 'uradio',
         name: 'U Radio',
-        logoUrl:
-            '/assets/partenairesMedia/Logo-URadio-def-3-01-1-141x100.png',
+        logoUrl: '/assets/partenairesMedia/Logo-URadio-def-3-01-1-141x100.png',
     },
     {
         id: 'media-marketing',
         name: 'Media Marketing Magazine',
-        logoUrl:
-            '/assets/partenairesMedia/Logo-Media-Marketing-200x76.png',
+        logoUrl: '/assets/partenairesMedia/Logo-Media-Marketing-200x76.png',
     },
 ];

@@ -51,4 +51,3 @@ export default function LatestMedia({ items = [] }) {
         </section>
     );
 }
-

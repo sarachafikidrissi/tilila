@@ -376,7 +376,18 @@ export default function EditionForm({
                                 ) : null}
                             </div>
                         </div>
-                        <div className="flex items-end gap-3">
+                        <div className="flex flex-col gap-3 sm:items-end">
+                            <label className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+                                <input
+                                    type="checkbox"
+                                    checked={Boolean(data.is_current)}
+                                    onChange={(e) =>
+                                        setData('is_current', e.target.checked)
+                                    }
+                                    className="size-4 rounded border-border"
+                                />
+                                Current edition (open for submissions)
+                            </label>
                             <label className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
                                 <input
                                     type="checkbox"
@@ -463,8 +474,8 @@ export default function EditionForm({
                             Ceremony video (YouTube)
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            Optional link to the awards ceremony replay. Shown on
-                            the public edition page.
+                            Optional link to the awards ceremony replay. Shown
+                            on the public edition page.
                         </p>
                         <Input
                             id="ceremony_video_url"

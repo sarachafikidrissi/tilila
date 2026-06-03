@@ -15,7 +15,15 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Head, Link, router } from '@inertiajs/react';
-import { ChevronDown, ChevronUp, GripVertical, Pencil, Plus, Power, Trash2 } from 'lucide-react';
+import {
+    ChevronDown,
+    ChevronUp,
+    GripVertical,
+    Pencil,
+    Plus,
+    Power,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 
 import {
@@ -42,13 +50,34 @@ import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 
 const KNOWN_ROUTE_KEYS = [
-    'home', 'about', 'tililab', 'tilila', 'gouvernance',
-    'experts', 'events', 'opportunities', 'media',
+    'home',
+    'about',
+    'tililab',
+    'tilila',
+    'gouvernance',
+    'experts',
+    'events',
+    'opportunities',
+    'media',
 ];
 
-function SortableRow({ slide, index, total, onMoveUp, onMoveDown, onToggle, onDelete }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-        useSortable({ id: slide.id });
+function SortableRow({
+    slide,
+    index,
+    total,
+    onMoveUp,
+    onMoveDown,
+    onToggle,
+    onDelete,
+}) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: slide.id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -75,7 +104,7 @@ function SortableRow({ slide, index, total, onMoveUp, onMoveDown, onToggle, onDe
                         type="button"
                         disabled={index === 0}
                         onClick={() => onMoveUp(index)}
-                        className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                         aria-label="Move up"
                     >
                         <ChevronUp className="size-4" />
@@ -84,7 +113,7 @@ function SortableRow({ slide, index, total, onMoveUp, onMoveDown, onToggle, onDe
                         type="button"
                         disabled={index === total - 1}
                         onClick={() => onMoveDown(index)}
-                        className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="p-0.5 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                         aria-label="Move down"
                     >
                         <ChevronDown className="size-4" />
@@ -93,7 +122,7 @@ function SortableRow({ slide, index, total, onMoveUp, onMoveDown, onToggle, onDe
             </TableCell>
             <TableCell>
                 {slide.image_url ? (
-                    <div className="w-14 h-10 overflow-hidden rounded-lg border border-border bg-muted">
+                    <div className="h-10 w-14 overflow-hidden rounded-lg border border-border bg-muted">
                         <img
                             src={slide.image_url}
                             alt=""
@@ -101,23 +130,28 @@ function SortableRow({ slide, index, total, onMoveUp, onMoveDown, onToggle, onDe
                         />
                     </div>
                 ) : (
-                    <div className="w-14 h-10 rounded-lg border border-border bg-muted" />
+                    <div className="h-10 w-14 rounded-lg border border-border bg-muted" />
                 )}
             </TableCell>
             <TableCell>
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
                     {slide.slide_key}
                 </code>
             </TableCell>
             <TableCell className="max-w-[200px] truncate text-sm text-muted-foreground">
                 {slide.title_before?.fr ?? slide.title_before?.en ?? '—'}
                 {slide.title_accent?.fr ? (
-                    <span className="text-beta-blue"> {slide.title_accent.fr}</span>
+                    <span className="text-beta-blue">
+                        {' '}
+                        {slide.title_accent.fr}
+                    </span>
                 ) : null}
             </TableCell>
             <TableCell>
                 <Badge variant="outline" className="text-xs capitalize">
-                    {slide.display_mode === 'banner_image' ? 'Banner' : 'Normal'}
+                    {slide.display_mode === 'banner_image'
+                        ? 'Banner'
+                        : 'Normal'}
                 </Badge>
             </TableCell>
             <TableCell>
@@ -171,25 +205,38 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
     );
 
     const handleToggle = (slide) => {
-        router.patch(`/admin/hero-slides/${slide.id}/toggle`, {}, {
-            preserveScroll: true,
-        });
+        router.patch(
+            `/admin/hero-slides/${slide.id}/toggle`,
+            {},
+            {
+                preserveScroll: true,
+            },
+        );
     };
 
     const sendReorder = (reordered) => {
-        router.post('/admin/hero-slides/reorder', {
-            ordered_ids: reordered.map((s) => s.id),
-        }, { preserveScroll: true });
+        router.post(
+            '/admin/hero-slides/reorder',
+            {
+                ordered_ids: reordered.map((s) => s.id),
+            },
+            { preserveScroll: true },
+        );
     };
 
     const handleMoveUp = (index) => {
         if (index === 0) return;
         const reordered = [...slides];
-        [reordered[index - 1], reordered[index]] = [reordered[index], reordered[index - 1]];
+        [reordered[index - 1], reordered[index]] = [
+            reordered[index],
+            reordered[index - 1],
+        ];
         setSlides(reordered);
         sendReorder(reordered);
     };
@@ -197,7 +244,10 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
     const handleMoveDown = (index) => {
         if (index === slides.length - 1) return;
         const reordered = [...slides];
-        [reordered[index], reordered[index + 1]] = [reordered[index + 1], reordered[index]];
+        [reordered[index], reordered[index + 1]] = [
+            reordered[index + 1],
+            reordered[index],
+        ];
         setSlides(reordered);
         sendReorder(reordered);
     };
@@ -231,16 +281,22 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
             <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:pb-10">
                 <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-start sm:justify-between sm:pb-8">
                     <div>
-                        <p className="text-sm font-medium text-tgray">Contenu</p>
+                        <p className="text-sm font-medium text-tgray">
+                            Contenu
+                        </p>
                         <h1 className="text-2xl font-bold tracking-tight text-tblack">
                             Hero Carousel
                         </h1>
                         <p className="mt-1 max-w-2xl text-sm text-tgray">
-                            Manage the hero carousel slides shown across the site. Drag or use the arrows to reorder.
+                            Manage the hero carousel slides shown across the
+                            site. Drag or use the arrows to reorder.
                         </p>
                     </div>
                     <Button asChild>
-                        <Link href="/admin/hero-slides/create" className="gap-2">
+                        <Link
+                            href="/admin/hero-slides/create"
+                            className="gap-2"
+                        >
                             <Plus className="size-4" />
                             New slide
                         </Link>
@@ -261,22 +317,34 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="w-8 px-2">
-                                            <span className="sr-only">drag to reorder</span>
+                                            <span className="sr-only">
+                                                drag to reorder
+                                            </span>
                                         </TableHead>
-                                        <TableHead className="w-16">Order</TableHead>
-                                        <TableHead className="w-20">Image</TableHead>
+                                        <TableHead className="w-16">
+                                            Order
+                                        </TableHead>
+                                        <TableHead className="w-20">
+                                            Image
+                                        </TableHead>
                                         <TableHead>Slide key</TableHead>
                                         <TableHead>Title (FR)</TableHead>
                                         <TableHead>Mode</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
+                                        <TableHead className="text-right">
+                                            Actions
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {slides.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={8} className="text-center text-sm text-muted-foreground py-10">
-                                                No slides yet. Create your first slide.
+                                            <TableCell
+                                                colSpan={8}
+                                                className="py-10 text-center text-sm text-muted-foreground"
+                                            >
+                                                No slides yet. Create your first
+                                                slide.
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -299,15 +367,24 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                 </div>
             </div>
 
-            <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+            <AlertDialog
+                open={Boolean(deleteTarget)}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Delete slide "{deleteTarget?.slide_key}"?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            Delete slide "{deleteTarget?.slide_key}"?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
                             This action cannot be undone.
-                            {KNOWN_ROUTE_KEYS.includes(deleteTarget?.slide_key ?? '') && (
+                            {KNOWN_ROUTE_KEYS.includes(
+                                deleteTarget?.slide_key ?? '',
+                            ) && (
                                 <span className="mt-2 block font-semibold text-amber-600">
-                                    Warning: "{deleteTarget?.slide_key}" is a built-in slide key. Deleting it will leave the hero blank on that route.
+                                    Warning: "{deleteTarget?.slide_key}" is a
+                                    built-in slide key. Deleting it will leave
+                                    the hero blank on that route.
                                 </span>
                             )}
                         </AlertDialogDescription>

@@ -296,8 +296,7 @@ export function TililabJurySection({ editions = [] }) {
                         };
                         const editionId = edition.id;
                         const hasEditionPage =
-                            editionId &&
-                            !String(editionId).startsWith('hist-');
+                            editionId && !String(editionId).startsWith('hist-');
 
                         return (
                             <div
@@ -322,7 +321,7 @@ export function TililabJurySection({ editions = [] }) {
                                 ) : null}
 
                                 {jury.length === 0 ? (
-                                    <p className="mt-4 text-sm italic text-tgray">
+                                    <p className="mt-4 text-sm text-tgray italic">
                                         <TransText
                                             en="Not fully detailed in public communications."
                                             fr="Non détaillé publiquement de façon exhaustive."

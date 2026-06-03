@@ -151,11 +151,7 @@ export default function ArchiveSection({ editions = [] }) {
             <div className="mt-10 rounded-3xl border border-border/60 bg-white/70 p-4 shadow-sm backdrop-blur sm:p-6">
                 <div className="flex items-center justify-between gap-3">
                     <div className="text-base font-semibold text-tblack">
-                        <TransText
-                            en="Editions"
-                            fr="Éditions"
-                            ar="الدورات"
-                        />
+                        <TransText en="Editions" fr="Éditions" ar="الدورات" />
                     </div>
                     <div className="flex items-center gap-2">
                         <button
@@ -167,7 +163,10 @@ export default function ArchiveSection({ editions = [] }) {
                                     const max = el.scrollWidth - el.clientWidth;
                                     const x = el.scrollLeft;
                                     if (x <= 8 && max > 0) {
-                                        el.scrollTo({ left: max, behavior: 'smooth' });
+                                        el.scrollTo({
+                                            left: max,
+                                            behavior: 'smooth',
+                                        });
                                         return;
                                     }
                                 }
@@ -176,9 +175,7 @@ export default function ArchiveSection({ editions = [] }) {
                             disabled={!canPrev}
                             className={[
                                 'inline-flex items-center justify-center rounded-full border border-border bg-background/80 p-2 text-tblack shadow-sm transition-colors hover:bg-secondary',
-                                !canPrev
-                                    ? 'cursor-not-allowed opacity-40'
-                                    : '',
+                                !canPrev ? 'cursor-not-allowed opacity-40' : '',
                             ].join(' ')}
                             aria-label="Previous editions"
                         >
@@ -193,7 +190,10 @@ export default function ArchiveSection({ editions = [] }) {
                                     const max = el.scrollWidth - el.clientWidth;
                                     const x = el.scrollLeft;
                                     if (x >= max - 8 && max > 0) {
-                                        el.scrollTo({ left: 0, behavior: 'smooth' });
+                                        el.scrollTo({
+                                            left: 0,
+                                            behavior: 'smooth',
+                                        });
                                         return;
                                     }
                                 }
@@ -202,9 +202,7 @@ export default function ArchiveSection({ editions = [] }) {
                             disabled={!canNext}
                             className={[
                                 'inline-flex items-center justify-center rounded-full border border-border bg-background/80 p-2 text-tblack shadow-sm transition-colors hover:bg-secondary',
-                                !canNext
-                                    ? 'cursor-not-allowed opacity-40'
-                                    : '',
+                                !canNext ? 'cursor-not-allowed opacity-40' : '',
                             ].join(' ')}
                             aria-label="Next editions"
                         >
@@ -231,7 +229,7 @@ export default function ArchiveSection({ editions = [] }) {
                         onMouseLeave={() => setPaused(false)}
                         onFocusCapture={() => setPaused(true)}
                         onBlurCapture={() => setPaused(false)}
-                        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pr-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pr-2 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                         aria-label="Tilila editions carousel"
                     >
                         {rows.map((edition) => (
@@ -242,9 +240,14 @@ export default function ArchiveSection({ editions = [] }) {
                                 <div
                                     role="link"
                                     tabIndex={0}
-                                    onClick={() => router.visit(edition.details_url)}
+                                    onClick={() =>
+                                        router.visit(edition.details_url)
+                                    }
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
+                                        if (
+                                            e.key === 'Enter' ||
+                                            e.key === ' '
+                                        ) {
                                             e.preventDefault();
                                             router.visit(edition.details_url);
                                         }
@@ -263,7 +266,7 @@ export default function ArchiveSection({ editions = [] }) {
                                             />
                                         ) : null}
                                         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/35 via-black/0 to-black/0" />
-                                        <div className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-tblack shadow-sm">
+                                        <div className="absolute top-4 left-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-tblack shadow-sm">
                                             {edition.year}
                                         </div>
                                     </div>
@@ -272,9 +275,18 @@ export default function ArchiveSection({ editions = [] }) {
                                         <div className="min-w-0">
                                             <div className="text-base font-semibold text-tblack">
                                                 <TransText
-                                                    en={edition.edition_label?.en ?? ''}
-                                                    fr={edition.edition_label?.fr ?? ''}
-                                                    ar={edition.edition_label?.ar ?? ''}
+                                                    en={
+                                                        edition.edition_label
+                                                            ?.en ?? ''
+                                                    }
+                                                    fr={
+                                                        edition.edition_label
+                                                            ?.fr ?? ''
+                                                    }
+                                                    ar={
+                                                        edition.edition_label
+                                                            ?.ar ?? ''
+                                                    }
                                                 />
                                             </div>
                                             <div className="mt-1 line-clamp-2 text-sm text-tgray">

@@ -54,7 +54,11 @@ const PILLARS = [
 function pickAlt(altObj, locale) {
     if (!altObj || typeof altObj !== 'object') return '';
     return (
-        (locale === 'ar' ? altObj.ar : locale === 'fr' ? altObj.fr : altObj.en) ??
+        (locale === 'ar'
+            ? altObj.ar
+            : locale === 'fr'
+              ? altObj.fr
+              : altObj.en) ??
         altObj.en ??
         ''
     );
@@ -95,7 +99,10 @@ export default function PillarTiles() {
 
                 <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     {PILLARS.map((p) => {
-                        const { src, imageAlt } = getPillarVisual(p.href, slides);
+                        const { src, imageAlt } = getPillarVisual(
+                            p.href,
+                            slides,
+                        );
                         const alt = pickAlt(imageAlt, locale);
 
                         return (
@@ -120,20 +127,20 @@ export default function PillarTiles() {
                                         aria-hidden
                                     />
                                     <div
-                                        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-tblack/10"
+                                        className="pointer-events-none absolute inset-0 ring-1 ring-tblack/10 ring-inset"
                                         aria-hidden
                                     />
                                 </div>
 
                                 <div className="flex flex-1 flex-col p-5 pt-4">
-                                    <h3 className="text-lg font-bold text-foreground visited:text-foreground group-hover:text-beta-blue">
+                                    <h3 className="text-lg font-bold text-foreground group-hover:text-beta-blue visited:text-foreground">
                                         <TransText
                                             en={p.enTitle}
                                             fr={p.frTitle}
                                             ar={p.arTitle}
                                         />
                                     </h3>
-                                    <p className="mt-2 text-xs font-medium leading-relaxed text-muted-foreground">
+                                    <p className="mt-2 text-xs leading-relaxed font-medium text-muted-foreground">
                                         <TransText
                                             en={p.enSub}
                                             fr={p.frSub}

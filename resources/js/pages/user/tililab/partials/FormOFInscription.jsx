@@ -233,7 +233,11 @@ export default function FormOFInscription() {
             <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
                 <div className="px-6 pt-7 pb-6 sm:px-10">
                     <div className="text-xs font-semibold tracking-widest text-beta-blue uppercase">
-                        <TransText en="Tililab contest" fr="Concours Tililab" ar="مسابقة Tililab" />
+                        <TransText
+                            en="Tililab contest"
+                            fr="Concours Tililab"
+                            ar="مسابقة Tililab"
+                        />
                     </div>
                     <div className="mt-2 text-2xl font-extrabold tracking-tight text-tblack">
                         <TransText

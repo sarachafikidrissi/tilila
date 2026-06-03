@@ -128,11 +128,31 @@ export const TILILA_EDITIONS_HISTORY = [
             },
         ],
         jury: [
-            { en: 'Nadia Ghalia Lamhaidi — expert on women’s image in media', fr: 'Nadia Ghalia Lamhaidi — experte image des femmes dans les médias', ar: 'نادية غالية لمحيدي — خبيرة صورة المرأة في الإعلام' },
-            { en: 'Mohamed Beyoud — FICAM', fr: 'Mohamed Beyoud — FICAM', ar: 'محمد بيود — FICAM' },
-            { en: 'Zakia Tahiri — director', fr: 'Zakia Tahiri — réalisatrice', ar: 'زكية التهيري — مخرجة' },
-            { en: 'Lamia Chraïbi — producer', fr: 'Lamia Chraïbi — productrice', ar: 'لمياء الشرايبي — منتجة' },
-            { en: 'Noureddine Lakhmari — director', fr: 'Noureddine Lakhmari — réalisateur', ar: 'نور الدين لخماري — مخرج' },
+            {
+                en: 'Nadia Ghalia Lamhaidi — expert on women’s image in media',
+                fr: 'Nadia Ghalia Lamhaidi — experte image des femmes dans les médias',
+                ar: 'نادية غالية لمحيدي — خبيرة صورة المرأة في الإعلام',
+            },
+            {
+                en: 'Mohamed Beyoud — FICAM',
+                fr: 'Mohamed Beyoud — FICAM',
+                ar: 'محمد بيود — FICAM',
+            },
+            {
+                en: 'Zakia Tahiri — director',
+                fr: 'Zakia Tahiri — réalisatrice',
+                ar: 'زكية التهيري — مخرجة',
+            },
+            {
+                en: 'Lamia Chraïbi — producer',
+                fr: 'Lamia Chraïbi — productrice',
+                ar: 'لمياء الشرايبي — منتجة',
+            },
+            {
+                en: 'Noureddine Lakhmari — director',
+                fr: 'Noureddine Lakhmari — réalisateur',
+                ar: 'نور الدين لخماري — مخرج',
+            },
         ],
     },
     {
@@ -175,7 +195,11 @@ export const TILILA_EDITIONS_HISTORY = [
             { en: 'Latefa Ahrrare', fr: 'Latefa Ahrrare', ar: 'لطيفة أحرار' },
             { en: 'Amal Chafai', fr: 'Amal Chafai', ar: 'أمل الشافعي' },
             { en: 'Basma El Hijri', fr: 'Basma El Hijri', ar: 'بسمة الحجري' },
-            { en: 'Nawal El Aidaoui', fr: 'Nawal El Aidaoui', ar: 'نوال العيداوي' },
+            {
+                en: 'Nawal El Aidaoui',
+                fr: 'Nawal El Aidaoui',
+                ar: 'نوال العيداوي',
+            },
             { en: 'Nawfel Bensari', fr: 'Nawfel Bensari', ar: 'نوفل بنساري' },
         ],
     },
@@ -220,12 +244,36 @@ export const TILILA_EDITIONS_HISTORY = [
             },
         ],
         jury: [
-            { en: 'Sanaa Akroud — producer, director, actress', fr: 'Sanaa Akroud — productrice, réalisatrice, actrice', ar: 'سناء عكرود — منتجة، مخرجة، ممثلة' },
-            { en: 'Rabii Kati — actor', fr: 'Rabii Kati — acteur', ar: 'ربيع الكاتي — ممثل' },
-            { en: 'Zhor Fassi Fihri — director, producer', fr: 'Zhor Fassi Fihri — réalisatrice, productrice', ar: 'زهور فاسي الفهري — مخرجة، منتجة' },
-            { en: 'Mohamed Achaour — director, screenwriter, producer', fr: 'Mohamed Achaour — réalisateur, scénariste, producteur', ar: 'محمد عشور — مخرج، كاتب سيناريو، منتج' },
-            { en: 'Siham El Mechtani El Idrissi — marketing & innovation expert', fr: 'Siham El Mechtani El Idrissi — experte marketing & innovation', ar: 'سهام المشتاني الإدريسي — خبيرة تسويق وابتكار' },
-            { en: 'Ali Boujena — marketing & communication expert', fr: 'Ali Boujena — expert marketing & communication', ar: 'علي بوجنة — خبير تسويق واتصال' },
+            {
+                en: 'Sanaa Akroud — producer, director, actress',
+                fr: 'Sanaa Akroud — productrice, réalisatrice, actrice',
+                ar: 'سناء عكرود — منتجة، مخرجة، ممثلة',
+            },
+            {
+                en: 'Rabii Kati — actor',
+                fr: 'Rabii Kati — acteur',
+                ar: 'ربيع الكاتي — ممثل',
+            },
+            {
+                en: 'Zhor Fassi Fihri — director, producer',
+                fr: 'Zhor Fassi Fihri — réalisatrice, productrice',
+                ar: 'زهور فاسي الفهري — مخرجة، منتجة',
+            },
+            {
+                en: 'Mohamed Achaour — director, screenwriter, producer',
+                fr: 'Mohamed Achaour — réalisateur, scénariste, producteur',
+                ar: 'محمد عشور — مخرج، كاتب سيناريو، منتج',
+            },
+            {
+                en: 'Siham El Mechtani El Idrissi — marketing & innovation expert',
+                fr: 'Siham El Mechtani El Idrissi — experte marketing & innovation',
+                ar: 'سهام المشتاني الإدريسي — خبيرة تسويق وابتكار',
+            },
+            {
+                en: 'Ali Boujena — marketing & communication expert',
+                fr: 'Ali Boujena — expert marketing & communication',
+                ar: 'علي بوجنة — خبير تسويق واتصال',
+            },
         ],
     },
     {
@@ -269,12 +317,36 @@ export const TILILA_EDITIONS_HISTORY = [
             },
         ],
         jury: [
-            { en: 'Hind Bensari — director', fr: 'Hind Bensari — réalisatrice', ar: 'هند بنساري — مخرجة' },
-            { en: 'Fihr Kettani — cultural entrepreneur', fr: 'Fihr Kettani — entrepreneur culturel', ar: 'فيهر كتاني — رائد أعمال ثقافي' },
-            { en: 'Idir Ouguindi — associative activist & inclusive development consultant', fr: 'Idir Ouguindi — militant associatif & consultant développement inclusif', ar: 'إدر وكيندي — ناشط جمعوي ومستشار تنمية شاملة' },
-            { en: 'Samira Rafi / Ghita El Kholti — creative director', fr: 'Samira Rafi / Ghita El Kholti — directrice de création', ar: 'سميرة رافي / غيثة الخولتي — مديرة إبداعية' },
-            { en: 'Mounia Lamkimel — actress', fr: 'Mounia Lamkimel — actrice', ar: 'منية لمكيميل — ممثلة' },
-            { en: 'Abdellah Tourabi — journalist & TV presenter', fr: 'Abdellah Tourabi — journaliste & présentateur TV', ar: 'عبد الله التورابي — صحفي ومقدم تلفزيوني' },
+            {
+                en: 'Hind Bensari — director',
+                fr: 'Hind Bensari — réalisatrice',
+                ar: 'هند بنساري — مخرجة',
+            },
+            {
+                en: 'Fihr Kettani — cultural entrepreneur',
+                fr: 'Fihr Kettani — entrepreneur culturel',
+                ar: 'فيهر كتاني — رائد أعمال ثقافي',
+            },
+            {
+                en: 'Idir Ouguindi — associative activist & inclusive development consultant',
+                fr: 'Idir Ouguindi — militant associatif & consultant développement inclusif',
+                ar: 'إدر وكيندي — ناشط جمعوي ومستشار تنمية شاملة',
+            },
+            {
+                en: 'Samira Rafi / Ghita El Kholti — creative director',
+                fr: 'Samira Rafi / Ghita El Kholti — directrice de création',
+                ar: 'سميرة رافي / غيثة الخولتي — مديرة إبداعية',
+            },
+            {
+                en: 'Mounia Lamkimel — actress',
+                fr: 'Mounia Lamkimel — actrice',
+                ar: 'منية لمكيميل — ممثلة',
+            },
+            {
+                en: 'Abdellah Tourabi — journalist & TV presenter',
+                fr: 'Abdellah Tourabi — journaliste & présentateur TV',
+                ar: 'عبد الله التورابي — صحفي ومقدم تلفزيوني',
+            },
         ],
     },
 ];

@@ -17,7 +17,9 @@ function getYouTubeEmbedUrl(url) {
         return `https://www.youtube.com/embed/${watchMatch[1]}`;
     }
 
-    const embedMatch = trimmed.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/);
+    const embedMatch = trimmed.match(
+        /youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/,
+    );
     if (embedMatch) {
         return `https://www.youtube.com/embed/${embedMatch[1]}`;
     }
@@ -47,8 +49,8 @@ export default function ExpertOfMonthSection({ entry }) {
                         <TransText
                             tag="p"
                             className="text-sm text-muted-foreground"
-                            en='A monthly spotlight with a featured video conversation.'
-                            fr='Un coup de projecteur mensuel avec une conversation vidéo en vedette.'
+                            en="A monthly spotlight with a featured video conversation."
+                            fr="Un coup de projecteur mensuel avec une conversation vidéo en vedette."
                             ar="تسليط الضوء الشهري مع محادثة فيديو مميزة"
                         />
 

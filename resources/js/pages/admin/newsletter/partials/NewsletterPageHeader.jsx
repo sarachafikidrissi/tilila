@@ -18,7 +18,7 @@ export default function NewsletterPageHeader({
                             <Mail className="size-6" />
                         </span>
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wider text-beta-blue">
+                            <p className="text-xs font-semibold tracking-wider text-beta-blue uppercase">
                                 Communication
                             </p>
                             <h1 className="text-2xl font-bold tracking-tight text-tblack sm:text-3xl">
@@ -34,7 +34,7 @@ export default function NewsletterPageHeader({
                     <div className="flex flex-wrap items-center gap-2">
                         <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-card/80 px-3 py-2 text-sm backdrop-blur-sm">
                             <Users className="size-4 text-beta-blue" />
-                            <span className="font-semibold tabular-nums text-tblack">
+                            <span className="font-semibold text-tblack tabular-nums">
                                 {total}
                             </span>
                             <span className="text-tgray">subscribers</span>

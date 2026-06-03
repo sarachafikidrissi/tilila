@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils';
 
 const AUTOPLAY_MS = 6500;
 
-
 export function isHomeHeroPath(pathname) {
     const path = (pathname || '/').replace(/\/$/, '') || '/';
     return path === '/';
@@ -112,7 +111,13 @@ function CtaButtons({ ctas, isActive }) {
                     <Link
                         key={i}
                         href={cta.url ?? '#'}
-                        tabIndex={isActive !== undefined ? (isActive ? 0 : -1) : undefined}
+                        tabIndex={
+                            isActive !== undefined
+                                ? isActive
+                                    ? 0
+                                    : -1
+                                : undefined
+                        }
                         className={
                             isPrimary
                                 ? 'inline-flex w-full items-center justify-center rounded-xl bg-beta-blue px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-tblack/30 transition hover:bg-beta-blue/90 sm:w-auto'
@@ -173,17 +178,17 @@ function HeroSlideLayer({ slide, isActive, locale }) {
                 aria-hidden
             />
 
-            <div className="absolute  inset-0 flex flex-col justify-end ">
-                <div className="mx-auto w-full max-w-[min(100%,1920px)] px-5  pt-24 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
+            <div className="absolute inset-0 flex flex-col justify-end">
+                <div className="mx-auto w-full max-w-[min(100%,1920px)] px-5 pt-24 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
                     <div
                         className={cn(
-                            'max-w-2xl transition-all duration-700 ease-out  motion-reduce:transition-none',
+                            'max-w-2xl transition-all duration-700 ease-out motion-reduce:transition-none',
                             isActive
                                 ? 'translate-y-0 opacity-100'
                                 : 'translate-y-3 opacity-0',
                         )}
                     >
-                        <div className="mb-4 flex flex-wrap  items-center gap-2 sm:mb-5 sm:gap-3">
+                        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
                             {slide?.cardKicker ? (
                                 <TransText
                                     tag="p"

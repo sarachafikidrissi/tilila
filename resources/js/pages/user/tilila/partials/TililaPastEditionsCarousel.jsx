@@ -22,20 +22,43 @@ function openEdition(edition) {
     router.visit(edition.details_url);
 }
 
-export default function TililaPastEditionsCarousel({ editions = [] }) {
+export default function TililaPastEditionsCarousel({
+    editions = [],
+    excludeEditionId = null,
+    excludeYear = null,
+}) {
     const rows = useMemo(() => {
+        const shouldExclude = (edition) => {
+            if (!edition) return true;
+            if (edition.is_current) return true;
+            if (
+                excludeEditionId != null &&
+                String(edition.id) === String(excludeEditionId)
+            ) {
+                return true;
+            }
+            if (
+                excludeYear != null &&
+                String(edition.year) === String(excludeYear)
+            ) {
+                return true;
+            }
+            return false;
+        };
+
         const fromApi = Array.isArray(editions)
-            ? editions.map(normalizeEdition).filter(Boolean)
+            ? editions
+                  .map(normalizeEdition)
+                  .filter((edition) => edition && !shouldExclude(edition))
             : [];
         if (fromApi.length > 0) {
-            return [...fromApi].sort(
-                (a, b) => Number(b.year) - Number(a.year),
-            );
+            return [...fromApi].sort((a, b) => Number(b.year) - Number(a.year));
         }
         return [...TILILA_EDITIONS_HISTORY]
             .map(editionRowFromHistory)
+            .filter((edition) => !shouldExclude(edition))
             .sort((a, b) => Number(b.year) - Number(a.year));
-    }, [editions]);
+    }, [editions, excludeEditionId, excludeYear]);
 
     const trackRef = useRef(null);
     const [paused, setPaused] = useState(false);
@@ -90,8 +113,7 @@ export default function TililaPastEditionsCarousel({ editions = [] }) {
 
         if (autoTimerRef.current) clearInterval(autoTimerRef.current);
         autoTimerRef.current = setInterval(() => {
-            if (Date.now() - (lastInteractionAtRef.current || 0) < 3500)
-                return;
+            if (Date.now() - (lastInteractionAtRef.current || 0) < 3500) return;
             autoAdvance();
         }, 4200);
 
@@ -183,7 +205,7 @@ export default function TililaPastEditionsCarousel({ editions = [] }) {
                 </div>
 
                 <div className="relative mt-8">
-                    <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-10 bg-linear-to-e from-background to-transparent" />
+                    <div className="bg-linear-to-e pointer-events-none absolute inset-y-0 start-0 z-10 w-10 from-background to-transparent" />
                     <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-10 bg-linear-to-l from-background to-transparent" />
                     <div
                         ref={trackRef}

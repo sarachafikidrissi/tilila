@@ -9,7 +9,7 @@ class TililabEditionSeeder extends Seeder
 {
     public function run(): void
     {
-        TililabEdition::query()->whereNotIn('year', ['2021', '2022', '2023', '2024', '2025'])->delete();
+        TililabEdition::query()->whereNotIn('year', ['2021', '2022', '2023', '2024', '2025', '2026'])->delete();
 
         foreach ($this->editions() as $row) {
             $year = (int) $row['year'];
@@ -29,6 +29,16 @@ class TililabEditionSeeder extends Seeder
                     'sort' => $year - 2020,
                 ],
             );
+        }
+
+        TililabEdition::query()->update(['is_current' => false]);
+
+        $currentYear = (string) now()->year;
+        $current = TililabEdition::query()->where('year', $currentYear)->first()
+            ?? TililabEdition::query()->orderByDesc('year')->orderByDesc('id')->first();
+
+        if ($current !== null) {
+            $current->update(['is_current' => true]);
         }
     }
 
@@ -134,6 +144,17 @@ class TililabEditionSeeder extends Seeder
                     ),
                 ],
             ],
+            [
+                'year' => '2026',
+                'edition_label' => $this->label(6, 2026),
+                'theme' => $this->triple(
+                    'Current edition — applications are open until the national final.',
+                    'Édition en cours — les candidatures sont ouvertes jusqu’à la finale nationale.',
+                    'الدورة الحالية — الترشيحات مفتوحة حتى النهائي الوطني.',
+                ),
+                'jury' => $this->jurySeventhTililaEdition(),
+                'winners' => [],
+            ],
         ];
     }
 
@@ -148,6 +169,7 @@ class TililabEditionSeeder extends Seeder
             3 => ['en' => '3rd', 'fr' => '3e', 'ar' => 'الثالثة'],
             4 => ['en' => '4th', 'fr' => '4e', 'ar' => 'الرابعة'],
             5 => ['en' => '5th', 'fr' => '5e', 'ar' => 'الخامسة'],
+            6 => ['en' => '6th', 'fr' => '6e', 'ar' => 'السادسة'],
         ];
 
         $o = $ordinals[$n] ?? ['en' => (string) $n, 'fr' => (string) $n, 'ar' => (string) $n];
