@@ -32,8 +32,9 @@ class HeroSlideSeeder extends Seeder
         return [
             // 0 — home
             [
-                'slide_key'   => 'home',
+                'slide_key' => 'home',
                 'path_prefix' => '/',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => false,
@@ -83,8 +84,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 1 — about
             [
-                'slide_key'   => 'about',
+                'slide_key' => 'about',
                 'path_prefix' => '/about',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => false,
@@ -133,8 +135,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 2 — tililab
             [
-                'slide_key'   => 'tililab',
+                'slide_key' => 'tililab',
                 'path_prefix' => '/tililab',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'banner_image',
                 'image_contain' => false,
@@ -160,8 +163,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 3 — tilila
             [
-                'slide_key'   => 'tilila',
+                'slide_key' => 'tilila',
                 'path_prefix' => '/tilila',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'banner_image',
                 'image_contain' => false,
@@ -187,8 +191,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 4 — gouvernance
             [
-                'slide_key'   => 'gouvernance',
+                'slide_key' => 'gouvernance',
                 'path_prefix' => '/gouvernance',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => true,
@@ -237,8 +242,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 5 — experts
             [
-                'slide_key'   => 'experts',
+                'slide_key' => 'experts',
                 'path_prefix' => '/experts',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => false,
@@ -288,8 +294,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 6 — events
             [
-                'slide_key'   => 'events',
+                'slide_key' => 'events',
                 'path_prefix' => '/events',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => true,
@@ -330,8 +337,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 7 — opportunities
             [
-                'slide_key'   => 'opportunities',
+                'slide_key' => 'opportunities',
                 'path_prefix' => '/opportunities',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => false,
@@ -371,7 +379,7 @@ class HeroSlideSeeder extends Seeder
                 ],
                 'card_line' => [
                     'en' => 'Apply before deadlines.',
-                    'fr' => "Postulez avant les dates limites.",
+                    'fr' => 'Postulez avant les dates limites.',
                     'ar' => "\u{0642}\u{062F}\u{0651}\u{0645} \u{0642}\u{0628}\u{0644} \u{0627}\u{0646}\u{062A}\u{0647}\u{0627}\u{0621} \u{0627}\u{0644}\u{0622}\u{062C}\u{0627}\u{0644}.",
                 ],
                 'ctas' => [
@@ -380,8 +388,9 @@ class HeroSlideSeeder extends Seeder
             ],
             // 8 — media
             [
-                'slide_key'   => 'media',
+                'slide_key' => 'media',
                 'path_prefix' => '/media',
+                'display_type' => 'banner',
                 'is_active' => true,
                 'display_mode' => 'normal',
                 'image_contain' => false,

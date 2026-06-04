@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,6 +25,9 @@ class HeroSlideController extends Controller
                 'is_active' => $s->is_active,
                 'sort_order' => $s->sort_order,
                 'display_mode' => $s->display_mode,
+                'display_type' => $s->display_type ?? 'banner',
+                'path_prefix' => $s->path_prefix,
+                'also_on_home' => (bool) $s->also_on_home,
                 'image_url' => $s->image_url,
                 'title_before' => $s->title_before,
                 'title_accent' => $s->title_accent,
@@ -36,7 +40,9 @@ class HeroSlideController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('admin/hero-slides/create');
+        return Inertia::render('admin/hero-slides/create', [
+            'displayTypeOptions' => ['banner', 'carousel'],
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -52,7 +58,8 @@ class HeroSlideController extends Controller
             $data['sort_order'] = (int) (HeroSlide::query()->max('sort_order') ?? -1) + 1;
         }
 
-        HeroSlide::query()->create($data);
+        $slide = HeroSlide::query()->create($data);
+        $this->syncDisplayTypeForPath($slide->path_prefix, (string) $data['display_type']);
 
         return redirect()->route('admin.hero-slides.index')->with('success', 'Hero slide created.');
     }
@@ -61,6 +68,7 @@ class HeroSlideController extends Controller
     {
         return Inertia::render('admin/hero-slides/edit', [
             'slide' => array_merge($heroSlide->toArray(), ['image_url' => $heroSlide->image_url]),
+            'displayTypeOptions' => ['banner', 'carousel'],
         ]);
     }
 
@@ -76,6 +84,7 @@ class HeroSlideController extends Controller
         }
 
         $heroSlide->update($data);
+        $this->syncDisplayTypeForPath($heroSlide->path_prefix, (string) $data['display_type']);
 
         return redirect()->route('admin.hero-slides.index')->with('success', 'Hero slide updated.');
     }
@@ -95,6 +104,20 @@ class HeroSlideController extends Controller
         $heroSlide->update(['is_active' => ! $heroSlide->is_active]);
 
         return redirect()->route('admin.hero-slides.index')->with('success', 'Hero slide status updated.');
+    }
+
+    public function toggleAlsoOnHome(HeroSlide $heroSlide): RedirectResponse
+    {
+        if (! $this->canHaveAlsoOnHome($heroSlide)) {
+            return back()->with(
+                'warning',
+                'Only slides assigned to a page other than home can be added to the home carousel.',
+            );
+        }
+
+        $heroSlide->update(['also_on_home' => ! $heroSlide->also_on_home]);
+
+        return redirect()->route('admin.hero-slides.index')->with('success', 'Home carousel setting updated.');
     }
 
     public function reorder(Request $request): RedirectResponse
@@ -118,13 +141,11 @@ class HeroSlideController extends Controller
             ? ['required', 'string', 'max:64', Rule::unique('hero_slides', 'slide_key')->ignore($slide->id)]
             : ['required', 'string', 'max:64', Rule::unique('hero_slides', 'slide_key')];
 
-        $pathPrefixRule = $slide
-            ? ['nullable', 'string', 'max:255', Rule::unique('hero_slides', 'path_prefix')->ignore($slide->id)]
-            : ['nullable', 'string', 'max:255', Rule::unique('hero_slides', 'path_prefix')];
-
         $validated = $request->validate([
-            'slide_key'   => $slideKeyRule,
-            'path_prefix' => $pathPrefixRule,
+            'slide_key' => $slideKeyRule,
+            'path_prefix' => ['nullable', 'string', 'max:255'],
+            'display_type' => 'required|string|in:banner,carousel',
+            'also_on_home' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
             'display_mode' => 'required|string|in:normal,banner_image',
@@ -190,7 +211,7 @@ class HeroSlideController extends Controller
             $hasBefore = ! empty(array_filter([$tb['en'] ?? '', $tb['fr'] ?? '', $tb['ar'] ?? '']));
             $hasAccent = ! empty(array_filter([$ta['en'] ?? '', $ta['fr'] ?? '', $ta['ar'] ?? '']));
             if (! $hasBefore && ! $hasAccent) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
+                throw ValidationException::withMessages([
                     'title_before.en' => ['A title is required for normal display mode slides.'],
                 ]);
             }
@@ -201,7 +222,7 @@ class HeroSlideController extends Controller
             $label = $cta['label'] ?? [];
             foreach (['en', 'fr', 'ar'] as $lang) {
                 if (trim((string) ($label[$lang] ?? '')) === '') {
-                    throw \Illuminate\Validation\ValidationException::withMessages([
+                    throw ValidationException::withMessages([
                         "ctas.{$i}.label.{$lang}" => ['A label is required in all languages (EN, FR, AR) for each CTA.'],
                     ]);
                 }
@@ -210,6 +231,47 @@ class HeroSlideController extends Controller
 
         unset($validated['image']);
 
+        $validated['path_prefix'] = $this->normalizePathPrefix($validated['path_prefix'] ?? null);
+
+        if ($validated['path_prefix'] === null || $validated['path_prefix'] === '/') {
+            $validated['also_on_home'] = false;
+        }
+
         return $validated;
+    }
+
+    private function normalizePathPrefix(?string $prefix): ?string
+    {
+        if ($prefix === null || $prefix === '') {
+            return null;
+        }
+
+        return rtrim($prefix, '/') ?: '/';
+    }
+
+    private function syncDisplayTypeForPath(?string $pathPrefix, string $displayType): void
+    {
+        $normalized = $this->normalizePathPrefix($pathPrefix);
+
+        if ($normalized === null || $normalized === '/') {
+            return;
+        }
+
+        HeroSlide::query()
+            ->where('path_prefix', $normalized)
+            ->update(['display_type' => $displayType]);
+    }
+
+    private function canHaveAlsoOnHome(HeroSlide $slide): bool
+    {
+        $prefix = $slide->path_prefix;
+
+        if ($prefix === null || $prefix === '') {
+            return false;
+        }
+
+        $normalized = rtrim($prefix, '/') ?: '/';
+
+        return $normalized !== '/';
     }
 }

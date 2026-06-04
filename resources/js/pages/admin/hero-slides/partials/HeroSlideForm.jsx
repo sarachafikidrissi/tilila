@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 
 function emptyTri() {
@@ -208,9 +209,16 @@ export default function HeroSlideForm({
                         <Input
                             id="path_prefix"
                             value={data.path_prefix ?? ''}
-                            onChange={(e) =>
-                                setData('path_prefix', e.target.value || null)
-                            }
+                            onChange={(e) => {
+                                const value = e.target.value || null;
+                                setData('path_prefix', value);
+                                if (
+                                    !value ||
+                                    value.replace(/\/$/, '') === '/'
+                                ) {
+                                    setData('also_on_home', false);
+                                }
+                            }}
                             placeholder="/about"
                         />
                         <p className="text-xs text-muted-foreground">
@@ -218,8 +226,72 @@ export default function HeroSlideForm({
                             appear (e.g. <code>/about</code>,{' '}
                             <code>/experts</code>). Use <code>/</code> for the
                             home page. Leave blank to hide from all pages.
+                            Multiple slides may share the same prefix when using
+                            carousel mode.
                         </p>
                         <InputError message={errors?.path_prefix} />
+                    </div>
+
+                    {data.path_prefix &&
+                        data.path_prefix.replace(/\/$/, '') !== '/' && (
+                            <div className="flex items-center gap-3">
+                                <input
+                                    type="checkbox"
+                                    id="also_on_home"
+                                    checked={Boolean(data.also_on_home)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'also_on_home',
+                                            e.target.checked,
+                                        )
+                                    }
+                                    className="h-4 w-4 rounded border-input accent-beta-blue"
+                                />
+                                <div className="space-y-0.5">
+                                    <Label htmlFor="also_on_home">
+                                        Also show on home page
+                                    </Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Include this slide in the home carousel
+                                        in addition to its assigned page. Home
+                                        slide order follows sort order.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                    <div className="space-y-2">
+                        <Label>Page display</Label>
+                        <ToggleGroup
+                            type="single"
+                            variant="outline"
+                            value={data.display_type ?? 'banner'}
+                            onValueChange={(value) => {
+                                if (value) setData('display_type', value);
+                            }}
+                            className="justify-start"
+                        >
+                            <ToggleGroupItem
+                                value="banner"
+                                className="px-4"
+                            >
+                                Banner
+                            </ToggleGroupItem>
+                            <ToggleGroupItem
+                                value="carousel"
+                                className="px-4"
+                            >
+                                Carousel
+                            </ToggleGroupItem>
+                        </ToggleGroup>
+                        <p className="text-xs text-muted-foreground">
+                            Applies to every slide sharing this page URL prefix.
+                            Saving updates display for all of them.{' '}
+                            {(data.display_type ?? 'banner') === 'carousel'
+                                ? 'Carousel mode shows all active slides for this page, ordered by sort order.'
+                                : 'Banner mode shows one slide: the first active slide for this page by sort order.'}
+                        </p>
+                        <InputError message={errors?.display_type} />
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -460,6 +532,7 @@ export default function HeroSlideForm({
                         type="button"
                         variant="outline"
                         size="sm"
+                        className="border-border text-tblack hover:border-beta-blue/40 hover:bg-alpha-blue/30"
                         onClick={addCta}
                     >
                         <Plus className="size-4" />
@@ -567,7 +640,11 @@ export default function HeroSlideForm({
 
             {/* Submit */}
             <div className="flex justify-end">
-                <Button type="submit" disabled={processing}>
+                <Button
+                    type="submit"
+                    disabled={processing}
+                    className="bg-beta-blue text-twhite hover:bg-beta-blue/90"
+                >
                     {processing ? 'Saving…' : submitLabel}
                 </Button>
             </div>

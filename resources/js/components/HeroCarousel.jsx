@@ -11,17 +11,40 @@ export function isHomeHeroPath(pathname) {
     return path === '/';
 }
 
-export function getSlideForPath(pathname, slides) {
-    const path = (pathname || '/').replace(/\/$/, '') || '/';
+export function normalizePathPrefix(prefix) {
+    if (!prefix) return null;
+    return prefix.replace(/\/$/, '') || '/';
+}
 
-    return (
-        (slides ?? []).find((slide) => {
-            const prefix = slide.pathPrefix;
-            if (!prefix) return false;
-            const norm = prefix.replace(/\/$/, '') || '/';
-            if (norm === '/') return path === '/';
-            return path === norm || path.startsWith(`${norm}/`);
-        }) ?? null
+function pathMatchesPrefix(pathname, prefix) {
+    const path = (pathname || '/').replace(/\/$/, '') || '/';
+    const norm = normalizePathPrefix(prefix);
+    if (!norm) return false;
+    if (norm === '/') return path === '/';
+    return path === norm || path.startsWith(`${norm}/`);
+}
+
+/** Page-level display: carousel if any slide on the path is carousel. */
+export function getPageDisplayType(pageSlides) {
+    if ((pageSlides ?? []).some((slide) => slide.displayType === 'carousel')) {
+        return 'carousel';
+    }
+    return 'banner';
+}
+
+export function getSlidesForPath(pathname, slides) {
+    return (slides ?? []).filter((slide) =>
+        pathMatchesPrefix(pathname, slide.pathPrefix),
+    );
+}
+
+export function getSlideForPath(pathname, slides) {
+    return getSlidesForPath(pathname, slides)[0] ?? null;
+}
+
+export function getHomeSlides(slides) {
+    return (slides ?? []).filter(
+        (slide) => slide.pathPrefix === '/' || slide.alsoOnHome,
     );
 }
 
@@ -60,7 +83,11 @@ export function shouldShowHeroCarousel(pathname, slides) {
         return false;
     }
 
-    return getSlideForPath(path, slides) !== null;
+    if (isHomeHeroPath(path)) {
+        return getHomeSlides(slides).length > 0;
+    }
+
+    return getSlidesForPath(path, slides).length > 0;
 }
 
 function pickLocalizedTriple(obj, locale) {
@@ -412,6 +439,10 @@ function PageHeroBanner({ slide, locale }) {
     );
 }
 
+function PageHeroCarousel({ slides, locale }) {
+    return <HomeHeroCarousel slides={slides} locale={locale} />;
+}
+
 function HomeHeroCarousel({ slides, locale }) {
     const slideCount = slides?.length ?? 0;
     const [activeIndex, setActiveIndex] = React.useState(0);
@@ -537,11 +568,12 @@ export default function HeroCarousel() {
     const isHome = isHomeHeroPath(pathname);
 
     if (isHome) {
-        if (!slides.length) return null;
+        const homeSlides = getHomeSlides(slides);
+        if (!homeSlides.length) return null;
 
         return (
             <section className="relative bg-background" aria-label="Home hero">
-                <HomeHeroCarousel slides={slides} locale={locale} />
+                <HomeHeroCarousel slides={homeSlides} locale={locale} />
                 <style>{`
                     @keyframes hero-ken-burns {
                         from { transform: scale(1); }
@@ -552,14 +584,30 @@ export default function HeroCarousel() {
         );
     }
 
-    const slide = getSlideForPath(pathname, slides);
+    const pageSlides = getSlidesForPath(pathname, slides);
 
-    if (!slide) return null;
+    if (!pageSlides.length) return null;
+
+    const displayType = getPageDisplayType(pageSlides);
+
+    if (displayType === 'carousel') {
+        return (
+            <section className="relative bg-background" aria-label="Page hero">
+                <PageHeroCarousel slides={pageSlides} locale={locale} />
+                <style>{`
+                    @keyframes hero-ken-burns {
+                        from { transform: scale(1); }
+                        to { transform: scale(1.06); }
+                    }
+                `}</style>
+            </section>
+        );
+    }
 
     return (
         <section className="relative bg-background" aria-label="Page hero">
             <div className="relative mx-auto w-full max-w-7xl py-8 sm:py-10">
-                <PageHeroBanner slide={slide} locale={locale} />
+                <PageHeroBanner slide={pageSlides[0]} locale={locale} />
             </div>
 
             <style>{`

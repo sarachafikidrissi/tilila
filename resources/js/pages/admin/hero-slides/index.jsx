@@ -24,7 +24,7 @@ import {
     Power,
     Trash2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
     AlertDialog,
@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
     Table,
     TableBody,
@@ -61,6 +62,19 @@ const KNOWN_ROUTE_KEYS = [
     'media',
 ];
 
+function canToggleAlsoOnHome(slide) {
+    const prefix = slide.path_prefix;
+    if (!prefix) return false;
+    const norm = prefix.replace(/\/$/, '') || '/';
+    return norm !== '/';
+}
+
+function isHomePathSlide(slide) {
+    const prefix = slide.path_prefix;
+    if (!prefix) return false;
+    return (prefix.replace(/\/$/, '') || '/') === '/';
+}
+
 function SortableRow({
     slide,
     index,
@@ -68,6 +82,7 @@ function SortableRow({
     onMoveUp,
     onMoveDown,
     onToggle,
+    onToggleAlsoOnHome,
     onDelete,
 }) {
     const {
@@ -134,9 +149,29 @@ function SortableRow({
                 )}
             </TableCell>
             <TableCell>
-                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                    {slide.slide_key}
-                </code>
+                <div className="flex flex-col gap-1">
+                    <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+                        {slide.slide_key}
+                    </code>
+                    <div className="flex flex-wrap gap-1">
+                        {slide.path_prefix ? (
+                            <Badge
+                                variant="outline"
+                                className="font-mono text-[10px]"
+                            >
+                                {slide.path_prefix}
+                            </Badge>
+                        ) : null}
+                        {slide.also_on_home ? (
+                            <Badge
+                                variant="outline"
+                                className="border-beta-blue/40 bg-beta-blue/10 text-[10px] text-beta-blue"
+                            >
+                                + Home
+                            </Badge>
+                        ) : null}
+                    </div>
+                </div>
             </TableCell>
             <TableCell className="max-w-[200px] truncate text-sm text-muted-foreground">
                 {slide.title_before?.fr ?? slide.title_before?.en ?? '—'}
@@ -167,9 +202,50 @@ function SortableRow({
                     {slide.is_active ? 'Active' : 'Inactive'}
                 </Badge>
             </TableCell>
+            <TableCell>
+                <Badge
+                    variant="outline"
+                    className={cn(
+                        'text-xs capitalize',
+                        slide.display_type === 'carousel'
+                            ? 'border-beta-blue/40 bg-beta-blue/10 text-beta-blue'
+                            : 'border-border bg-muted text-muted-foreground',
+                    )}
+                >
+                    {slide.display_type === 'carousel' ? 'Carousel' : 'Banner'}
+                </Badge>
+            </TableCell>
+            <TableCell>
+                {isHomePathSlide(slide) ? (
+                    <span className="text-xs text-muted-foreground">Home</span>
+                ) : (
+                    <Switch
+                        checked={Boolean(slide.also_on_home)}
+                        disabled={!canToggleAlsoOnHome(slide)}
+                        onCheckedChange={() => onToggleAlsoOnHome(slide)}
+                        title={
+                            canToggleAlsoOnHome(slide)
+                                ? slide.also_on_home
+                                    ? 'Remove from home carousel'
+                                    : 'Also show on home page'
+                                : 'Set a page URL prefix (not home) to enable'
+                        }
+                        aria-label={
+                            slide.also_on_home
+                                ? 'Also on home, on'
+                                : 'Also on home, off'
+                        }
+                    />
+                )}
+            </TableCell>
             <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
-                    <Button asChild variant="outline" size="sm">
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="border-border text-tblack hover:border-beta-blue/40 hover:bg-alpha-blue/30"
+                    >
                         <Link href={`/admin/hero-slides/${slide.id}/edit`}>
                             <Pencil className="size-3.5" />
                             Edit
@@ -178,6 +254,7 @@ function SortableRow({
                     <Button
                         variant="outline"
                         size="sm"
+                        className="border-border text-tblack hover:border-beta-blue/40 hover:bg-alpha-blue/30"
                         onClick={() => onToggle(slide)}
                         title={slide.is_active ? 'Deactivate' : 'Activate'}
                     >
@@ -187,7 +264,7 @@ function SortableRow({
                     <Button
                         variant="outline"
                         size="sm"
-                        className="text-destructive hover:text-destructive"
+                        className="border-alpha-danger/40 text-alpha-danger hover:bg-beta-danger"
                         onClick={() => onDelete(slide)}
                     >
                         <Trash2 className="size-3.5" />
@@ -203,6 +280,17 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
     const [slides, setSlides] = useState(initialSlides);
     const [deleteTarget, setDeleteTarget] = useState(null);
 
+    const slidesSignature = initialSlides
+        .map(
+            (s) =>
+                `${s.id}:${s.is_active ? 1 : 0}:${s.sort_order ?? 0}:${s.also_on_home ? 1 : 0}`,
+        )
+        .join('|');
+
+    useEffect(() => {
+        setSlides(initialSlides);
+    }, [slidesSignature]);
+
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
         useSensor(KeyboardSensor, {
@@ -211,11 +299,41 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
     );
 
     const handleToggle = (slide) => {
+        const previous = slides;
+        setSlides((prev) =>
+            prev.map((s) =>
+                s.id === slide.id ? { ...s, is_active: !s.is_active } : s,
+            ),
+        );
+
         router.patch(
             `/admin/hero-slides/${slide.id}/toggle`,
             {},
             {
                 preserveScroll: true,
+                onError: () => setSlides(previous),
+            },
+        );
+    };
+
+    const handleToggleAlsoOnHome = (slide) => {
+        if (!canToggleAlsoOnHome(slide)) return;
+
+        const previous = slides;
+        setSlides((prev) =>
+            prev.map((s) =>
+                s.id === slide.id
+                    ? { ...s, also_on_home: !s.also_on_home }
+                    : s,
+            ),
+        );
+
+        router.patch(
+            `/admin/hero-slides/${slide.id}/toggle-also-on-home`,
+            {},
+            {
+                preserveScroll: true,
+                onError: () => setSlides(previous),
             },
         );
     };
@@ -254,8 +372,12 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
 
     const handleDelete = () => {
         if (!deleteTarget) return;
-        router.delete(`/admin/hero-slides/${deleteTarget.id}`, {
+        const id = deleteTarget.id;
+        router.delete(`/admin/hero-slides/${id}`, {
             preserveScroll: true,
+            onSuccess: () => {
+                setSlides((prev) => prev.filter((s) => s.id !== id));
+            },
             onFinish: () => setDeleteTarget(null),
         });
     };
@@ -292,7 +414,10 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                             site. Drag or use the arrows to reorder.
                         </p>
                     </div>
-                    <Button asChild>
+                    <Button
+                        asChild
+                        className="gap-2 bg-beta-blue text-twhite hover:bg-beta-blue/90"
+                    >
                         <Link
                             href="/admin/hero-slides/create"
                             className="gap-2"
@@ -331,6 +456,8 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                                         <TableHead>Title (FR)</TableHead>
                                         <TableHead>Mode</TableHead>
                                         <TableHead>Status</TableHead>
+                                        <TableHead>Display</TableHead>
+                                        <TableHead>On home</TableHead>
                                         <TableHead className="text-right">
                                             Actions
                                         </TableHead>
@@ -340,7 +467,7 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                                     {slides.length === 0 && (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={8}
+                                                colSpan={10}
                                                 className="py-10 text-center text-sm text-muted-foreground"
                                             >
                                                 No slides yet. Create your first
@@ -357,6 +484,9 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                                             onMoveUp={handleMoveUp}
                                             onMoveDown={handleMoveDown}
                                             onToggle={handleToggle}
+                                            onToggleAlsoOnHome={
+                                                handleToggleAlsoOnHome
+                                            }
                                             onDelete={setDeleteTarget}
                                         />
                                     ))}
@@ -393,7 +523,7 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            className="bg-alpha-danger text-twhite hover:bg-alpha-danger/90"
                         >
                             Delete
                         </AlertDialogAction>

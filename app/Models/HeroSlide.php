@@ -11,6 +11,8 @@ class HeroSlide extends Model
     protected $fillable = [
         'slide_key',
         'path_prefix',
+        'display_type',
+        'also_on_home',
         'is_active',
         'sort_order',
         'display_mode',
@@ -38,6 +40,7 @@ class HeroSlide extends Model
     {
         return [
             'is_active' => 'boolean',
+            'also_on_home' => 'boolean',
             'image_contain' => 'boolean',
             'banner_image_contain' => 'boolean',
             'image_alt' => 'array',
@@ -61,6 +64,18 @@ class HeroSlide extends Model
     public function scopeOrdered(Builder $query): void
     {
         $query->orderBy('sort_order')->orderBy('id');
+    }
+
+    /** @param Builder<HeroSlide> $query */
+    public function scopeForPath(Builder $query, ?string $pathPrefix): void
+    {
+        $query->active()->ordered();
+
+        if ($pathPrefix === null || $pathPrefix === '') {
+            $query->whereNull('path_prefix');
+        } else {
+            $query->where('path_prefix', $pathPrefix);
+        }
     }
 
     public function getImageUrlAttribute(): ?string
@@ -93,6 +108,8 @@ class HeroSlide extends Model
         return [
             'key' => $this->slide_key,
             'pathPrefix' => $this->path_prefix,
+            'displayType' => $this->display_type ?? 'banner',
+            'alsoOnHome' => (bool) $this->also_on_home,
             'imageSrc' => $this->image_url,
             'imageAlt' => $this->image_alt ?? ['en' => '', 'fr' => '', 'ar' => ''],
             'bannerImage' => $this->display_mode === 'banner_image',

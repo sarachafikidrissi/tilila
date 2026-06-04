@@ -71,6 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('hero-slides/reorder', [HeroSlideController::class, 'reorder'])->name('hero-slides.reorder');
     Route::patch('hero-slides/{heroSlide}/toggle', [HeroSlideController::class, 'toggle'])->name('hero-slides.toggle');
+    Route::patch('hero-slides/{heroSlide}/toggle-also-on-home', [HeroSlideController::class, 'toggleAlsoOnHome'])
+        ->name('hero-slides.toggle-also-on-home');
     Route::resource('hero-slides', HeroSlideController::class)->except(['show']);
 
     Route::get('tilila/participants/export.csv', [TililaContestParticipantController::class, 'exportCsv'])

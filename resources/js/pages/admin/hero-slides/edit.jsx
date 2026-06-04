@@ -14,6 +14,8 @@ export default function AdminHeroSlideEdit({ slide }) {
     const { data, setData, errors, setError, clearErrors } = useForm({
         slide_key: slide.slide_key ?? '',
         path_prefix: slide.path_prefix ?? '',
+        display_type: slide.display_type ?? 'banner',
+        also_on_home: slide.also_on_home ?? false,
         is_active: slide.is_active ?? true,
         sort_order: slide.sort_order ?? 0,
         display_mode: slide.display_mode ?? 'normal',
@@ -68,7 +70,11 @@ export default function AdminHeroSlideEdit({ slide }) {
                             settings.
                         </p>
                     </div>
-                    <Button asChild variant="outline">
+                    <Button
+                        asChild
+                        variant="outline"
+                        className="gap-2 border-border text-tblack hover:border-beta-blue/40 hover:bg-alpha-blue/30"
+                    >
                         <Link href="/admin/hero-slides" className="gap-2">
                             <ChevronLeft className="size-4" />
                             Back to list
