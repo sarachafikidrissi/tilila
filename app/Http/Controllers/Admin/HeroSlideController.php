@@ -242,11 +242,23 @@ class HeroSlideController extends Controller
 
     private function normalizePathPrefix(?string $prefix): ?string
     {
-        if ($prefix === null || $prefix === '') {
+        if ($prefix === null) {
             return null;
         }
 
-        return rtrim($prefix, '/') ?: '/';
+        $prefix = trim($prefix);
+
+        if ($prefix === '') {
+            return null;
+        }
+
+        if (! str_starts_with($prefix, '/')) {
+            $prefix = '/'.$prefix;
+        }
+
+        $prefix = rtrim($prefix, '/');
+
+        return $prefix === '' ? '/' : $prefix;
     }
 
     private function syncDisplayTypeForPath(?string $pathPrefix, string $displayType): void
@@ -264,14 +276,8 @@ class HeroSlideController extends Controller
 
     private function canHaveAlsoOnHome(HeroSlide $slide): bool
     {
-        $prefix = $slide->path_prefix;
+        $normalized = $this->normalizePathPrefix($slide->path_prefix);
 
-        if ($prefix === null || $prefix === '') {
-            return false;
-        }
-
-        $normalized = rtrim($prefix, '/') ?: '/';
-
-        return $normalized !== '/';
+        return $normalized !== null && $normalized !== '/';
     }
 }
