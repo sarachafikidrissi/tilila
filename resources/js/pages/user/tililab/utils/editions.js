@@ -7,6 +7,7 @@ export function coverImageSrc(galleryImages, winners) {
 
     const rows = Array.isArray(winners) ? winners : [];
     const primaryWinner = rows[0] ?? null;
+
     if (primaryWinner?.photo_path) {
         return `/storage/${primaryWinner.photo_path}`;
     }

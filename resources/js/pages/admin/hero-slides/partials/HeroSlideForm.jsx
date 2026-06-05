@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
+import { normalizePathPrefix } from '@/components/HeroCarousel';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -115,6 +116,7 @@ export default function HeroSlideForm({
 
     const isBanner = data.display_mode === 'banner_image';
     const isNormal = !isBanner;
+    const normalizedPathPrefix = normalizePathPrefix(data.path_prefix || null);
 
     // CTA helpers
     const addCta = () => setData('ctas', [...(data.ctas ?? []), emptyCta()]);
@@ -212,9 +214,11 @@ export default function HeroSlideForm({
                             onChange={(e) => {
                                 const value = e.target.value || null;
                                 setData('path_prefix', value);
+                                const normalizedPath =
+                                    normalizePathPrefix(value);
                                 if (
-                                    !value ||
-                                    value.replace(/\/$/, '') === '/'
+                                    normalizedPath === null ||
+                                    normalizedPath === '/'
                                 ) {
                                     setData('also_on_home', false);
                                 }
@@ -232,8 +236,8 @@ export default function HeroSlideForm({
                         <InputError message={errors?.path_prefix} />
                     </div>
 
-                    {data.path_prefix &&
-                        data.path_prefix.replace(/\/$/, '') !== '/' && (
+                    {normalizedPathPrefix &&
+                        normalizedPathPrefix !== '/' && (
                             <div className="flex items-center gap-3">
                                 <input
                                     type="checkbox"

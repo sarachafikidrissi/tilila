@@ -298,45 +298,45 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
         }),
     );
 
-    const handleToggle = (slide) => {
-        const previous = slides;
+    function patchSlideBoolean(slide, field, url, { guard } = {}) {
+        if (guard && !guard(slide)) return;
+
+        const priorValue =
+            slides.find((s) => s.id === slide.id)?.[field] ?? slide[field];
+
         setSlides((prev) =>
             prev.map((s) =>
-                s.id === slide.id ? { ...s, is_active: !s.is_active } : s,
+                s.id === slide.id ? { ...s, [field]: !s[field] } : s,
             ),
         );
 
-        router.patch(
+        router.patch(url, {}, {
+            preserveScroll: true,
+            onError: () =>
+                setSlides((prev) =>
+                    prev.map((s) =>
+                        s.id === slide.id
+                            ? { ...s, [field]: priorValue }
+                            : s,
+                    ),
+                ),
+        });
+    }
+
+    const handleToggle = (slide) =>
+        patchSlideBoolean(
+            slide,
+            'is_active',
             `/admin/hero-slides/${slide.id}/toggle`,
-            {},
-            {
-                preserveScroll: true,
-                onError: () => setSlides(previous),
-            },
-        );
-    };
-
-    const handleToggleAlsoOnHome = (slide) => {
-        if (!canToggleAlsoOnHome(slide)) return;
-
-        const previous = slides;
-        setSlides((prev) =>
-            prev.map((s) =>
-                s.id === slide.id
-                    ? { ...s, also_on_home: !s.also_on_home }
-                    : s,
-            ),
         );
 
-        router.patch(
+    const handleToggleAlsoOnHome = (slide) =>
+        patchSlideBoolean(
+            slide,
+            'also_on_home',
             `/admin/hero-slides/${slide.id}/toggle-also-on-home`,
-            {},
-            {
-                preserveScroll: true,
-                onError: () => setSlides(previous),
-            },
+            { guard: canToggleAlsoOnHome },
         );
-    };
 
     const sendReorder = (reordered) => {
         router.post(
