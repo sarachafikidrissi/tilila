@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'email_verified_at'])]
+#[Fillable(['name', 'email', 'password', 'password_set_at', 'role', 'email_verified_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,8 +29,25 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'password_set_at' => 'datetime',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function hasPasswordSet(): bool
+    {
+        return $this->password_set_at !== null;
+    }
+
+    public function isStaffRole(): bool
+    {
+        return in_array((string) $this->role, ['admin', 'expert'], true);
+    }
+
+    /** Guest access-request flow applies only to regular user accounts. */
+    public function usesAccessRequestActivation(): bool
+    {
+        return ! $this->isStaffRole();
     }
 
     public function expertProfile(): HasOne

@@ -10,6 +10,36 @@ test('login screen can be rendered', function () {
     $response->assertOk();
 });
 
+test('admin can authenticate without access request activation', function () {
+    $admin = User::factory()->create([
+        'role' => 'admin',
+        'password_set_at' => null,
+    ]);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $admin->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect('/admin/dashboard');
+});
+
+test('expert can authenticate without access request activation', function () {
+    $expert = User::factory()->create([
+        'role' => 'expert',
+        'password_set_at' => null,
+    ]);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $expert->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect('/expert/dashboard');
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
@@ -19,7 +49,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect('/');
 });
 
 test('users with two factor enabled are redirected to two factor challenge', function () {

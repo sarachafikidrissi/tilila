@@ -57,6 +57,11 @@ const adminModuleItems: NavItem[] = [
 
 const expertModuleItems: NavItem[] = [
     {
+        title: 'Contact requests',
+        href: '/expert/contact-requests',
+        icon: Mail,
+    },
+    {
         title: 'Information',
         href: '/expert/profile',
         icon: Users,

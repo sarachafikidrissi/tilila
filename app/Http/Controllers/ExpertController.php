@@ -68,6 +68,7 @@ class ExpertController extends Controller
             'id' => $expert->id,
             'expert' => $expert->toDirectoryArray(),
             'details' => $details,
+            'contactPurposes' => ExpertContactController::purposes(),
         ]);
     }
 

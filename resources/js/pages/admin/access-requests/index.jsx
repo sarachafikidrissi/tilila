@@ -63,9 +63,6 @@ const rejectButtonClass =
 const reacceptButtonClass =
     'rounded-full border-alpha-yellow/50 text-alpha-yellow hover:bg-beta-yellow';
 
-const viewDetailsButtonClass =
-    'h-auto p-0 text-sm font-semibold text-beta-blue hover:text-beta-blue/80';
-
 export default function AdminAccessRequestsIndex({ requests, filters }) {
     const { t } = useTranslation();
     const { flash } = usePage().props;
@@ -365,19 +362,9 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                             className="text-right"
                                             onClick={stopRowClick}
                                         >
-                                            <div className="flex flex-col items-end gap-2">
-                                                <Button
-                                                    type="button"
-                                                    variant="link"
-                                                    className={viewDetailsButtonClass}
-                                                    onClick={() => openDetails(row)}
-                                                >
-                                                    {t(
-                                                        'accessRequest.admin.viewDetails',
-                                                    )}
-                                                </Button>
+                                            <div className="flex justify-end gap-2">
                                                 {row.status === 'pending' ? (
-                                                    <div className="flex justify-end gap-2">
+                                                    <>
                                                         <Button
                                                             type="button"
                                                             size="sm"
@@ -411,7 +398,7 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                                 'accessRequest.admin.reject',
                                                             )}
                                                         </Button>
-                                                    </div>
+                                                    </>
                                                 ) : row.status === 'rejected' ? (
                                                     <Button
                                                         type="button"

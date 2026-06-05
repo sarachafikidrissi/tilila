@@ -75,6 +75,11 @@ class Expert extends Model
         return $this->hasMany(ExpertArticle::class);
     }
 
+    public function contactRequests(): HasMany
+    {
+        return $this->hasMany(ExpertContactRequest::class);
+    }
+
     /**
      * Public URL for the stored profile image (`image` = relative path on the public disk).
      */

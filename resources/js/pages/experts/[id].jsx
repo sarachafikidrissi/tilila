@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import ProfileSidebar from '@/pages/experts/Partials/Details/ProfileSidebar';
 import { useTranslation } from '@/contexts/TranslationContext';
@@ -10,8 +10,13 @@ import {
     buildLanguageOptions,
 } from '@/components/helpers/expert-form-options';
 
-export default function ExpertDetails({ expert, details: detailsProp }) {
+export default function ExpertDetails({
+    expert,
+    details: detailsProp,
+    contactPurposes = [],
+}) {
     const { locale, t } = useTranslation();
+    const flash = usePage().props?.flash ?? {};
     const details = detailsProp ?? {};
 
     const resolvedName =
@@ -88,9 +93,22 @@ export default function ExpertDetails({ expert, details: detailsProp }) {
                         </span>
                     </nav>
 
+                    {flash.success ? (
+                        <p
+                            role="status"
+                            className="mt-4 rounded-lg border border-beta-blue/30 bg-beta-blue/5 px-4 py-3 text-sm font-medium text-foreground"
+                        >
+                            {flash.success}
+                        </p>
+                    ) : null}
+
                     <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
                         <div className="lg:col-span-4">
-                            <ProfileSidebar expert={expert} details={details} />
+                            <ProfileSidebar
+                                expert={expert}
+                                details={details}
+                                contactPurposes={contactPurposes}
+                            />
                         </div>
 
                         <div className="space-y-6 lg:col-span-8">

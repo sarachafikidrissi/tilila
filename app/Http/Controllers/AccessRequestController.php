@@ -10,12 +10,109 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AccessRequestController extends Controller
 {
+    public function submitted(): Response
+    {
+        return Inertia::render('access-request/submitted');
+    }
+
+    public function apply(Request $request): RedirectResponse
+    {
+        $request->session()->flash('authMode', 'request');
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'reason' => ['required', 'string', 'max:5000'],
+            'organization' => ['nullable', 'string', 'max:255'],
+            'profession' => ['required', 'string', 'max:255'],
+        ]);
+
+        $email = Str::lower($validated['email']);
+
+        $existingUser = User::query()->where('email', $email)->first();
+
+        if ($existingUser) {
+            if ($existingUser->hasPasswordSet()) {
+                return back()
+                    ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
+                    ->withErrors([
+                        'email' => 'An account with this email already exists. Log in to request access, or use another email.',
+                    ]);
+            }
+
+            $accessRequest = $existingUser->accessRequest;
+
+            if ($accessRequest?->isPending()) {
+                return redirect()
+                    ->route('access-request.submitted')
+                    ->with('warning', 'A request for this email is already under review.');
+            }
+
+            if ($accessRequest?->isApproved() && ! $existingUser->hasPasswordSet()) {
+                return back()
+                    ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
+                    ->withErrors([
+                        'email' => 'Your request was approved. Check your email for the activation link to set your password.',
+                    ]);
+            }
+
+            if ($accessRequest?->isRejected()) {
+                return back()
+                    ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
+                    ->withErrors([
+                        'email' => 'This email was not approved. Contact support if you need help.',
+                    ]);
+            }
+        }
+
+        try {
+            $accessRequest = DB::transaction(function () use ($validated, $email, $existingUser) {
+                $user = $existingUser ?? User::query()->create([
+                    'name' => $validated['name'],
+                    'email' => $email,
+                    'password' => Hash::make(Str::random(64)),
+                    'password_set_at' => null,
+                    'role' => 'user',
+                ]);
+
+                if ($existingUser) {
+                    $user->update(['name' => $validated['name']]);
+                }
+
+                $record = AccessRequest::query()->create([
+                    'user_id' => $user->id,
+                    'status' => AccessRequestStatus::Pending,
+                    'reason' => $validated['reason'],
+                    'organization' => $validated['organization'],
+                    'profession' => $validated['profession'],
+                ]);
+
+                return $record;
+            });
+        } catch (QueryException $e) {
+            if ($this->isUniqueConstraintViolation($e)) {
+                return redirect()
+                    ->route('access-request.submitted')
+                    ->with('warning', 'A request for this email is already under review.');
+            }
+
+            throw $e;
+        }
+
+        return $this->redirectAfterSuccessfulStore($accessRequest);
+    }
+
     public function create(Request $request): Response|RedirectResponse
     {
         $accessRequest = $request->user()->accessRequest;
@@ -155,9 +252,15 @@ class AccessRequestController extends Controller
             ->pluck('email')
             ->each(fn (string $email) => Mail::to($email)->send(new NewAccessRequestSubmitted($accessRequest)));
 
+        if ($accessRequest->user->hasPasswordSet()) {
+            return redirect()
+                ->route('access-request.pending')
+                ->with('success', 'Your access request has been submitted.');
+        }
+
         return redirect()
-            ->route('access-request.pending')
-            ->with('success', 'Your access request has been submitted.');
+            ->route('access-request.submitted')
+            ->with('success', 'Your account request has been submitted. You will receive an email once an administrator approves it.');
     }
 
     private function redirectForBlockedStore(AccessRequest $accessRequest): RedirectResponse

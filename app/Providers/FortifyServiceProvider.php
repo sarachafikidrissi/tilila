@@ -5,11 +5,14 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Http\Responses\LoginResponse;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Features;
@@ -42,6 +45,48 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::query()
+                ->where('email', Str::lower((string) $request->input(Fortify::username())))
+                ->first();
+
+            if (! $user) {
+                return null;
+            }
+
+            if (! $user->hasPasswordSet() && $user->usesAccessRequestActivation()) {
+                $accessRequest = $user->accessRequest;
+
+                if ($accessRequest?->isPending()) {
+                    throw ValidationException::withMessages([
+                        Fortify::username() => 'Your account request is awaiting administrator approval. You will receive an email when it is reviewed.',
+                    ]);
+                }
+
+                if ($accessRequest?->isApproved()) {
+                    throw ValidationException::withMessages([
+                        Fortify::username() => 'Your request was approved. Use the activation link in your email to set your password.',
+                    ]);
+                }
+
+                if ($accessRequest?->isRejected()) {
+                    throw ValidationException::withMessages([
+                        Fortify::username() => 'Your account request was not approved.',
+                    ]);
+                }
+
+                throw ValidationException::withMessages([
+                    Fortify::username() => 'This account is not active yet. Submit a request from the login page.',
+                ]);
+            }
+
+            if (! Hash::check((string) $request->password, (string) $user->password)) {
+                return null;
+            }
+
+            return $user;
+        });
     }
 
     /**

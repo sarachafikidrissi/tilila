@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AccessRequestActivationController;
 use App\Http\Controllers\AccessRequestController;
 use App\Http\Controllers\ExpertApplicationController;
 use App\Http\Controllers\ExpertArticleController;
+use App\Http\Controllers\ExpertContactController;
 use App\Http\Controllers\ExpertController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsletterSubscriptionController;
@@ -126,6 +128,9 @@ Route::get('/experts/articles/{article}', [ExpertArticleController::class, 'show
 Route::get('/experts/{expert}', [ExpertController::class, 'show'])
     ->middleware(['auth', 'verified', 'expert.access'])
     ->name('experts.show');
+Route::post('/experts/{expert}/contact', [ExpertContactController::class, 'store'])
+    ->middleware('auth')
+    ->name('experts.contact.store');
 
 Route::post('/newsletter', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.store');
 
@@ -225,6 +230,15 @@ Route::get('/tililab/form', function () {
 Route::post('/tililab/form', [TililabInscriptionController::class, 'store'])->name('tililab.form.store');
 Route::get('/media', [MediaController::class, 'index'])->name('media.index');
 Route::get('/media/{media}', [MediaController::class, 'show'])->name('media.show');
+
+Route::post('access-request/apply', [AccessRequestController::class, 'apply'])
+    ->middleware('throttle:5,60')
+    ->name('access-request.apply');
+Route::get('access-request/submitted', [AccessRequestController::class, 'submitted'])->name('access-request.submitted');
+Route::get('access-request/activate/{token}', [AccessRequestActivationController::class, 'show'])->name('access-request.activate');
+Route::post('access-request/activate/{token}', [AccessRequestActivationController::class, 'store'])
+    ->middleware('throttle:10,60')
+    ->name('access-request.activate.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('access-request/create', [AccessRequestController::class, 'create'])->name('access-request.create');

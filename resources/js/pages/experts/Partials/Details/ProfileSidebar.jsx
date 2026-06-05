@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Instagram, Linkedin, Link, Mail, X } from 'lucide-react';
 import TransText from '@/components/TransText';
 import { useTranslation } from '@/contexts/TranslationContext';
-import { buildCountryOptions } from '@/components/helpers/expert-form-options';
+import ContactExpertModal from '@/pages/experts/Partials/Details/ContactExpertModal';
 
 /** @param {string | null | undefined} url */
 function withHttps(url) {
@@ -16,15 +16,19 @@ function withHttps(url) {
     return `https://${s}`;
 }
 
-export default function ProfileSidebar({ expert, details }) {
+export default function ProfileSidebar({
+    expert,
+    details,
+    contactPurposes = [],
+}) {
     const { locale, t } = useTranslation();
+    const [contactOpen, setContactOpen] = useState(false);
 
     const socials = details?.socials ?? {};
     const linkedin = withHttps(socials.linkedin);
     const twitter = withHttps(socials.twitter);
     const instagram = withHttps(socials.instagram);
     const portfolio = withHttps(socials.portfolio);
-    const email = (expert.email ?? '').trim();
 
     const iconWrapClass =
         'inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-muted-foreground shadow-sm transition-colors hover:border-beta-blue hover:bg-beta-blue/5 hover:text-beta-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-beta-blue';
@@ -136,34 +140,27 @@ export default function ProfileSidebar({ expert, details }) {
                         </div>
                     ) : null}
 
-                    {email ? (
-                        <a
-                            href={`mailto:${email}`}
-                            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-beta-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                        >
-                            <Mail className="size-4 shrink-0 opacity-90" />
-                            <TransText
-                                en="Contact Expert"
-                                fr="Contacter l’experte"
-                                ar="تواصل مع الخبيرة"
-                            />
-                        </a>
-                    ) : (
-                        <button
-                            type="button"
-                            disabled
-                            className="mt-5 inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground opacity-80"
-                        >
-                            <Mail className="size-4 shrink-0" />
-                            <TransText
-                                en="Contact Expert"
-                                fr="Contacter l’experte"
-                                ar="تواصل مع الخبيرة"
-                            />
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        onClick={() => setContactOpen(true)}
+                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-beta-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    >
+                        <Mail className="size-4 shrink-0 opacity-90" />
+                        <TransText
+                            en="Contact Expert"
+                            fr="Contacter l’experte"
+                            ar="تواصل مع الخبيرة"
+                        />
+                    </button>
                 </div>
             </div>
+
+            <ContactExpertModal
+                open={contactOpen}
+                onOpenChange={setContactOpen}
+                expertId={expert?.id}
+                contactPurposes={contactPurposes}
+            />
         </aside>
     );
 }

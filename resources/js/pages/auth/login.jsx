@@ -1,5 +1,5 @@
-import { Form, Head, router, setLayoutProps } from '@inertiajs/react';
-import { useState } from 'react';
+import { Form, Head, router, setLayoutProps, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -11,6 +11,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/contexts/TranslationContext';
 import { store as loginForm } from '@/routes/login';
 import { request } from '@/routes/password';
+import { store as registerStore } from '@/routes/register';
 
 const DEMO_PASSWORD = 'password';
 
@@ -19,13 +20,25 @@ const DEMO_ACCOUNTS = {
     expert: { email: 'test.expert@example.com', password: DEMO_PASSWORD },
 };
 
+const fieldClassName =
+    'border-border bg-twhite text-tblack placeholder:text-tgray focus-visible:border-beta-blue focus-visible:ring-beta-blue/25';
+
 export default function Login({
     status,
     canResetPassword,
+    canRegister = true,
     showDemoLogins = false,
 }) {
     const { t } = useTranslation();
+    const flash = usePage().props?.flash ?? {};
     const [demoRole, setDemoRole] = useState(null);
+
+    useEffect(() => {
+        setLayoutProps({
+            title: t('auth.login.layoutTitle'),
+            description: t('auth.login.layoutDescription'),
+        });
+    }, [t]);
 
     const loginAsDemo = (role) => {
         setDemoRole(role);
@@ -36,16 +49,23 @@ export default function Login({
         );
     };
 
-    setLayoutProps({
-        title: t('auth.login.layoutTitle'),
-        description: t('auth.login.layoutDescription'),
-    });
-
     return (
         <>
             <Head title={t('auth.login.headTitle')} />
 
             <div className="flex flex-col gap-6 text-tblack">
+                {flash.success ? (
+                    <div className="rounded-lg border border-beta-green/40 bg-beta-green/10 px-4 py-3 text-sm font-medium text-alpha-green">
+                        {flash.success}
+                    </div>
+                ) : null}
+
+                {flash.warning ? (
+                    <div className="rounded-lg border border-border bg-muted px-4 py-3 text-sm text-tgray">
+                        {flash.warning}
+                    </div>
+                ) : null}
+
                 <Form
                     {...loginForm.form()}
                     resetOnSuccess={['password']}
@@ -55,10 +75,7 @@ export default function Login({
                         <>
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
-                                    <Label
-                                        htmlFor="email"
-                                        className="text-tblack"
-                                    >
+                                    <Label htmlFor="email" className="text-tblack">
                                         {t('auth.login.emailLabel')}
                                     </Label>
                                     <Input
@@ -72,7 +89,7 @@ export default function Login({
                                         placeholder={t(
                                             'auth.common.emailPlaceholder',
                                         )}
-                                        className="border-border bg-twhite text-tblack placeholder:text-tgray focus-visible:border-beta-blue focus-visible:ring-beta-blue/25"
+                                        className={fieldClassName}
                                     />
                                     <InputError message={errors.email} />
                                 </div>
@@ -104,7 +121,7 @@ export default function Login({
                                         placeholder={t(
                                             'auth.common.passwordPlaceholder',
                                         )}
-                                        className="border-border bg-twhite text-tblack placeholder:text-tgray focus-visible:border-beta-blue focus-visible:ring-beta-blue/25"
+                                        className={fieldClassName}
                                     />
                                     <InputError message={errors.password} />
                                 </div>
@@ -134,6 +151,19 @@ export default function Login({
                                     {t('auth.login.submit')}
                                 </Button>
                             </div>
+
+                            {canRegister ? (
+                                <p className="text-center text-sm text-tgray">
+                                    {t('auth.login.noAccount')}{' '}
+                                    <TextLink
+                                        href={registerStore.url()}
+                                        tabIndex={6}
+                                        className="font-semibold text-beta-blue decoration-beta-blue/30 hover:text-beta-blue hover:decoration-beta-blue"
+                                    >
+                                        {t('auth.login.requestAccountLink')}
+                                    </TextLink>
+                                </p>
+                            ) : null}
                         </>
                     )}
                 </Form>
