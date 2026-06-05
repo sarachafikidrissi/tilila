@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Test Admin',
                 'password' => 'password',
+                'password_set_at' => now(),
                 'role' => 'admin',
                 'email_verified_at' => now(),
             ],

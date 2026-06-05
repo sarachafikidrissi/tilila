@@ -16,6 +16,7 @@ class ExpertSeeder extends Seeder
                 [
                     'name' => $row['name']['fr'],
                     'password' => 'password',
+                    'password_set_at' => now(),
                     'role' => 'expert',
                     'email_verified_at' => now(),
                 ],

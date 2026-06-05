@@ -28,7 +28,7 @@ const authNavItems: NavItem[] = [
         icon: LogIn,
     },
     {
-        title: 'Register',
+        title: 'Request account',
         href: '/register',
         icon: UserPlus,
     },

@@ -20,7 +20,7 @@ class AccessRequestApproved extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your expert profile access request was approved',
+            subject: 'Your expert profile access request is activated',
         );
     }
 
@@ -28,9 +28,6 @@ class AccessRequestApproved extends Mailable
     {
         return new Content(
             view: 'emails.access-request-approved',
-            with: [
-                'activationUrl' => $this->accessRequest->activationUrl(),
-            ],
         );
     }
 }

@@ -25,6 +25,8 @@ class AccessRequestController extends Controller
 
     public function apply(Request $request): RedirectResponse
     {
+        $request->session()->flash('authMode', 'request');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -41,6 +43,7 @@ class AccessRequestController extends Controller
             if ($existingUser->hasPasswordSet()) {
                 return back()
                     ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
                     ->withErrors([
                         'email' => 'An account with this email already exists. Log in to request access, or use another email.',
                     ]);
@@ -57,6 +60,7 @@ class AccessRequestController extends Controller
             if ($accessRequest?->isApproved() && ! $existingUser->hasPasswordSet()) {
                 return back()
                     ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
                     ->withErrors([
                         'email' => 'Your request was approved. Check your email for the activation link to set your password.',
                     ]);
@@ -65,6 +69,7 @@ class AccessRequestController extends Controller
             if ($accessRequest?->isRejected()) {
                 return back()
                     ->withInput($request->except('password'))
+                    ->with('authMode', 'request')
                     ->withErrors([
                         'email' => 'This email was not approved. Contact support if you need help.',
                     ]);

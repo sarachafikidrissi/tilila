@@ -55,7 +55,7 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
-            if (! $user->hasPasswordSet()) {
+            if (! $user->hasPasswordSet() && $user->usesAccessRequestActivation()) {
                 $accessRequest = $user->accessRequest;
 
                 if ($accessRequest?->isPending()) {

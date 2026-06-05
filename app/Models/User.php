@@ -39,6 +39,17 @@ class User extends Authenticatable
         return $this->password_set_at !== null;
     }
 
+    public function isStaffRole(): bool
+    {
+        return in_array((string) $this->role, ['admin', 'expert'], true);
+    }
+
+    /** Guest access-request flow applies only to regular user accounts. */
+    public function usesAccessRequestActivation(): bool
+    {
+        return ! $this->isStaffRole();
+    }
+
     public function expertProfile(): HasOne
     {
         return $this->hasOne(Expert::class, 'user_id');
