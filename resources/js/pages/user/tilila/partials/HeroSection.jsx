@@ -7,9 +7,9 @@ const stats = [
         frLabel: 'Impact sur la publicité',
         arLabel: 'الأثر على الإعلانات',
         enDescription:
-            'Measuring how the Trophée Tilila has shifted the narrative in Moroccan media over the years.',
+            'Measuring how the Tilila Awards has shifted the narrative in Moroccan media over the years.',
         frDescription:
-            'Mesurer comment le Trophée Tilila a fait évoluer le récit dans les médias marocains au fil des années.',
+            'Mesurer comment le Tilila Awards a fait évoluer le récit dans les médias marocains au fil des années.',
         arDescription:
             'قياس كيف غيّرت جائزة تيليلا السردية في الإعلام المغربي عبر السنوات.',
     },
@@ -84,7 +84,7 @@ export default function HeroSection({ onParticipate }) {
                                 lineHeight: 1.05,
                             }}
                         >
-                            Trophée
+                            Tilila
                             <br />
                             <span style={{ color: 'var(--color-gold)' }}>
                                 Tilila
@@ -171,8 +171,8 @@ export default function HeroSection({ onParticipate }) {
                                     />
                                     <p className="sr-only">
                                         <TransText
-                                            en="7th edition of Trophée Tilila — awards ceremony 16 October. Organized by 2M."
-                                            fr="7e édition du Trophée Tilila — remise des prix le 16 octobre. Organisé par 2M."
+                                            en="7th edition of Tilila Awards — awards ceremony 16 October. Organized by 2M."
+                                            fr="7e édition du Tilila Awards — remise des prix le 16 octobre. Organisé par 2M."
                                             ar="الدورة السابعة لتروفي تيليلا — حفل التتويج 16 أكتوبر. تنظيم 2M."
                                         />
                                     </p>

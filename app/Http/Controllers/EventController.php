@@ -53,6 +53,8 @@ class EventController extends Controller
     public function show(int $id): Response
     {
         $event = Event::query()
+            ->where('visibility', 'public')
+            ->where('status', '!=', 'draft')
             ->with([
                 'speakers' => fn ($q) => $q->orderBy('sort')->orderBy('id'),
                 'partners' => fn ($q) => $q->orderBy('sort')->orderBy('id'),
@@ -68,7 +70,10 @@ class EventController extends Controller
 
     public function register(Request $request, int $id)
     {
-        $event = Event::query()->findOrFail($id);
+        $event = Event::query()
+            ->where('visibility', 'public')
+            ->where('status', '!=', 'draft')
+            ->findOrFail($id);
 
         $data = $request->validate([
             'full_name' => 'required|string|max:255',

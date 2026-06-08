@@ -1,5 +1,5 @@
 /**
- * Trophée Tilila partners — logo paths under public/assets (use existing files first).
+ * Tilila Awards partners — logo paths under public/assets (use existing files first).
  * @see resources/js/pages/user/about/partials/PartnersSection.jsx
  */
 

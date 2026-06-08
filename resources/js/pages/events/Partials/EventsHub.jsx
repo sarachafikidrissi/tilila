@@ -11,7 +11,7 @@ const MODULES = [
     {
         href: '/tilila',
         logoSrc: TILILA_AWARDS_LOGO,
-        logoAlt: 'Les Débats Tilila — Trophée Tilila',
+        logoAlt: 'Les Débats Tilila — Tilila Awards',
         logoClassName: 'h-14 w-full max-w-[12rem] object-contain',
         enTitle: 'Tilila Awards',
         frTitle: 'Tilila Awards',

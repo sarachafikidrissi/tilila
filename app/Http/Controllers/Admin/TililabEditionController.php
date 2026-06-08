@@ -176,6 +176,7 @@ class TililabEditionController extends Controller
             'gallery_url' => ['nullable', 'url', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
             'is_current' => ['sometimes', 'boolean'],
+            'applications_close_at' => ['nullable', 'date'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
@@ -231,6 +232,7 @@ class TililabEditionController extends Controller
             }
             if (in_array($path, $toRemove, true)) {
                 Storage::disk('public')->delete($path);
+
                 continue;
             }
             $kept[] = $path;
@@ -333,4 +335,3 @@ class TililabEditionController extends Controller
         return $next;
     }
 }
-

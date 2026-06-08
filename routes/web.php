@@ -9,6 +9,9 @@ use App\Http\Controllers\ExpertController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\ProgramContactController;
+use App\Http\Controllers\ProgramNewsController;
+use App\Http\Controllers\ProgramRegulationController;
 use App\Http\Controllers\TililabInscriptionController;
 use App\Http\Controllers\TililaConnectController;
 use App\Http\Controllers\TililaParticipationController;
@@ -17,6 +20,7 @@ use App\Models\Expert;
 use App\Models\MediaItem;
 use App\Models\TililabEdition;
 use App\Models\TililaEdition;
+use App\Support\ProgramPageProps;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -121,9 +125,13 @@ Route::permanentRedirect('/expertes', '/experts');
 
 Route::get('/experts', [ExpertController::class, 'index'])->name('experts.index');
 Route::get('/experts/connect', [TililaConnectController::class, 'create'])->name('experts.connect');
-Route::post('/experts/connect', [TililaConnectController::class, 'store'])->name('experts.connect.store');
+Route::post('/experts/connect', [TililaConnectController::class, 'store'])
+    ->middleware('throttle:public-forms')
+    ->name('experts.connect.store');
 Route::get('/experts/become', [ExpertApplicationController::class, 'create'])->name('experts.become');
-Route::post('/experts/become', [ExpertApplicationController::class, 'store'])->name('experts.become.store');
+Route::post('/experts/become', [ExpertApplicationController::class, 'store'])
+    ->middleware('throttle:public-uploads')
+    ->name('experts.become.store');
 Route::get('/experts/articles/{article}', [ExpertArticleController::class, 'show'])->name('experts.articles.show');
 Route::get('/experts/{expert}', [ExpertController::class, 'show'])
     ->middleware(['auth', 'verified', 'expert.access'])
@@ -132,7 +140,9 @@ Route::post('/experts/{expert}/contact', [ExpertContactController::class, 'store
     ->middleware('auth')
     ->name('experts.contact.store');
 
-Route::post('/newsletter', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.store');
+Route::post('/newsletter', [NewsletterSubscriptionController::class, 'store'])
+    ->middleware('throttle:public-forms')
+    ->name('newsletter.store');
 
 Route::get('/plan-du-site', function () {
     return Inertia::render('legal/plan-du-site');
@@ -143,7 +153,9 @@ Route::get('/mentions-legales', function () {
 })->name('mentions-legales');
 Route::get('/opportunities', [OpportunityController::class, 'index'])->name('opportunities.index');
 Route::get('/opportunities/{opportunity}', [OpportunityController::class, 'show'])->name('opportunities.show');
-Route::post('/opportunities/{opportunity}/apply', [OpportunityController::class, 'apply'])->name('opportunities.apply');
+Route::post('/opportunities/{opportunity}/apply', [OpportunityController::class, 'apply'])
+    ->middleware('throttle:public-uploads')
+    ->name('opportunities.apply');
 Route::get('/about', function () {
     return Inertia::render('user/about/index');
 });
@@ -167,6 +179,7 @@ Route::get('/tililab', function () {
     return Inertia::render('user/tililab/index', [
         'currentEdition' => $currentEdition,
         'editions' => $pastEditions,
+        ...ProgramPageProps::forProgram('tililab'),
     ]);
 });
 Route::get('/tilila', function () {
@@ -186,8 +199,19 @@ Route::get('/tilila', function () {
     return Inertia::render('user/tilila/index', [
         'currentEdition' => $currentEdition,
         'editions' => $pastEditions,
+        ...ProgramPageProps::forProgram('tilila'),
     ]);
 });
+
+Route::get('/tilila/reglement', [ProgramRegulationController::class, 'tilila'])->name('program.reglement.tilila');
+Route::get('/tilila/reglement/download', [ProgramRegulationController::class, 'downloadTilila'])->name('program.reglement.tilila.download');
+Route::get('/tililab/reglement', [ProgramRegulationController::class, 'tililab'])->name('program.reglement.tililab');
+Route::get('/tililab/reglement/download', [ProgramRegulationController::class, 'downloadTililab'])->name('program.reglement.tililab.download');
+Route::get('/actualites', [ProgramNewsController::class, 'index'])->name('program.news.index');
+Route::get('/actualites/{news:slug}', [ProgramNewsController::class, 'show'])->name('program.news.show');
+Route::post('/program/contact', [ProgramContactController::class, 'store'])
+    ->middleware('throttle:public-forms')
+    ->name('program.contact.store');
 
 Route::get('/tilila/editions/{edition}', function (TililaEdition $edition) {
     return Inertia::render('user/tilila/edition', [
@@ -214,7 +238,7 @@ Route::get('/tilila/editions/{edition}/jury', function (TililaEdition $edition) 
 });
 
 Route::get('/tilila/participate', function () {
-    return Inertia::render('user/tilila/partials/ParticipateModal');
+    return Inertia::render('user/tilila/participate');
 })->name('tilila.participate');
 
 Route::get('/tililab/editions/{edition}', function (TililabEdition $edition) {
@@ -223,11 +247,15 @@ Route::get('/tililab/editions/{edition}', function (TililabEdition $edition) {
     ]);
 });
 
-Route::post('/tilila/participate', [TililaParticipationController::class, 'store'])->name('tilila.participate.store');
+Route::post('/tilila/participate', [TililaParticipationController::class, 'store'])
+    ->middleware('throttle:public-uploads')
+    ->name('tilila.participate.store');
 Route::get('/tililab/form', function () {
-    return Inertia::render('user/tililab/partials/FormOFInscription');
-});
-Route::post('/tililab/form', [TililabInscriptionController::class, 'store'])->name('tililab.form.store');
+    return Inertia::render('user/tililab/participate');
+})->name('tililab.form');
+Route::post('/tililab/form', [TililabInscriptionController::class, 'store'])
+    ->middleware('throttle:public-uploads')
+    ->name('tililab.form.store');
 Route::get('/media', [MediaController::class, 'index'])->name('media.index');
 Route::get('/media/{media}', [MediaController::class, 'show'])->name('media.show');
 

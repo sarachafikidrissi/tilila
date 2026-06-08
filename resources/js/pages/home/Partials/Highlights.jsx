@@ -19,8 +19,8 @@ export default function Highlights({
             enTag: 'Award',
             frTag: 'Prix',
             arTag: 'جائزة',
-            enTitle: 'Trophée Tilila',
-            frTitle: 'Trophée Tilila',
+            enTitle: 'Tilila Awards',
+            frTitle: 'Tilila Awards',
             arTitle: 'جائزة تيليلا',
             enDescription:
                 'Discover editions, winners, jury, and gallery — managed dynamically from our archive.',

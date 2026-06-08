@@ -248,6 +248,16 @@ export function AppSidebar() {
                                         href: '/admin/newsletter',
                                         icon: Mail,
                                     },
+                                    {
+                                        title: 'Program news',
+                                        href: '/admin/program/news',
+                                        icon: Newspaper,
+                                    },
+                                    {
+                                        title: 'Testimonials',
+                                        href: '/admin/program/testimonials',
+                                        icon: Megaphone,
+                                    },
                                 ]}
                             />
                         </SidebarGroup>

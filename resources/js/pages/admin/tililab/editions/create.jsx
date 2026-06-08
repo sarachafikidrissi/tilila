@@ -11,6 +11,7 @@ export default function AdminTililabEditionsCreate() {
         theme: { en: '', fr: '', ar: '' },
         has_gallery: false,
         is_current: false,
+        applications_close_at: '',
         gallery_images: [],
         gallery_images_files: [],
         remove_gallery_images: [],

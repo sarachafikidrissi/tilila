@@ -29,7 +29,7 @@ const rows = [
     },
     {
         activity: 'Annual Diversity Awards',
-        module: 'Trophée',
+        module: 'Tilila Awards',
         moduleClass: 'border-alpha-yellow/40 bg-beta-yellow text-alpha-yellow',
         metric: '50 Nominees',
         date: 'Oct 21, 2023',

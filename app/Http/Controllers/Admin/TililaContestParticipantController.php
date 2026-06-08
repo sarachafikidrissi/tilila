@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TililaContestParticipant;
 use App\Models\TililaEdition;
+use App\Support\ParticipantFileStorage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -57,6 +58,7 @@ class TililaContestParticipantController extends Controller
 
     public function destroy(TililaContestParticipant $participant): RedirectResponse
     {
+        ParticipantFileStorage::deleteMany($participant->storedFilePaths());
         $participant->delete();
 
         return redirect()->route('admin.tilila.participants.index')
@@ -83,13 +85,25 @@ class TililaContestParticipantController extends Controller
                 'edition_year',
                 'first_name',
                 'last_name',
+                'representative_role',
                 'email',
                 'phone',
+                'company',
+                'brand',
+                'agency',
                 'city',
                 'country',
-                'submission_title',
+                'campaign_title',
+                'first_broadcast_date',
+                'category',
+                'creative_concept',
+                'edi_contribution',
                 'submission_link',
                 'submission_video_url',
+                'audio_url',
+                'visual_url',
+                'declared_accuracy',
+                'declared_rights',
                 'accepted_rules',
                 'created_at',
             ], $delimiter);
@@ -102,13 +116,25 @@ class TililaContestParticipantController extends Controller
                         (string) ($p->edition?->year ?? ''),
                         (string) ($p->first_name ?? ''),
                         (string) ($p->last_name ?? ''),
+                        (string) ($p->representative_role ?? ''),
                         (string) ($p->email ?? ''),
                         (string) ($p->phone ?? ''),
+                        (string) ($p->company ?? ''),
+                        (string) ($p->brand ?? ''),
+                        (string) ($p->agency ?? ''),
                         (string) ($p->city ?? ''),
                         (string) ($p->country ?? ''),
-                        (string) ($p->submission_title ?? ''),
+                        (string) ($p->campaign_title ?? ''),
+                        optional($p->first_broadcast_date)->toDateString(),
+                        (string) ($p->category ?? ''),
+                        (string) ($p->creative_concept ?? ''),
+                        (string) ($p->edi_contribution ?? ''),
                         (string) ($p->submission_link ?? ''),
                         (string) ($p->submission_video_url ?? ''),
+                        (string) ($p->audio_url ?? ''),
+                        (string) ($p->visual_url ?? ''),
+                        $p->declared_accuracy ? 'yes' : 'no',
+                        $p->declared_rights ? 'yes' : 'no',
                         $p->accepted_rules ? 'yes' : 'no',
                         optional($p->created_at)->toIso8601String(),
                     ], $delimiter);

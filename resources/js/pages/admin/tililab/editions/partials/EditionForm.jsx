@@ -337,6 +337,19 @@ export default function EditionForm({
                                 />
                                 Current edition (open for applications)
                             </label>
+                            <div className="w-full sm:w-auto">
+                                <label className="text-sm font-semibold text-foreground">
+                                    Applications close at
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    value={data.applications_close_at ?? ''}
+                                    onChange={(e) =>
+                                        setData('applications_close_at', e.target.value)
+                                    }
+                                    className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm"
+                                />
+                            </div>
                             <label className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
                                 <input
                                     type="checkbox"

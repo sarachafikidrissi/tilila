@@ -41,8 +41,8 @@ export default function AboutOverviewSection() {
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
                     <TransText
-                        en="Trophée Tilila is an annual award organized by 2M (Moroccan television) through its Comité Parité et Diversité (Parity and Diversity Committee). It honours the most inclusive, respectful, and committed advertising campaigns—especially those that promote a positive image of women, gender equality (parité), diversity, and inclusion in Moroccan advertising. It has become a major reference for Morocco’s advertising and communication industry."
-                        fr="Le Trophée Tilila est une distinction annuelle organisée par 2M (chaîne marocaine) via son Comité Parité et Diversité. Il récompense les campagnes publicitaires les plus inclusives, respectueuses et engagées—en particulier celles qui valorisent les femmes, la parité, la diversité et l’inclusion dans la publicité marocaine. C’est aujourd’hui une référence majeure pour les professionnels de la communication."
+                        en="Tilila Awards is an annual award organized by 2M (Moroccan television) through its Comité Parité et Diversité (Parity and Diversity Committee). It honours the most inclusive, respectful, and committed advertising campaigns—especially those that promote a positive image of women, gender equality (parité), diversity, and inclusion in Moroccan advertising. It has become a major reference for Morocco’s advertising and communication industry."
+                        fr="Le Tilila Awards est une distinction annuelle organisée par 2M (chaîne marocaine) via son Comité Parité et Diversité. Il récompense les campagnes publicitaires les plus inclusives, respectueuses et engagées—en particulier celles qui valorisent les femmes, la parité, la diversité et l’inclusion dans la publicité marocaine. C’est aujourd’hui une référence majeure pour les professionnels de la communication."
                         ar="جائزة تيليلا هي تكريم سنوي تنظمه قناة 2M المغربية عبر لجنة المساواة والتنوع. تُكرّم الحملات الإعلانية الأكثر شمولاً واحتراماً والتزاماً—خصوصاً ما يعزز صورة المرأة والمساواة بين الجنسين والتنوع والإدماج في الإعلان المغربي. وأصبحت مرجعاً رئيسياً في قطاع الإعلان والتواصل بالمغرب."
                     />
                 </p>
@@ -89,8 +89,8 @@ export default function AboutOverviewSection() {
                     href="/tilila"
                     cta={
                         <TransText
-                            en="Discover Trophée Tilila →"
-                            fr="Découvrir le Trophée Tilila →"
+                            en="Discover Tilila Awards →"
+                            fr="Découvrir le Tilila Awards →"
                             ar="اكتشف جائزة تيليلا →"
                         />
                     }

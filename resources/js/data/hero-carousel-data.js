@@ -141,8 +141,8 @@ export const HERO_CAROUSEL_SLIDES = [
         imagePosition: 'center',
         imageSrc: '/assets/tilila/tilila-awards-logo.png',
         imageAlt: {
-            en: 'Les Débats Tilila — Trophée Tilila',
-            fr: 'Les Débats Tilila — Trophée Tilila',
+            en: 'Les Débats Tilila — Tilila Awards',
+            fr: 'Les Débats Tilila — Tilila Awards',
             ar: 'المناظرات تيليلا — تروفي تيليلا',
         },
         primaryCta: {

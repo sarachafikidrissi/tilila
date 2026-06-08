@@ -77,9 +77,9 @@ export default function TililaEditionDetails() {
                     <div>
                         <div className="text-xs font-semibold tracking-widest text-tgray">
                             <TransText
-                                en="TROPHÉE TILILA"
-                                fr="TROPHÉE TILILA"
-                                ar="جائزة تيليلا"
+                                en="TILILA AWARDS"
+                                fr="TILILA AWARDS"
+                                ar="تيليلا أووردز"
                             />
                         </div>
                         <h1 className="mt-3 text-2xl font-semibold text-tblack sm:text-3xl">
@@ -176,9 +176,9 @@ export default function TililaEditionDetails() {
                         <>
                             <a href="#ceremony" className="hover:underline">
                                 <TransText
-                                    en="Ceremony"
-                                    fr="Cérémonie"
-                                    ar="الحفل"
+                                    en="Ceremony video"
+                                    fr="Vidéo cérémonie"
+                                    ar="فيديو الحفل"
                                 />
                             </a>
                             <span className="text-tgray">·</span>
@@ -201,7 +201,7 @@ export default function TililaEditionDetails() {
                     </a>
                     <span className="text-tgray">·</span>
                     <a href="#gallery" className="hover:underline">
-                        <TransText en="Gallery" fr="Galerie" ar="المعرض" />
+                        <TransText en="Photos" fr="Photos" ar="الصور" />
                     </a>
                 </nav>
 

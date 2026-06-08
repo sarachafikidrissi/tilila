@@ -207,6 +207,7 @@ class TililaEditionController extends Controller
             'ceremony_video_url' => ['nullable', 'string', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
             'is_current' => ['sometimes', 'boolean'],
+            'applications_close_at' => ['nullable', 'date'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
@@ -277,7 +278,9 @@ class TililaEditionController extends Controller
                 continue;
             }
             if (in_array($path, $toRemove, true)) {
-                Storage::disk('public')->delete($path);
+                if ($this->isAllowedEditionAssetPath($path)) {
+                    Storage::disk('public')->delete($path);
+                }
 
                 continue;
             }
@@ -348,8 +351,8 @@ class TililaEditionController extends Controller
             $file = $request->file("$key.$idx.photo");
             if ($file instanceof UploadedFile && $file->isValid()) {
                 $photoPath = $file->store($storageDir, 'public');
-            } elseif (! empty($row['photo_path']) && is_string($row['photo_path'])) {
-                $photoPath = $row['photo_path'];
+            } elseif ($this->isAllowedEditionAssetPath($row['photo_path'] ?? null)) {
+                $photoPath = (string) $row['photo_path'];
             }
 
             if (is_string($photoPath) && $photoPath !== '') {
@@ -381,5 +384,13 @@ class TililaEditionController extends Controller
         }
 
         return $rows;
+    }
+
+    private function isAllowedEditionAssetPath(mixed $path): bool
+    {
+        return is_string($path)
+            && $path !== ''
+            && ! str_contains($path, '..')
+            && str_starts_with($path, 'tilila-editions/');
     }
 }

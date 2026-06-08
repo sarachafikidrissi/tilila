@@ -23,7 +23,7 @@ export default function TililaAwardsHero() {
                         />
                     </p>
                     <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl lg:leading-[1.1]">
-                        <span className="text-gold">Trophée</span>{' '}
+                        <span className="text-gold">Tilila</span>{' '}
                         <span className="text-twhite">Tilila</span>
                     </h1>
                     <p className="mt-5 text-base leading-relaxed text-twhite/75 sm:text-lg">

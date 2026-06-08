@@ -10,7 +10,7 @@ const modules = [
         barClass: 'bg-alpha-purple',
     },
     {
-        name: 'Trophée',
+        name: 'Tilila Awards',
         label: 'Participation',
         pct: 62,
         barClass: 'bg-alpha-yellow',

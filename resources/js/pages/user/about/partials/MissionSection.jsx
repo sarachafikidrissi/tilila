@@ -10,8 +10,8 @@ const stats = [
     },
     {
         value: '2018',
-        en: 'First Trophée Tilila edition',
-        fr: '1re édition du Trophée',
+        en: 'First Tilila Awards edition',
+        fr: '1re édition des Tilila Awards',
         ar: 'الدورة الأولى للجائزة',
     },
     {
@@ -80,8 +80,8 @@ export default function MissionSection() {
 
                     <p className="mt-4 text-sm leading-6 text-tgray">
                         <TransText
-                            en="Trophée Tilila was launched in 2018 as one of the Committee’s flagship initiatives. The award celebrates advertising that reflects society fairly and responsibly—and keeps growing as a reference for the sector."
-                            fr="Le Trophée Tilila a été lancé en 2018 comme initiative phare du Comité. Il met en lumière une publicité qui reflète la société avec équité et responsabilité—et s’impose comme une référence pour le secteur."
+                            en="Tilila Awards was launched in 2018 as one of the Committee’s flagship initiatives. The award celebrates advertising that reflects society fairly and responsibly—and keeps growing as a reference for the sector."
+                            fr="Le Tilila Awards a été lancé en 2018 comme initiative phare du Comité. Il met en lumière une publicité qui reflète la société avec équité et responsabilité—et s’impose comme une référence pour le secteur."
                             ar="أُطلقت جائزة تيليلا سنة 2018 كإحدى الركائز الرئيسية للجنة. تُكرّم إعلاناً يعكس المجتمع بعدالة ومسؤولية—وتواصل النمو كمرجع للقطاع."
                         />
                     </p>

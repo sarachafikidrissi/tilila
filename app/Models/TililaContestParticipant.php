@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class TililaContestParticipant extends Model
 {
@@ -14,14 +13,28 @@ class TililaContestParticipant extends Model
         'tilila_edition_id',
         'first_name',
         'last_name',
+        'representative_role',
         'email',
         'phone',
+        'company',
+        'brand',
+        'agency',
         'city',
         'country',
+        'campaign_title',
+        'first_broadcast_date',
+        'category',
         'submission_title',
         'submission_description',
+        'creative_concept',
+        'edi_contribution',
         'submission_link',
         'submission_video_path',
+        'audio_path',
+        'visual_path',
+        'extra_document_paths',
+        'declared_accuracy',
+        'declared_rights',
         'accepted_rules',
         'locale',
         'ip',
@@ -29,10 +42,14 @@ class TililaContestParticipant extends Model
     ];
 
     protected $casts = [
+        'first_broadcast_date' => 'date',
+        'extra_document_paths' => 'array',
+        'declared_accuracy' => 'boolean',
+        'declared_rights' => 'boolean',
         'accepted_rules' => 'boolean',
     ];
 
-    protected $appends = ['submission_video_url'];
+    protected $appends = ['submission_video_url', 'audio_url', 'visual_url'];
 
     public function edition(): BelongsTo
     {
@@ -41,10 +58,35 @@ class TililaContestParticipant extends Model
 
     public function getSubmissionVideoUrlAttribute(): ?string
     {
-        if (! $this->submission_video_path) {
-            return null;
-        }
+        return $this->submission_video_path
+            ? route('admin.tilila.participants.file', ['participant' => $this->id, 'type' => 'video'])
+            : null;
+    }
 
-        return Storage::url($this->submission_video_path);
+    public function getAudioUrlAttribute(): ?string
+    {
+        return $this->audio_path
+            ? route('admin.tilila.participants.file', ['participant' => $this->id, 'type' => 'audio'])
+            : null;
+    }
+
+    public function getVisualUrlAttribute(): ?string
+    {
+        return $this->visual_path
+            ? route('admin.tilila.participants.file', ['participant' => $this->id, 'type' => 'visual'])
+            : null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function storedFilePaths(): array
+    {
+        return array_values(array_filter([
+            $this->submission_video_path,
+            $this->audio_path,
+            $this->visual_path,
+            ...($this->extra_document_paths ?? []),
+        ]));
     }
 }

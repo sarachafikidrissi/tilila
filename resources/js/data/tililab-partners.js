@@ -8,9 +8,9 @@ export const TILILAB_ORGANISER = {
     name: '2M',
     logoUrl: '/assets/organizer-logo.png',
     role: {
-        en: 'Organizer — creative bootcamp alongside Trophée Tilila',
-        fr: 'Organisateur — bootcamp créatif en marge du Trophée Tilila',
-        ar: 'المنظم — معسكر إبداعي إلى جانب تروفي تيليلا',
+        en: 'Organizer — creative bootcamp alongside Tilila Awards',
+        fr: 'Organisateur — bootcamp créatif en marge des Tilila Awards',
+        ar: 'المنظم — معسكر إبداعي إلى جانب تيليلا أووردز',
     },
 };
 

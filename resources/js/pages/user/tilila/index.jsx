@@ -1,23 +1,32 @@
 import { Head, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
+import {
+    ProgramContactSection,
+    ProgramHeroSection,
+    ProgramNewsSection,
+    ProgramStatsSection,
+    ProgramTestimonialsSection,
+} from '@/components/program/ProgramSharedSections';
 import ParticipateModal from '@/pages/user/tilila/partials/ParticipateModal';
 import TililaHowToApply from '@/pages/user/tilila/partials/TililaHowToApply';
 import CurrentEditionSection from '@/pages/user/tilila/partials/CurrentEditionSection';
 import TililaPastEditionsCarousel from '@/pages/user/tilila/partials/TililaPastEditionsCarousel';
 import {
+    TililaAdmissionSection,
     TililaApplySection,
     TililaConceptSection,
     TililaCriteriaSection,
     TililaFaqSection,
+    TililaJurySection,
     TililaPrizesSection,
     TililaSponsorsSection,
+    TililaWhyParticipateSection,
 } from '@/pages/user/tilila/partials/ProgramSections';
-import TransText from '@/components/TransText';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililaIndex() {
-    const { currentEdition, editions, flash } = usePage().props;
+    const { currentEdition, editions, flash, testimonials, news } = usePage().props;
     const [formOpen, setFormOpen] = useState(false);
 
     return (
@@ -30,6 +39,9 @@ export default function TililaIndex() {
                     </div>
                 ) : null}
 
+                <ProgramHeroSection program="tilila" />
+                <ProgramStatsSection />
+
                 <CurrentEditionSection
                     edition={currentEdition}
                     onOpenParticipate={() => setFormOpen(true)}
@@ -41,75 +53,32 @@ export default function TililaIndex() {
                     excludeYear={currentEdition?.year ?? null}
                 />
 
-                <nav className="bg-background/70 backdrop-blur">
-                    <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-4 text-sm font-semibold text-beta-blue">
-                        {currentEdition ? (
-                            <>
-                                <a
-                                    href="#current-edition"
-                                    className="hover:underline"
-                                >
-                                    <TransText
-                                        en="Current edition"
-                                        fr="Édition en cours"
-                                        ar="الدورة الحالية"
-                                    />
-                                </a>
-                                <span className="text-tgray">·</span>
-                            </>
-                        ) : null}
-                        <a href="#past-editions" className="hover:underline">
-                            Éditions
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#how-to-apply" className="hover:underline">
-                            Candidature
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#concept" className="hover:underline">
-                            Concept
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#prizes" className="hover:underline">
-                            <span>Prix</span>
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#criteria" className="hover:underline">
-                            Critères
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#apply" className="hover:underline">
-                            Formulaire
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#sponsors" className="hover:underline">
-                            Sponsors
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#faq" className="hover:underline">
-                            FAQ
-                        </a>
-                    </div>
-                </nav>
-
-                {/* <div className="bg-beta-white">
+                <div className="bg-beta-white">
                     <TililaConceptSection />
+                    <TililaWhyParticipateSection />
                     <TililaPrizesSection />
-                    <TililaCriteriaSection />
-                </div> */}
+                    <TililaAdmissionSection />
+                    <TililaJurySection />
+                    {/* <TililaCriteriaSection /> */}
+                </div>
 
                 <div className="bg-background">
                     <TililaHowToApply onOpenForm={() => setFormOpen(true)} />
+                    <TililaApplySection onOpenForm={() => setFormOpen(true)} />
                 </div>
 
+                {/* <ProgramTestimonialsSection testimonials={testimonials ?? []} program="tilila" /> */}
+                {/* <ProgramNewsSection news={news ?? []} program="tilila" /> */}
+
                 <div className="bg-twhite">
-                    {/* <TililaApplySection onOpenForm={() => setFormOpen(true)} /> */}
                     <TililaSponsorsSection />
                 </div>
 
                 <div className="border-t border-border bg-background">
                     <TililaFaqSection />
                 </div>
+
+                <ProgramContactSection program="tilila" />
 
                 <ParticipateModal open={formOpen} onOpenChange={setFormOpen} />
             </div>

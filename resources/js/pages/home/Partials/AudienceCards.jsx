@@ -23,10 +23,10 @@ const AUDIENCES = [
     },
     {
         logoSrc: TILILA_AWARDS_LOGO,
-        logoAlt: 'Les Débats Tilila — Trophée Tilila',
+        logoAlt: 'Les Débats Tilila — Tilila Awards',
         logoClassName: 'h-12 w-full max-w-[10rem] object-contain',
-        enTitle: 'Trophée Tilila',
-        frTitle: 'Trophée Tilila',
+        enTitle: 'Tilila Awards',
+        frTitle: 'Tilila Awards',
         arTitle: 'جائزة تيليلا',
         enDescription:
             'Participate and discover editions, winners, jury and gallery.',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Expert;
 use App\Http\Controllers\Controller;
 use App\Models\Expert;
 use App\Models\ExpertArticle;
+use App\Support\SafeHtml;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -166,7 +167,7 @@ class ArticleController extends Controller
 
         return [
             'title' => $title,
-            'content' => $content,
+            'content' => SafeHtml::sanitizeTriLang($content),
             'status' => $validated['status'],
         ];
     }

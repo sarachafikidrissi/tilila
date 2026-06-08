@@ -22,9 +22,11 @@ class TililabEdition extends Model
         'has_gallery',
         'sort',
         'is_current',
+        'applications_close_at',
     ];
 
     protected $casts = [
+        'applications_close_at' => 'datetime',
         'edition_label' => 'array',
         'theme' => 'array',
         'winners' => 'array',
@@ -42,6 +44,19 @@ class TililabEdition extends Model
     public static function current(): ?self
     {
         return static::query()->where('is_current', true)->first();
+    }
+
+    public function applicationsAreOpen(): bool
+    {
+        if (! $this->is_current) {
+            return false;
+        }
+
+        if ($this->applications_close_at === null) {
+            return true;
+        }
+
+        return $this->applications_close_at->isFuture();
     }
 
     public static function markAsCurrent(self $edition): void

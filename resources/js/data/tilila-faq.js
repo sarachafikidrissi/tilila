@@ -1,29 +1,16 @@
-/** Trophée Tilila — official FAQ (EN / FR / AR) */
+/** Tilila Awards — official FAQ (EN / FR / AR) */
 export const TILILA_FAQ_ITEMS = [
     {
         id: 'what-is',
         q: {
-            en: 'What is Trophée Tilila?',
-            fr: 'Qu’est-ce que le Trophée Tilila ?',
-            ar: 'ما هو تروفي تيليلا؟',
+            en: 'What are Tilila Awards?',
+            fr: 'Qu’est-ce que les Tilila Awards ?',
+            ar: 'ما هي تيليلا أووردز؟',
         },
         a: {
-            en: 'Trophée Tilila is an annual award organized by 2M through its Comité Parité et Diversité. It rewards the best advertising campaigns that promote gender parity, diversity, inclusion, and a respectful and positive image of women and all components of Moroccan society.',
-            fr: 'Le Trophée Tilila est un prix annuel organisé par 2M via son Comité Parité et Diversité. Il récompense les meilleures campagnes publicitaires qui promeuvent la parité, la diversité, l’inclusion et une image respectueuse et positive des femmes et de toutes les composantes de la société marocaine.',
-            ar: 'تروفي تيليلا جائزة سنوية تنظمها 2M عبر لجنة المساواة والتنوع. تكافئ أفضل الحملات الإعلانية التي تعزز المساواة بين الجنسين والتنوع والإدماج وصورة إيجابية محترمة للمرأة ولجميع مكونات المجتمع المغربي.',
-        },
-    },
-    {
-        id: 'who-organizes',
-        q: {
-            en: 'Who organizes Trophée Tilila?',
-            fr: 'Qui organise le Trophée Tilila ?',
-            ar: 'من ينظم تروفي تيليلا؟',
-        },
-        a: {
-            en: 'The trophy is organized by 2M Television via its Parity and Diversity Committee.',
-            fr: 'Le trophée est organisé par la télévision 2M via son Comité Parité et Diversité.',
-            ar: 'ينظم التروفي تلفزيون 2M عبر لجنة المساواة والتنوع.',
+            en: 'Tilila Awards is an annual ceremony organized by SOREAD 2M through its Comité Parité et Diversité. It rewards advertising campaigns, brands and personalities that promote equity, diversity and inclusion.',
+            fr: 'Les Tilila Awards sont une cérémonie annuelle organisée par SOREAD 2M via son Comité Parité et Diversité. Elle récompense les campagnes, marques et personnalités qui promeuvent l’équité, la diversité et l’inclusion.',
+            ar: 'تيليلا أووردز حفل سنوي تنظمه SOREAD 2M عبر لجنة المساواة والتنوع. تكافئ الحملات والعلامات والشخصيات التي تعزز الإنصاف والتنوع والإدماج.',
         },
     },
     {
@@ -34,130 +21,68 @@ export const TILILA_FAQ_ITEMS = [
             ar: 'من يمكنه المشاركة؟',
         },
         a: {
-            en: 'The competition is open to all advertisers (annonceurs) and communication / advertising agencies.',
-            fr: 'Le concours est ouvert à tous les annonceurs et aux agences de communication / publicité.',
-            ar: 'المسابقة مفتوحة لجميع المعلنين ووكالات الاتصال والإعلان.',
+            en: 'All Moroccan advertisers. Campaigns on TV (2M), digital, OOH, print and radio are eligible.',
+            fr: 'Tous les annonceurs marocains. Sont éligibles les campagnes TV (2M), digital, affichage, presse et radio.',
+            ar: 'جميع المعلنين المغاربة. تُقبل الحملات التلفزية (2M) والرقمية والإعلانية والمطبوعة والإذاعية.',
         },
     },
     {
-        id: 'eligible-campaigns',
+        id: 'categories',
         q: {
-            en: 'What campaigns are eligible?',
-            fr: 'Quelles campagnes sont éligibles ?',
-            ar: 'ما الحملات المؤهلة؟',
+            en: 'What are the award categories?',
+            fr: 'Quelles sont les catégories de prix ?',
+            ar: 'ما فئات الجوائز؟',
         },
         a: {
-            en: 'Campaigns (TV spots and digital) that have been broadcast or are scheduled to be broadcast during the period defined for each edition (usually one full year). Digital campaigns are also accepted.',
-            fr: 'Les campagnes (spots TV et digitales) diffusées ou programmées pendant la période définie pour chaque édition (généralement une année complète). Les campagnes digitales sont également acceptées.',
-            ar: 'الحملات (إعلانات تلفزية ورقمية) التي بُثت أو مجدولة للبث خلال الفترة المحددة لكل دورة (عادة سنة كاملة). تُقبل أيضاً الحملات الرقمية.',
+            en: 'Hommage Tilila, Jury Prize, Honour Prize, Engaged Communication ONLINE and OFFLINE.',
+            fr: 'Hommage Tilila, Prix du Jury, Prix d’Honneur, Communication Engagée ONLINE et OFFLINE.',
+            ar: 'تكريم تيليلا، جائزة لجنة التحكيم، جائزة الشرف، التواصل الملتزم ONLINE و OFFLINE.',
         },
     },
     {
         id: 'how-to-submit',
         q: {
             en: 'How can I submit my campaign?',
-            fr: 'Comment déposer ma campagne ?',
+            fr: 'Comment déposer ma candidature ?',
             ar: 'كيف أقدّم حملتي؟',
         },
         a: {
-            en: 'You must fill out the official participation form available on the website during the submission period.',
-            fr: 'Vous devez remplir le formulaire officiel de participation disponible sur le site pendant la période de candidatures.',
-            ar: 'يجب ملء استمارة المشاركة الرسمية المتاحة على الموقع خلال فترة الترشح.',
+            en: 'Use the online application form on this website during the open period.',
+            fr: 'Utilisez le formulaire de candidature en ligne sur ce site pendant la période d’ouverture.',
+            ar: 'استخدم استمارة الترشح الإلكترونية على هذا الموقع خلال فترة الفتح.',
         },
     },
     {
-        id: 'deadline',
+        id: 'regulations',
         q: {
-            en: 'What is the submission deadline?',
-            fr: 'Quelle est la date limite de dépôt ?',
-            ar: 'ما آخر أجل للتقديم؟',
+            en: 'Where can I read the regulations?',
+            fr: 'Où consulter les règlements ?',
+            ar: 'أين أجد النظام؟',
         },
         a: {
-            en: 'The deadline is announced each year on the official website and 2M’s communication channels.',
-            fr: 'La date limite est annoncée chaque année sur le site officiel et les canaux de communication de 2M.',
-            ar: 'يُعلَن الأجل كل سنة على الموقع الرسمي وقنوات تواصل 2M.',
+            en: 'Download the official Tilila Awards regulations from the dedicated page.',
+            fr: 'Téléchargez le règlement officiel des Tilila Awards depuis la page dédiée.',
+            ar: 'حمّلوا النظام الرسمي لتيليلا أووردز من الصفحة المخصصة.',
         },
-    },
-    {
-        id: 'winners-selection',
-        q: {
-            en: 'How are the winners selected?',
-            fr: 'Comment les lauréats sont-ils sélectionnés ?',
-            ar: 'كيف يُختار الفائزون؟',
+        link: '/tilila/reglement',
+        linkLabel: {
+            en: 'Tilila Awards regulations',
+            fr: 'Règlement Tilila Awards',
+            ar: 'نظام تيليلا أووردز',
         },
-        a: {
-            en: '• A selection committee first shortlists the entries.\n• An independent professional jury then evaluates the finalist campaigns.\n• Winners are revealed during the official awards ceremony.',
-            fr: '• Un comité de sélection présélectionne d’abord les candidatures.\n• Un jury professionnel indépendant évalue ensuite les campagnes finalistes.\n• Les lauréats sont dévoilés lors de la cérémonie officielle de remise des prix.',
-            ar: '• لجنة فرز تختار أولاً الملفات المؤهلة.\n• لجنة تحكيم مهنية مستقلة تقيّم الحملات النهائية.\n• يُعلَن الفائزون خلال حفل التتويج الرسمي.',
-        },
-        preline: true,
-    },
-    {
-        id: 'categories',
-        q: {
-            en: 'What are the main categories?',
-            fr: 'Quelles sont les principales catégories ?',
-            ar: 'ما الفئات الرئيسية؟',
-        },
-        a: {
-            en: '• Prix du Jury (Main Prize)\n• Prix Tilila Digital\n• Prix Coup de Cœur\n• Other special mentions depending on the edition.',
-            fr: '• Prix du Jury (prix principal)\n• Prix Tilila Digital\n• Prix Coup de Cœur\n• Autres mentions spéciales selon l’édition.',
-            ar: '• جائزة لجنة التحكيم (الجائزة الرئيسية)\n• جائزة تيليلا الرقمية\n• جائزة القلب\n• تنويهات خاصة أخرى حسب الدورة.',
-        },
-        preline: true,
-    },
-    {
-        id: 'winners-receive',
-        q: {
-            en: 'What do the winners receive?',
-            fr: 'Que reçoivent les lauréats ?',
-            ar: 'ماذا يحصل الفائزون؟',
-        },
-        a: {
-            en: 'Winners receive a Trophée Tilila, official recognition, and important media visibility on 2M channels.',
-            fr: 'Les lauréats reçoivent un Trophée Tilila, une reconnaissance officielle et une visibilité médiatique importante sur les antennes 2M.',
-            ar: 'يحصل الفائزون على تروفي تيليلا وتقديراً رسمياً وظهوراً إعلامياً مهماً على قنوات 2M.',
-        },
-    },
-    {
-        id: 'tililab',
-        q: {
-            en: 'What is Tililab?',
-            fr: 'Qu’est-ce que Tililab ?',
-            ar: 'ما هو تيليلاب؟',
-        },
-        a: {
-            en: 'Tililab is a parallel creative program dedicated to young talents (under 30 years old). It includes a bootcamp and its own awards, organized alongside Trophée Tilila.',
-            fr: 'Tililab est un programme créatif parallèle dédié aux jeunes talents (moins de 30 ans). Il comprend un bootcamp et ses propres récompenses, organisés en marge du Trophée Tilila.',
-            ar: 'تيليلاب برنامج إبداعي موازٍ مخصص للشباب (دون 30 سنة). يشمل معسكراً تدريبياً وجوائزه الخاصة، ويُنظَّم إلى جانب تروفي تيليلا.',
-        },
-    },
-    {
-        id: 'rules',
-        q: {
-            en: 'Where can I find the full rules (Règlement du concours)?',
-            fr: 'Où trouver le règlement complet du concours ?',
-            ar: 'أين أجد نظام المسابقة الكامل؟',
-        },
-        a: {
-            en: 'The complete rules are published every year on the official website:',
-            fr: 'Le règlement complet est publié chaque année sur le site officiel :',
-            ar: 'يُنشر النظام الكامل كل سنة على الموقع الرسمي:',
-        },
-        link: 'https://www.tropheetilila.ma',
     },
     {
         id: 'contact',
         q: {
-            en: 'How can I contact the organization?',
-            fr: 'Comment contacter l’organisation ?',
-            ar: 'كيف أتواصل مع المنظمين؟',
+            en: 'Who can I contact?',
+            fr: 'Qui contacter ?',
+            ar: 'من أتواصل معه؟',
         },
         a: {
-            en: 'For any questions, please write to:',
-            fr: 'Pour toute question, écrivez à :',
-            ar: 'لأي استفسار، راسلوا:',
+            en: 'Contact the Comité Parité & Diversité at',
+            fr: 'Contactez le Comité Parité & Diversité à',
+            ar: 'تواصلوا مع لجنة المساواة والتنوع على',
         },
-        email: 'tropheetilila@2m.ma',
+        email: 'comiteparitediversité@2m.ma',
     },
 ];

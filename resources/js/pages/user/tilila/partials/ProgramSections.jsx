@@ -1,4 +1,6 @@
+import { Link } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import RegulationCta from '@/components/program/RegulationCta';
 import { PartnerLogoTile, PartnerTier } from '@/components/PartnerSection';
 import { TILILA_FAQ_ITEMS } from '@/data/tilila-faq';
 import {
@@ -29,74 +31,126 @@ export function TililaConceptSection() {
     return (
         <SectionShell
             id="concept"
-            title={<TransText en="Concept" fr="Concept" ar="المفهوم" />}
+            title={<TransText en="Tilila Awards" fr="Tilila Awards" ar="تيليلا أووردز" />}
             subtitle={
                 <TransText
-                    en="Tilila Awards celebrates advertising campaigns that challenge stereotypes and advance gender equality."
-                    fr="Tilila Awards célèbre les campagnes publicitaires qui combattent les stéréotypes et font progresser l’égalité."
-                    ar="تحتفي جوائز تيليلا بالحملات الإعلانية التي تتحدى الصور النمطية وتعزز المساواة."
+                    en="Rewarding campaigns, brands and personalities that promote equity, diversity and inclusion."
+                    fr="Récompenser les campagnes, marques et personnalités qui contribuent à promouvoir l’équité, la diversité et l’inclusion."
+                    ar="تكريم الحملات والعلامات والشخصيات التي تعزز الإنصاف والتنوع والإدماج."
                 />
             }
         >
-            <div className="rounded-2xl border border-border bg-background p-6 text-sm text-tgray">
+            <p className="max-w-3xl text-sm leading-7 text-tgray">
                 <TransText
-                    en="This page is structured according to the reference arborescence: concept, prizes, evaluation criteria, jury, application, FAQ, sponsors, and laureates by year."
-                    fr="Cette page est structurée selon l’arborescence de référence : concept, prix, critères d’évaluation, jury, candidature, FAQ, sponsors et lauréats par année."
-                    ar="تم تنظيم هذه الصفحة وفقًا للهيكلة المرجعية: المفهوم، الجوائز، معايير التقييم، لجنة التحكيم، الترشح، الأسئلة الشائعة، الرعاة، والفائزات حسب السنة."
+                    en="Tilila Awards identifies and celebrates advertising work that challenges stereotypes and promotes a fairer, more inclusive society — with a focus on gender parity and disability inclusion."
+                    fr="Les Tilila Awards identifient et célèbrent les créations publicitaires qui bousculent les stéréotypes et promeuvent une société plus juste et inclusive — avec une attention particulière à la parité et à l’inclusion des personnes en situation de handicap."
+                    ar="تُكرّم تيليلا أووردز الأعمال الإعلانية التي تتحدى الصور النمطية وتعزز مجتمعًا أكثر عدالة وشمولية، مع تركيز على المساواة بين الجنسين وإدماج ذوي الإعاقة."
                 />
-            </div>
+            </p>
         </SectionShell>
     );
 }
+
+export function TililaWhyParticipateSection() {
+    const items = [
+        { en: 'Highlight your societal commitment', fr: 'Valoriser son engagement sociétal', ar: 'إبراز الالتزام المجتمعي' },
+        { en: 'Gain recognition from an independent jury', fr: 'Faire reconnaître ses campagnes par un jury indépendant', ar: 'الحصول على اعتراف من لجنة تحكيم مستقلة' },
+        { en: 'Benefit from national visibility', fr: 'Bénéficier d’une visibilité nationale', ar: 'الاستفادة من ظهور وطني' },
+        { en: 'Join a community of engaged actors', fr: 'Rejoindre une communauté d’acteurs engagés', ar: 'الانضمام إلى مجتمع من الفاعلين الملتزمين' },
+    ];
+    return (
+        <SectionShell
+            id="why-participate"
+            title={<TransText en="Why participate?" fr="Pourquoi participer ?" ar="لماذا المشاركة؟" />}
+        >
+            <ul className="grid gap-3 sm:grid-cols-2">
+                {items.map((item) => (
+                    <li key={item.en} className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray">
+                        <TransText en={item.en} fr={item.fr} ar={item.ar} />
+                    </li>
+                ))}
+            </ul>
+        </SectionShell>
+    );
+}
+
+const TILILA_PRIZES = [
+    { fr: 'Hommage Tilila', en: 'Hommage Tilila', ar: 'تكريم تيليلا', reward: 'Distinction honorifique — trophée' },
+    { fr: 'Prix du Jury', en: 'Jury Prize', ar: 'جائزة لجنة التحكيم', reward: 'Trophée + espace pub 2M — 1 000 000 DH brut' },
+    { fr: 'Prix d’Honneur', en: 'Honour Prize', ar: 'جائزة الشرف', reward: 'Trophée + espace pub 2M — 500 000 DH brut' },
+    { fr: 'Communication Engagée — ONLINE', en: 'Engaged Communication — ONLINE', ar: 'تواصل ملتزم — رقمي', reward: 'Trophée + espace pub 2M — 250 000 DH brut' },
+    { fr: 'Communication Engagée — OFFLINE', en: 'Engaged Communication — OFFLINE', ar: 'تواصل ملتزم — تقليدي', reward: 'Trophée + espace pub 2M — 250 000 DH brut' },
+];
 
 export function TililaPrizesSection() {
     return (
         <SectionShell
             id="prizes"
-            title={<TransText en="Prizes" fr="Prix" ar="الجوائز" />}
-            subtitle={
-                <TransText
-                    en="Recognizing campaigns that set a new standard for inclusive representation."
-                    fr="Récompenser les campagnes qui établissent une nouvelle norme de représentation inclusive."
-                    ar="تكريم الحملات التي تضع معيارًا جديدًا للتمثيل الشامل."
-                />
-            }
+            title={<TransText en="Categories & rewards" fr="Les catégories" ar="الفئات والمكافآت" />}
         >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {[
-                    {
-                        en: 'Grand Prize',
-                        fr: 'Grand Prix',
-                        ar: 'الجائزة الكبرى',
-                    },
-                    {
-                        en: 'Jury Prize',
-                        fr: 'Prix du jury',
-                        ar: 'جائزة لجنة التحكيم',
-                    },
-                    {
-                        en: 'Special Mention',
-                        fr: 'Mention spéciale',
-                        ar: 'تنويه خاص',
-                    },
-                ].map((p) => (
-                    <div
-                        key={p.en}
-                        className="rounded-2xl border border-border bg-secondary p-5"
-                    >
+            <div className="grid gap-4 sm:grid-cols-2">
+                {TILILA_PRIZES.map((p) => (
+                    <div key={p.fr} className="rounded-2xl border border-border bg-secondary p-5">
                         <div className="text-sm font-semibold text-tblack">
                             <TransText en={p.en} fr={p.fr} ar={p.ar} />
                         </div>
-                        <div className="mt-2 text-sm text-tgray">
-                            <TransText
-                                en="Details can be updated per edition."
-                                fr="Les détails peuvent être mis à jour par édition."
-                                ar="يمكن تحديث التفاصيل حسب الدورة."
-                            />
-                        </div>
+                        <p className="mt-2 text-sm text-tgray">{p.reward}</p>
                     </div>
                 ))}
             </div>
+            <div className="mt-6">
+                <RegulationCta href="/tilila/reglement" />
+            </div>
+        </SectionShell>
+    );
+}
+
+export function TililaAdmissionSection() {
+    return (
+        <SectionShell
+            id="admission"
+            title={<TransText en="Admission conditions" fr="Conditions d’admission" ar="شروط القبول" />}
+        >
+            <div className="space-y-4 text-sm leading-7 text-tgray">
+                <TransText
+                    fr={`Le concours est ouvert à tous les annonceurs marocains.
+
+Sont éligibles les campagnes publicitaires diffusées en télévision, sur les supports digitaux, en affichage, en presse écrite ou en radio, en langue arabe, amazighe ou française, quel que soit le secteur d'activité concerné.
+
+Les campagnes soumises doivent s'inscrire dans les valeurs portées par le programme Tilila et contribuer à promouvoir l'équité, la diversité et l'inclusion, notamment la parité femmes-hommes et/ou l'inclusion des personnes en situation de handicap.
+`}
+                    en={`The competition is open to all Moroccan advertisers.
+
+Eligible entries are advertising campaigns broadcast on television, digital media, out-of-home, print or radio, in Arabic, Amazigh or French, regardless of the industry sector concerned.
+
+Submitted campaigns must reflect the values promoted by the Tilila program and contribute to equity, diversity and inclusion, particularly gender parity and/or the inclusion of people with disabilities.
+`}
+                    ar={`المسابقة مفتوحة لجميع المعلنين المغاربة.
+
+تُقبل الحملات الإعلانية التي تم بثها في التلفزيون أو على المنصات الرقمية أو في الإشهار الخارجي أو الصحافة المكتوبة أو الإذاعة، باللغة العربية أو الأمازيغية أو الفرنسية، بغض النظر عن القطاع المعني.
+
+يجب أن تندرج الحملات المقدمة في إطار القيم التي يحملها برنامج تيليلا وأن تساهم في تعزيز الإنصاف والتنوع والإدماج، ولا سيما المساواة بين الجنسين و/أو إدماج الأشخاص في وضعية إعاقة.
+`}
+                />
+            </div>
+      
+        </SectionShell>
+    );
+}
+
+export function TililaJurySection() {
+    return (
+        <SectionShell
+            id="jury"
+            title={<TransText en="The jury" fr="Le Jury" ar="لجنة التحكيم" />}
+        >
+            <p className="max-w-3xl text-sm leading-7 text-tgray">
+                <TransText
+                    en="The Tilila Awards jury brings together recognized figures from media, communication, creation, institutions, research and civil society. It evaluates applications on creative quality, relevance, impact and contribution to EDI values."
+                    fr="Le Jury des Tilila Awards est composé de personnalités reconnues issues des médias, de la communication, de la création, des institutions, de la recherche et de la société civile. Il évalue les candidatures sur la qualité créative, la pertinence, l’impact et la contribution aux valeurs d’équité, de diversité et d’inclusion."
+                    ar="تضم لجنة تحكيم تيليلا أووردز شخصيات معروفة من الإعلام والاتصال والإبداع والمؤسسات والبحث والمجتمع المدني. تقيّم الترشحات من حيث الجودة الإبداعية والملاءمة والأثر والمساهمة في قيم الإنصاف والتنوع والإدماج."
+                />
+            </p>
         </SectionShell>
     );
 }
@@ -196,6 +250,12 @@ export function TililaApplySection({ onOpenForm }) {
                             />
                         </button>
                     ) : null}
+                    <Link
+                        href="/tilila/reglement"
+                        className="inline-flex items-center justify-center rounded-full border border-border px-5 py-2 text-sm font-semibold text-tblack hover:bg-muted"
+                    >
+                        <TransText en="Regulations" fr="Règlement" ar="النظام" />
+                    </Link>
                     <a
                         href="#past-editions"
                         className="inline-flex items-center justify-center rounded-full border border-border px-5 py-2 text-sm font-semibold text-tblack hover:bg-muted"
@@ -235,17 +295,16 @@ function TililaFaqAnswer({ item }) {
     }
 
     if (item.link) {
+        const label = item.linkLabel ?? { en: 'Learn more', fr: 'En savoir plus', ar: 'المزيد' };
         return (
             <div className={bodyClass}>
                 <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />{' '}
-                <a
+                <Link
                     href={item.link}
-                    target="_blank"
-                    rel="noreferrer"
                     className="font-semibold text-beta-blue hover:underline"
                 >
-                    www.tropheetilila.ma
-                </a>
+                    <TransText en={label.en} fr={label.fr} ar={label.ar} />
+                </Link>
             </div>
         );
     }
@@ -264,9 +323,9 @@ export function TililaFaqSection() {
             title={<TransText en="FAQ" fr="FAQ" ar="الأسئلة الشائعة" />}
             subtitle={
                 <TransText
-                    en="Official answers about Trophée Tilila, eligibility, submission, and awards."
-                    fr="Réponses officielles sur le Trophée Tilila, l’éligibilité, les candidatures et les prix."
-                    ar="إجابات رسمية حول تروفي تيليلا، الأهلية، الترشح والجوائز."
+                    en="Official answers about Tilila Awards, eligibility, submission, and awards."
+                    fr="Réponses officielles sur les Tilila Awards, l’éligibilité, les candidatures et les prix."
+                    ar="إجابات رسمية حول تيليلا أووردز، الأهلية، الترشح والجوائز."
                 />
             }
         >
@@ -298,15 +357,15 @@ export function TililaSponsorsSection() {
             id="sponsors"
             title={
                 <TransText
-                    en="Complete list of sponsors & partners"
-                    fr="Liste complète des sponsors & partenaires"
-                    ar="القائمة الكاملة للرعاة والشركاء"
+                    en="Sponsors & Partners"
+                    fr=" Sponsors & Partenaires"
+                    ar=" الرعاة والشركاء"
                 />
             }
             subtitle={
                 <TransText
-                    en="Trophée Tilila by 2M — institutional and media partners, not traditional commercial sponsors."
-                    fr="Trophée Tilila par 2M — partenaires institutionnels et médias, sans sponsors commerciaux classiques."
+                    en="Tilila Awards by 2M — institutional and media partners, not traditional commercial sponsors."
+                    fr="Tilila Awards par 2M — partenaires institutionnels et médias, sans sponsors commerciaux classiques."
                     ar="تrophي تيليلا من 2M — شركاء مؤسسات وإعلام، وليس رعاة تجاريين تقليديين."
                 />
             }
@@ -314,8 +373,8 @@ export function TililaSponsorsSection() {
             <div className="max-w-3xl rounded-2xl border border-gold/25 bg-linear-to-br from-gold/5 to-beta-blue/5 p-6 text-sm leading-relaxed text-tgray">
                 <TransText
                     en="Tilila is mainly an initiative of 2M through its Comité Parité et Diversité. It does not rely on traditional commercial sponsors like many events, but on strong institutional and media partners regularly mentioned in official posts and ceremonies."
-                    fr="Tilila est avant tout une initiative de 2M via son Comité Parité et Diversité. Le Trophée ne s’appuie pas sur des sponsors commerciaux classiques comme beaucoup d’événements, mais sur des partenaires institutionnels et médias solides, régulièrement cités dans les communications et cérémonies officielles."
-                    ar="تيليلا مبادرة أساساً من 2M عبر لجنة المساواة والتنوع. لا يعتمد التروفي على رعاة تجاريين تقليديين كما في كثير من الفعاليات، بل على شركاء مؤسساتيين وإعلاميين قويين يُذكرون بانتظام في المنشورات والحفلات الرسمية."
+                    fr="Tilila est avant tout une initiative de 2M via son Comité Parité et Diversité. Les Tilila Awards ne s’appuient pas sur des sponsors commerciaux classiques comme beaucoup d’événements, mais sur des partenaires institutionnels et médias solides, régulièrement cités dans les communications et cérémonies officielles."
+                    ar="تيليلا مبادرة أساساً من 2M عبر لجنة المساواة والتنوع. لا تعتمد تيليلا أووردز على رعاة تجاريين تقليديين كما في كثير من الفعاليات، بل على شركاء مؤسساتيين وإعلاميين قويين يُذكرون بانتظام في المنشورات والحفلات الرسمية."
                 />
             </div>
 
@@ -337,8 +396,8 @@ export function TililaSponsorsSection() {
                     }
                     description={
                         <TransText
-                            en="The driving force behind Trophée Tilila and its commitment to parity, diversity, and responsible advertising."
-                            fr="La force motrice du Trophée Tilila et de son engagement pour la parité, la diversité et une publicité responsable."
+                            en="The driving force behind Tilila Awards and its commitment to parity, diversity, and responsible advertising."
+                            fr="La force motrice des Tilila Awards et de son engagement pour la parité, la diversité et une publicité responsable."
                             ar="القوة الدافعة وراء تروفي تيليلا والتزامه بالمساواة والتنوع والإعلان المسؤول."
                         />
                     }
@@ -371,8 +430,8 @@ export function TililaSponsorsSection() {
                     }
                     description={
                         <TransText
-                            en="Consistent across editions — main partners of the Trophée."
-                            fr="Présents sur les éditions — partenaires principaux du Trophée."
+                            en="Consistent across editions — main partners of Tilila Awards."
+                            fr="Présents sur les éditions — partenaires principaux des Tilila Awards."
                             ar="حاضرون في الدورات — الشركاء الرئيسيون للتروفي."
                         />
                     }

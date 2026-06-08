@@ -3,34 +3,14 @@ import { ExternalLink, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-
-function Row({ label, value }) {
-    return (
-        <div className="grid grid-cols-1 gap-1 sm:grid-cols-4 sm:gap-4">
-            <div className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                {label}
-            </div>
-            {typeof value === 'string' && value.startsWith('http') ? (
-                <a
-                    href={value}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm text-beta-blue hover:underline sm:col-span-3"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {value}
-                </a>
-            ) : (
-                <div className="text-sm wrap-break-word text-foreground sm:col-span-3">
-                    {value ?? '—'}
-                </div>
-            )}
-        </div>
-    );
-}
+import {
+    ParticipantFileLink,
+    ParticipantRow,
+} from '@/pages/admin/shared/ParticipantShowRows';
 
 export default function AdminTililaSubmissionShow({ participant }) {
     const p = participant ?? {};
+    const extraDocs = Array.isArray(p.extra_document_paths) ? p.extra_document_paths : [];
 
     return (
         <>
@@ -39,12 +19,13 @@ export default function AdminTililaSubmissionShow({ participant }) {
             <div className="mx-auto flex w-full max-w-[min(100%,70rem)] flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
                 <div className="flex flex-col gap-3 border-b border-border/60 pb-5 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <p className="text-sm font-medium text-tgray">
-                            Trophée Tilila
-                        </p>
+                        <p className="text-sm font-medium text-tgray">Tilila Awards</p>
                         <h1 className="text-2xl font-bold tracking-tight text-tblack">
                             {p.first_name} {p.last_name}
                         </h1>
+                        <p className="mt-1 text-sm text-tgray">
+                            {p.company} — {p.campaign_title}
+                        </p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -58,33 +39,11 @@ export default function AdminTililaSubmissionShow({ participant }) {
                                 variant="outline"
                                 className="gap-2"
                                 onClick={() =>
-                                    window.open(
-                                        p.submission_link,
-                                        '_blank',
-                                        'noopener,noreferrer',
-                                    )
+                                    window.open(p.submission_link, '_blank', 'noopener,noreferrer')
                                 }
                             >
                                 <ExternalLink className="size-4" />
-                                Open submission link
-                            </Button>
-                        ) : null}
-
-                        {p.submission_video_url ? (
-                            <Button
-                                type="button"
-                                variant="outline"
-                                className="gap-2"
-                                onClick={() =>
-                                    window.open(
-                                        p.submission_video_url,
-                                        '_blank',
-                                        'noopener,noreferrer',
-                                    )
-                                }
-                            >
-                                <ExternalLink className="size-4" />
-                                Open uploaded video
+                                Campaign link
                             </Button>
                         ) : null}
 
@@ -93,20 +52,11 @@ export default function AdminTililaSubmissionShow({ participant }) {
                             variant="destructive"
                             className="gap-2"
                             onClick={() => {
-                                if (
-                                    confirm(
-                                        'Delete this submission? This cannot be undone.',
-                                    )
-                                ) {
-                                    router.delete(
-                                        `/admin/tilila/participants/${p.id}`,
-                                        {
-                                            onSuccess: () =>
-                                                router.visit(
-                                                    '/admin/tilila/participants',
-                                                ),
-                                        },
-                                    );
+                                if (confirm('Delete this submission? This cannot be undone.')) {
+                                    router.delete(`/admin/tilila/participants/${p.id}`, {
+                                        onSuccess: () =>
+                                            router.visit('/admin/tilila/participants'),
+                                    });
                                 }
                             }}
                         >
@@ -117,7 +67,7 @@ export default function AdminTililaSubmissionShow({ participant }) {
                 </div>
 
                 <div className="space-y-4 rounded-xl border border-border/70 bg-card p-5 shadow-sm sm:p-6">
-                    <Row
+                    <ParticipantRow
                         label="Edition"
                         value={
                             p.edition?.year
@@ -125,24 +75,37 @@ export default function AdminTililaSubmissionShow({ participant }) {
                                 : '—'
                         }
                     />
-                    <Row label="Email" value={p.email} />
-                    <Row label="Phone" value={p.phone} />
-                    <Row label="City" value={p.city} />
-                    <Row label="Country" value={p.country} />
-                    <Row label="Title" value={p.submission_title} />
-                    <Row label="Description" value={p.submission_description} />
-                    <Row label="Link" value={p.submission_link} />
-                    {/* <Row label="Uploaded video" value={p.submission_video_url} /> */}
-                    {p.submission_video_url ? (
-                        <div className="pt-2">
-                            <video
-                                className="w-full rounded-lg ring-1 ring-border"
-                                controls
-                                preload="metadata"
-                                src={p.submission_video_url}
-                            />
-                        </div>
-                    ) : null}
+                    <ParticipantRow label="Representative role" value={p.representative_role} />
+                    <ParticipantRow label="Email" value={p.email} />
+                    <ParticipantRow label="Phone" value={p.phone} />
+                    <ParticipantRow label="Company" value={p.company} />
+                    <ParticipantRow label="Brand" value={p.brand} />
+                    <ParticipantRow label="Agency" value={p.agency} />
+                    <ParticipantRow label="City" value={p.city} />
+                    <ParticipantRow label="Country" value={p.country} />
+                    <ParticipantRow label="Campaign title" value={p.campaign_title} />
+                    <ParticipantRow label="First broadcast" value={p.first_broadcast_date} />
+                    <ParticipantRow label="Category" value={p.category} />
+                    <ParticipantRow label="Creative concept" value={p.creative_concept} />
+                    <ParticipantRow label="EDI contribution" value={p.edi_contribution} />
+                    <ParticipantRow label="Submission link" value={p.submission_link} />
+                    <ParticipantFileLink label="Video file" url={p.submission_video_url} />
+                    <ParticipantFileLink label="Audio file" url={p.audio_url} />
+                    <ParticipantFileLink label="Visual file" url={p.visual_url} />
+                    {extraDocs.map((_, index) => (
+                        <ParticipantFileLink
+                            key={`extra-${index}`}
+                            label={`Extra document ${index + 1}`}
+                            url={`/admin/tilila/participants/${p.id}/files/extra-${index}`}
+                        />
+                    ))}
+                    <ParticipantRow
+                        label="Declarations"
+                        value={`Accuracy: ${p.declared_accuracy ? 'yes' : 'no'} | Rights: ${p.declared_rights ? 'yes' : 'no'} | Rules: ${p.accepted_rules ? 'yes' : 'no'}`}
+                    />
+                    <ParticipantRow label="Submitted at" value={p.created_at} />
+                    <ParticipantRow label="Locale" value={p.locale} />
+                    <ParticipantRow label="IP" value={p.ip} />
                 </div>
             </div>
         </>
