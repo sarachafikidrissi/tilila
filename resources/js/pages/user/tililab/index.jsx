@@ -4,6 +4,7 @@ import {
     ProgramContactSection,
     ProgramHeroSection,
     ProgramNewsSection,
+    ProgramPartnersSection,
     ProgramStatsSection,
     ProgramTestimonialsSection,
 } from '@/components/program/ProgramSharedSections';
@@ -19,7 +20,6 @@ import {
     TililabFaqSection,
     TililabJourneySection,
     TililabPrizesSection,
-    TililabSponsorsSection,
     TililabWhyParticipateSection,
 } from '@/pages/user/tililab/partials/ProgramSections';
 import { useTranslation } from '@/contexts/TranslationContext';
@@ -62,9 +62,7 @@ export default function TililabIndex() {
                 {/* <ProgramTestimonialsSection testimonials={testimonials ?? []} program="tililab" /> */}
                 {/* <ProgramNewsSection news={news ?? []} program="tililab" /> */}
 
-                <div className="bg-twhite">
-                    <TililabSponsorsSection />
-                </div>
+                <ProgramPartnersSection />
 
                 <div className="border-t border-border bg-background">
                     <TililabFaqSection />

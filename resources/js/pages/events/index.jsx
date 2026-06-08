@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import EventsHub from '@/pages/events/Partials/EventsHub';
+import TililaTeaserHero from '@/pages/user/tilila/partials/TililaTeaserHero';
 import EventsTabs from '@/pages/events/Partials/EventsTabs';
 import EventsSidebar from '@/pages/events/Partials/EventsSidebar';
 import EventCard from '@/pages/events/Partials/EventCard';
@@ -53,6 +54,7 @@ export default function EventsIndex({
     eventStatuses = [],
     eventsByYear = {},
     eventsInitialPanel = 'hub',
+    teaserVideoUrl = null,
 }) {
     const { t } = useTranslation();
     const { url } = usePage();
@@ -126,6 +128,8 @@ export default function EventsIndex({
             <Head title={t('events.headTitle')} />
 
             <div>
+                <TililaTeaserHero videoUrl={teaserVideoUrl} />
+
                 <div className="bg-beta-white py-8 sm:py-10">
                     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                         <header className="mx-auto max-w-3xl text-center">

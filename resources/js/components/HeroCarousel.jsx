@@ -75,7 +75,7 @@ export function shouldShowHeroCarousel(pathname, slides) {
         return false;
     }
 
-    if (path.startsWith('/tilila/')) {
+    if (path === '/tilila/participate') {
         return false;
     }
 

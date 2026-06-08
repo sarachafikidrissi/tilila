@@ -3,14 +3,13 @@ import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import {
     ProgramContactSection,
-    ProgramHeroSection,
     ProgramNewsSection,
-    ProgramStatsSection,
     ProgramTestimonialsSection,
 } from '@/components/program/ProgramSharedSections';
 import ParticipateModal from '@/pages/user/tilila/partials/ParticipateModal';
 import TililaHowToApply from '@/pages/user/tilila/partials/TililaHowToApply';
 import CurrentEditionSection from '@/pages/user/tilila/partials/CurrentEditionSection';
+import TililaPartnersSection from '@/pages/user/tilila/partials/TililaPartnersSection';
 import TililaPastEditionsCarousel from '@/pages/user/tilila/partials/TililaPastEditionsCarousel';
 import {
     TililaAdmissionSection,
@@ -20,13 +19,13 @@ import {
     TililaFaqSection,
     TililaJurySection,
     TililaPrizesSection,
-    TililaSponsorsSection,
     TililaWhyParticipateSection,
 } from '@/pages/user/tilila/partials/ProgramSections';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililaIndex() {
-    const { currentEdition, editions, flash, testimonials, news } = usePage().props;
+    const { currentEdition, editions, flash, testimonials, news } =
+        usePage().props;
     const [formOpen, setFormOpen] = useState(false);
 
     return (
@@ -38,9 +37,6 @@ export default function TililaIndex() {
                         {flash.success}
                     </div>
                 ) : null}
-
-                <ProgramHeroSection program="tilila" />
-                <ProgramStatsSection program="tilila" />
 
                 <CurrentEditionSection
                     edition={currentEdition}
@@ -70,9 +66,7 @@ export default function TililaIndex() {
                 {/* <ProgramTestimonialsSection testimonials={testimonials ?? []} program="tilila" /> */}
                 {/* <ProgramNewsSection news={news ?? []} program="tilila" /> */}
 
-                <div className="bg-twhite">
-                    <TililaSponsorsSection />
-                </div>
+                <TililaPartnersSection />
 
                 <div className="border-t border-border bg-background">
                     <TililaFaqSection />

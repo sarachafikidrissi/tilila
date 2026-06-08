@@ -1,7 +1,9 @@
 import { Link } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import { PartnerLogoTile } from '@/components/PartnerSection';
 import RegulationCta from '@/components/program/RegulationCta';
+import { PROGRAM_PARTNERS } from '@/data/program-partners';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 function SectionShell({ id, title, subtitle, children, className = '' }) {
@@ -343,6 +345,45 @@ export function ProgramContactSection({ program }) {
                         <TransText en="Send" fr="Envoyer" ar="إرسال" />
                     </button>
                 </form>
+            </div>
+        </SectionShell>
+    );
+}
+
+export function ProgramPartnersSection() {
+    return (
+        <SectionShell
+            id="partners"
+            title={
+                <TransText en="Partners" fr="Partenaires" ar="الشركاء" />
+            }
+            subtitle={
+                <TransText
+                    en="A dedicated space for institutional, media and technical partners associated with Tilila Awards and Tililab."
+                    fr="Espace dédié aux partenaires institutionnels, médias et techniques associés aux Tilila Awards et à Tililab."
+                    ar="فضاء مخصص للشركاء المؤسساتيين والإعلاميين والتقنيين المرتبطين بتيليلا أووردز وتيليلاب."
+                />
+            }
+            className="bg-twhite"
+        >
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                {PROGRAM_PARTNERS.map((partner) => (
+                    <PartnerLogoTile
+                        key={partner.id}
+                        name={partner.name}
+                        logoUrl={partner.logoUrl}
+                        tall
+                        subtitle={
+                            partner.subtitle ? (
+                                <TransText
+                                    en={partner.subtitle.en}
+                                    fr={partner.subtitle.fr}
+                                    ar={partner.subtitle.ar}
+                                />
+                            ) : null
+                        }
+                    />
+                ))}
             </div>
         </SectionShell>
     );

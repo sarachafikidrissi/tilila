@@ -47,6 +47,7 @@ class EventController extends Controller
             'eventStatuses' => ['upcoming', 'live', 'finished'],
             'eventsByYear' => $eventsByYear,
             'eventsInitialPanel' => $initialPanel,
+            'teaserVideoUrl' => route('tilila.media.teaser'),
         ]);
     }
 
