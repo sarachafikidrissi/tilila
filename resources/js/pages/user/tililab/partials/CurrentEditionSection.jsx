@@ -62,7 +62,11 @@ export default function TililabCurrentEditionSection({ edition }) {
     const images = Array.isArray(edition.gallery_images)
         ? edition.gallery_images
         : [];
-    const coverSrc = coverImageSrc(edition.gallery_images, edition.winners);
+    const coverSrc = coverImageSrc(
+        edition.cover_image_path,
+        edition.gallery_images,
+        edition.winners,
+    );
     const editionId = edition.id;
 
     return (
@@ -72,17 +76,15 @@ export default function TililabCurrentEditionSection({ edition }) {
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
-                    {coverSrc ? (
-                        <div className="w-full shrink-0 overflow-hidden rounded-3xl border border-border bg-muted shadow-md lg:max-w-md">
-                            <img
-                                src={coverSrc}
-                                alt=""
-                                className="aspect-4/3 w-full object-cover"
-                                loading="eager"
-                                decoding="async"
-                            />
-                        </div>
-                    ) : null}
+                    <div className="w-full shrink-0 overflow-hidden rounded-3xl border border-border bg-muted shadow-md lg:max-w-md">
+                        <img
+                            src={coverSrc}
+                            alt=""
+                            className="aspect-4/3 w-full object-cover"
+                            loading="eager"
+                            decoding="async"
+                        />
+                    </div>
 
                     <div className="min-w-0 flex-1">
                         <p className="inline-flex items-center gap-2 rounded-full border border-beta-blue/30 bg-beta-blue/10 px-3 py-1 text-xs font-bold tracking-[0.18em] text-beta-blue uppercase">

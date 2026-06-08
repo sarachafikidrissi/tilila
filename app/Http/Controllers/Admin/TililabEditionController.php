@@ -51,6 +51,13 @@ class TililabEditionController extends Controller
         $data = $this->validated($request);
         $data['sort'] = (int) (TililabEdition::query()->max('sort') ?? 0) + 1;
 
+        $cover = $request->file('cover_image');
+        if ($cover instanceof UploadedFile && $cover->isValid()) {
+            $data['cover_image_path'] = $cover->store('tililab-editions/covers', 'public');
+        } else {
+            $data['cover_image_path'] = ($data['cover_image_path'] ?? null) ?: null;
+        }
+
         $edition = TililabEdition::query()->create($data);
 
         $edition->winners = $this->applyPeopleUploads($request, 'winners', 'tililab-editions/winners', []);
@@ -76,6 +83,18 @@ class TililabEditionController extends Controller
     public function update(Request $request, TililabEdition $edition): RedirectResponse
     {
         $data = $this->validated($request);
+
+        $cover = $request->file('cover_image');
+        if ($cover instanceof UploadedFile && $cover->isValid()) {
+            $old = $edition->cover_image_path;
+            if (is_string($old) && $old !== '') {
+                Storage::disk('public')->delete($old);
+            }
+            $data['cover_image_path'] = $cover->store('tililab-editions/covers', 'public');
+        } else {
+            $data['cover_image_path'] = ($data['cover_image_path'] ?? null) ?: $edition->cover_image_path;
+        }
+
         $edition->update($data);
 
         $existingWinners = is_array($edition->winners) ? $edition->winners : [];
@@ -109,6 +128,10 @@ class TililabEditionController extends Controller
 
     public function destroy(TililabEdition $edition): RedirectResponse
     {
+        if (is_string($edition->cover_image_path) && $edition->cover_image_path !== '') {
+            Storage::disk('public')->delete($edition->cover_image_path);
+        }
+
         $winners = is_array($edition->winners) ? $edition->winners : [];
         foreach ($winners as $row) {
             if (! is_array($row)) {
@@ -157,6 +180,7 @@ class TililabEditionController extends Controller
             'theme.en' => ['nullable', 'string', 'max:255'],
             'theme.fr' => ['nullable', 'string', 'max:255'],
             'theme.ar' => ['nullable', 'string', 'max:255'],
+            'cover_image_path' => ['nullable', 'string', 'max:500'],
             'winners' => ['nullable', 'array'],
             'winners.*.full_name' => ['nullable', 'string', 'max:255'],
             'winners.*.bio' => ['nullable', 'array'],
@@ -180,6 +204,12 @@ class TililabEditionController extends Controller
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
+
+        if ($request->hasFile('cover_image')) {
+            $request->validate([
+                'cover_image' => ['file', 'image', 'max:10240'],
+            ]);
+        }
 
         if ($request->hasFile('gallery_images_files')) {
             $request->validate([

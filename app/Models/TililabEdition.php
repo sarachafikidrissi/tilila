@@ -13,6 +13,7 @@ class TililabEdition extends Model
         'year',
         'edition_label',
         'theme',
+        'cover_image_path',
         'winners',
         'jury',
         'winners_url',

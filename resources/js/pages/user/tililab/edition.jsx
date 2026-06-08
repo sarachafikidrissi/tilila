@@ -4,6 +4,7 @@ import { ChevronLeft, GalleryHorizontal, Gavel, Trophy } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
 import TililaPeopleGrid from '@/components/TililaPeopleGrid';
+import { coverImageSrc } from '@/pages/user/tililab/utils/editions';
 
 function GalleryGrid({ images }) {
     const rows = Array.isArray(images) ? images : [];
@@ -64,6 +65,11 @@ export default function TililabEditionDetails() {
     const images = Array.isArray(edition?.gallery_images)
         ? edition.gallery_images
         : [];
+    const bannerSrc = coverImageSrc(
+        edition?.cover_image_path,
+        edition?.gallery_images,
+        edition?.winners,
+    );
 
     return (
         <>
@@ -133,6 +139,16 @@ export default function TililabEditionDetails() {
                             </span>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-8 overflow-hidden rounded-3xl border border-border bg-muted shadow-md">
+                    <img
+                        src={bannerSrc}
+                        alt=""
+                        className="aspect-[21/9] w-full object-cover sm:aspect-[2.4/1]"
+                        loading="eager"
+                        decoding="async"
+                    />
                 </div>
 
                 <nav

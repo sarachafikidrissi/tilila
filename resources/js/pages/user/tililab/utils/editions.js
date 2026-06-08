@@ -1,6 +1,26 @@
 import { TILILAB_EDITIONS_HISTORY } from '@/pages/user/tililab/data/tililab-editions-history';
 
-export function coverImageSrc(galleryImages, winners) {
+export const TILILAB_DEFAULT_EDITION_BANNER =
+    '/assets/tililab/tililab-banner.png';
+
+function resolveStorageOrAssetPath(path) {
+    if (!path) {
+        return '';
+    }
+
+    if (path.startsWith('assets/') || path.startsWith('/assets/')) {
+        return path.startsWith('/') ? path : `/${path}`;
+    }
+
+    return `/storage/${path}`;
+}
+
+export function coverImageSrc(coverPath, galleryImages, winners) {
+    const fromCover = resolveStorageOrAssetPath(coverPath);
+    if (fromCover) {
+        return fromCover;
+    }
+
     if (Array.isArray(galleryImages) && galleryImages[0]) {
         return `/storage/${galleryImages[0]}`;
     }
@@ -12,7 +32,7 @@ export function coverImageSrc(galleryImages, winners) {
         return `/storage/${primaryWinner.photo_path}`;
     }
 
-    return '';
+    return TILILAB_DEFAULT_EDITION_BANNER;
 }
 
 export function normalizeEdition(raw) {
@@ -24,19 +44,15 @@ export function normalizeEdition(raw) {
         ? raw.gallery_images
         : [];
     const winners = Array.isArray(raw.winners) ? raw.winners : [];
-    const primaryWinner = winners[0] ?? null;
-    const winnerPhoto = primaryWinner?.photo_path
-        ? `/storage/${primaryWinner.photo_path}`
-        : '';
-
-    const coverFromGallery = coverImageSrc(galleryImages, winners);
+    const coverPath = raw.cover_image_path ?? null;
 
     return {
         id: raw.id ?? `tililab-${raw.year ?? ''}`,
         year: String(raw.year ?? ''),
         edition_label: raw.edition_label ?? { en: '', fr: '', ar: '' },
         theme: raw.theme ?? { en: '', fr: '', ar: '' },
-        cover_image_src: coverFromGallery || winnerPhoto || '',
+        cover_image_path: coverPath,
+        cover_image_src: coverImageSrc(coverPath, galleryImages, winners),
         details_url: raw.id ? `/tililab/editions/${raw.id}` : '/tililab',
         winners_url: raw.id ? `/tililab/editions/${raw.id}` : '/tililab',
         gallery_images: galleryImages,
@@ -51,7 +67,9 @@ export function editionRowFromHistory(entry) {
         year: String(entry.year),
         edition_label: entry.title,
         theme: entry.focus ?? { en: '', fr: '', ar: '' },
-        cover_image_src: entry.posterSrc || '/assets/tililab/tililab-logo.png',
+        cover_image_path: null,
+        cover_image_src:
+            entry.posterSrc || TILILAB_DEFAULT_EDITION_BANNER,
         details_url: '/tililab#past-editions',
         winners_url: '/tililab#past-editions',
         gallery_images: [],

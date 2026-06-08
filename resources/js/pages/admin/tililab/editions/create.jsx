@@ -9,6 +9,8 @@ export default function AdminTililabEditionsCreate() {
         year: '',
         edition_label: { en: '', fr: '', ar: '' },
         theme: { en: '', fr: '', ar: '' },
+        cover_image: null,
+        cover_image_path: null,
         has_gallery: false,
         is_current: false,
         applications_close_at: '',
