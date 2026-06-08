@@ -392,35 +392,66 @@ export function TililabJurySection({ editions = [] }) {
                                     </p>
                                 ) : (
                                     <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                        {jury.map((person, idx) => (
-                                            <li
-                                                key={`${person?.full_name ?? 'juror'}-${idx}`}
-                                                className="rounded-xl border border-border bg-white px-4 py-3 shadow-sm"
-                                            >
-                                                <div className="text-sm font-semibold text-tblack">
-                                                    {person?.full_name ?? ''}
-                                                </div>
-                                                {(person?.bio?.en ||
-                                                    person?.bio?.fr) && (
-                                                    <div className="mt-1 text-xs text-tgray">
-                                                        <TransText
-                                                            en={
-                                                                person.bio
-                                                                    ?.en ?? ''
-                                                            }
-                                                            fr={
-                                                                person.bio
-                                                                    ?.fr ?? ''
-                                                            }
-                                                            ar={
-                                                                person.bio
-                                                                    ?.ar ?? ''
-                                                            }
-                                                        />
+                                        {jury.map((person, idx) => {
+                                            const photoSrc = person?.photo_path
+                                                ? `/storage/${person.photo_path}`
+                                                : '';
+
+                                            return (
+                                                <li
+                                                    key={`${person?.full_name ?? 'juror'}-${idx}`}
+                                                    className="rounded-xl border border-border bg-white px-4 py-3 shadow-sm"
+                                                >
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="size-14 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                                                            {photoSrc ? (
+                                                                <img
+                                                                    src={
+                                                                        photoSrc
+                                                                    }
+                                                                    alt=""
+                                                                    className="h-full w-full object-cover"
+                                                                    loading="lazy"
+                                                                    decoding="async"
+                                                                />
+                                                            ) : null}
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <div className="text-sm font-semibold text-tblack">
+                                                                {person?.full_name ??
+                                                                    ''}
+                                                            </div>
+                                                            {(person?.bio?.en ||
+                                                                person?.bio
+                                                                    ?.fr) && (
+                                                                <div className="mt-1 text-xs text-tgray">
+                                                                    <TransText
+                                                                        en={
+                                                                            person
+                                                                                .bio
+                                                                                ?.en ??
+                                                                            ''
+                                                                        }
+                                                                        fr={
+                                                                            person
+                                                                                .bio
+                                                                                ?.fr ??
+                                                                            ''
+                                                                        }
+                                                                        ar={
+                                                                            person
+                                                                                .bio
+                                                                                ?.ar ??
+                                                                            ''
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                )}
-                                            </li>
-                                        ))}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 )}
 

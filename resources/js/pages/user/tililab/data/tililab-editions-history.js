@@ -18,6 +18,8 @@ export const TILILAB_EDITIONS_HISTORY = [
     },
     {
         year: 2022,
+        videoUrl:
+            'https://www.youtube.com/live/Hpy3yjHoYf8?si=c-wvixM6DC3g1uqX',
         posterSrc: '/assets/tililab/tililab-logo.png',
         title: {
             en: '2nd edition (2022)',
@@ -32,6 +34,8 @@ export const TILILAB_EDITIONS_HISTORY = [
     },
     {
         year: 2023,
+        videoUrl:
+            'https://www.youtube.com/live/o_J4mrzRIgU?si=Vk1bAi7kn08NcfMv',
         posterSrc: '/assets/tililab/tililab-logo.png',
         title: {
             en: '3rd edition (2023)',
@@ -46,6 +50,8 @@ export const TILILAB_EDITIONS_HISTORY = [
     },
     {
         year: 2024,
+        videoUrl:
+            'https://www.youtube.com/live/Tj03Erz0gGI?si=hWLIjVpnFLPAzi-Q',
         posterSrc: '/assets/tililab/tililab-logo.png',
         title: {
             en: '4th edition (2024)',
@@ -60,6 +66,8 @@ export const TILILAB_EDITIONS_HISTORY = [
     },
     {
         year: 2025,
+        videoUrl:
+            'https://www.youtube.com/live/yKYDLPWRRkU?si=wtwNZtccGu0-wAj7',
         posterSrc: '/assets/tililab/tililab-logo.png',
         title: {
             en: '5th edition (2025)',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\ProgramTililabArchive;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,6 +14,8 @@ class TililabEdition extends Model
         'year',
         'edition_label',
         'theme',
+        'ceremony_video_url',
+        'ceremony_video_path',
         'cover_image_path',
         'winners',
         'jury',
@@ -69,5 +72,11 @@ class TililabEdition extends Model
         if (! $edition->is_current) {
             $edition->forceFill(['is_current' => true])->save();
         }
+    }
+
+    /** Fill archive video from Tilila ceremony replays when not set locally. */
+    public function withArchiveEnrichment(): self
+    {
+        return ProgramTililabArchive::enrichEdition($this);
     }
 }

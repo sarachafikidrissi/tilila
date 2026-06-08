@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import TransText from '@/components/TransText';
 import { router } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -241,6 +241,19 @@ export default function TililabPastEditionsCarousel({
                                         <div className="absolute start-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-tblack shadow-sm ring-1 ring-border/60">
                                             {edition.year}
                                         </div>
+                                        {edition.has_archive_video ? (
+                                            <div className="absolute end-3 top-3 inline-flex items-center gap-1 rounded-full bg-tblack/80 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+                                                <Play
+                                                    className="size-3 fill-current"
+                                                    aria-hidden
+                                                />
+                                                <TransText
+                                                    en="Video"
+                                                    fr="Vidéo"
+                                                    ar="فيديو"
+                                                />
+                                            </div>
+                                        ) : null}
                                     </div>
                                     <div className="flex flex-1 flex-col p-5">
                                         <div className="text-base font-bold text-foreground">

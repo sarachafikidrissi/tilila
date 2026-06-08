@@ -1,10 +1,16 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ChevronLeft, GalleryHorizontal, Gavel, Trophy } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
+import EditionTopHero from '@/components/program/EditionTopHero';
 import TransText from '@/components/TransText';
 import TililaPeopleGrid from '@/components/TililaPeopleGrid';
-import { coverImageSrc } from '@/pages/user/tililab/utils/editions';
+import {
+    archiveUploadedVideoSrc,
+    coverImageSrc,
+    editionHasArchiveVideo,
+} from '@/pages/user/tililab/utils/editions';
+import { getYoutubeEmbedUrl } from '@/lib/youtubeEmbed';
 
 function GalleryGrid({ images }) {
     const rows = Array.isArray(images) ? images : [];
@@ -70,13 +76,24 @@ export default function TililabEditionDetails() {
         edition?.gallery_images,
         edition?.winners,
     );
+    const hasArchiveVideo = editionHasArchiveVideo(edition);
+    const uploadSrc = archiveUploadedVideoSrc(edition?.ceremony_video_path);
+    const embedUrl = uploadSrc
+        ? null
+        : getYoutubeEmbedUrl(edition?.ceremony_video_url);
 
     return (
         <>
             <Head title={`Tililab Edition ${edition?.year ?? ''}`} />
 
             <section className="mx-auto max-w-7xl px-4 py-10">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <EditionTopHero
+                    uploadSrc={uploadSrc}
+                    embedUrl={embedUrl}
+                    bannerSrc={hasArchiveVideo ? '' : bannerSrc}
+                />
+
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <div className="text-xs font-semibold tracking-widest text-tgray">
                             <TransText en="TILILAB" fr="TILILAB" ar="تيليلاب" />
@@ -104,51 +121,13 @@ export default function TililabEditionDetails() {
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Link
-                            href="/tililab"
-                            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                        >
-                            <ChevronLeft className="size-4 text-tgray" />
-                            <TransText en="Back" fr="Retour" ar="رجوع" />
-                        </Link>
-                        <div className="hidden items-center gap-2 sm:flex">
-                            <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack">
-                                <Trophy className="size-4 text-tgray" />
-                                <TransText
-                                    en="Winners"
-                                    fr="Lauréats"
-                                    ar="الفائزون"
-                                />
-                            </span>
-                            <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack">
-                                <Gavel className="size-4 text-tgray" />
-                                <TransText
-                                    en="Jury"
-                                    fr="Jury"
-                                    ar="لجنة التحكيم"
-                                />
-                            </span>
-                            <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack">
-                                <GalleryHorizontal className="size-4 text-tgray" />
-                                <TransText
-                                    en="Gallery"
-                                    fr="Galerie"
-                                    ar="المعرض"
-                                />
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-8 overflow-hidden rounded-3xl border border-border bg-muted shadow-md">
-                    <img
-                        src={bannerSrc}
-                        alt=""
-                        className="aspect-[21/9] w-full object-cover sm:aspect-[2.4/1]"
-                        loading="eager"
-                        decoding="async"
-                    />
+                    <Link
+                        href="/tililab"
+                        className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
+                    >
+                        <ChevronLeft className="size-4 text-tgray" />
+                        <TransText en="Back" fr="Retour" ar="رجوع" />
+                    </Link>
                 </div>
 
                 <nav

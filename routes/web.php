@@ -177,6 +177,12 @@ Route::get('/tililab', function () {
         ->orderByDesc('id')
         ->get();
 
+    if ($currentEdition) {
+        $currentEdition->withArchiveEnrichment();
+    }
+
+    $pastEditions->each->withArchiveEnrichment();
+
     return Inertia::render('user/tililab/index', [
         'currentEdition' => $currentEdition,
         'editions' => $pastEditions,
@@ -248,6 +254,8 @@ Route::get('/tilila/participate', function () {
 })->name('tilila.participate');
 
 Route::get('/tililab/editions/{edition}', function (TililabEdition $edition) {
+    $edition->withArchiveEnrichment();
+
     return Inertia::render('user/tililab/edition', [
         'edition' => $edition,
     ]);

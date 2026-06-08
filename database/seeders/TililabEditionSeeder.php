@@ -16,10 +16,7 @@ class TililabEditionSeeder extends Seeder
 
         foreach ($this->editions() as $row) {
             $year = (int) $row['year'];
-
-            TililabEdition::query()->updateOrCreate(
-                ['year' => (string) $year],
-                [
+            $payload = [
                     'edition_label' => $row['edition_label'],
                     'theme' => $row['theme'],
                     'winners' => $row['winners'],
@@ -30,7 +27,16 @@ class TililabEditionSeeder extends Seeder
                     'jury_url' => null,
                     'gallery_url' => null,
                     'sort' => $year - 2020,
-                ],
+            ];
+
+            $ceremonyUrl = $this->ceremonyVideoUrl((string) $year);
+            if ($ceremonyUrl !== null) {
+                $payload['ceremony_video_url'] = $ceremonyUrl;
+            }
+
+            TililabEdition::query()->updateOrCreate(
+                ['year' => (string) $year],
+                $payload,
             );
         }
 
@@ -214,5 +220,19 @@ class TililabEditionSeeder extends Seeder
             'bio' => ['en' => $roleEn, 'fr' => $roleFr, 'ar' => $roleAr],
             'photo_path' => null,
         ];
+    }
+
+    private function ceremonyVideoUrl(string $year): ?string
+    {
+        static $byYear = null;
+
+        if ($byYear === null) {
+            $path = __DIR__.'/data/tililab_ceremony_videos.php';
+            $byYear = is_file($path) ? require $path : [];
+        }
+
+        $url = $byYear[$year] ?? null;
+
+        return is_string($url) && $url !== '' ? $url : null;
     }
 }

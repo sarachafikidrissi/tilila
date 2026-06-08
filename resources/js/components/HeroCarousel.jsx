@@ -79,7 +79,15 @@ export function shouldShowHeroCarousel(pathname, slides) {
         return false;
     }
 
+    if (/^\/tilila\/editions\//.test(path)) {
+        return false;
+    }
+
     if (path === '/tililab/form') {
+        return false;
+    }
+
+    if (/^\/tililab\/editions\//.test(path)) {
         return false;
     }
 
