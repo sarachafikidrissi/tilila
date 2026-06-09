@@ -59,7 +59,7 @@ export default function LearnComingSoon({
     return (
         <div className="relative overflow-hidden">
             <div
-                className="pointer-events-none absolute inset-0 bg-brand-subtle"
+                className="bg-brand-subtle pointer-events-none absolute inset-0"
                 aria-hidden
             />
             <div className="pointer-events-none absolute end-0 -top-24 h-72 w-72 rounded-full bg-beta-blue/10 blur-3xl" />

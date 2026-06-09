@@ -26,7 +26,7 @@ export default function ProgramNewsIndex({ program, news }) {
                                 {textFor(item.title)}
                             </h2>
                             {item.excerpt ? (
-                                <p className="mt-2 text-sm text-tgray line-clamp-3">
+                                <p className="mt-2 line-clamp-3 text-sm text-tgray">
                                     {textFor(item.excerpt)}
                                 </p>
                             ) : null}

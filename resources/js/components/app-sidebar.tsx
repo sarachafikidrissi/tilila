@@ -96,7 +96,9 @@ function SidebarNavLinks({ items }: { items: NavItem[] }) {
                                 {Icon && <Icon />}
                                 <span>{item.title}</span>
                                 {item.badge != null && item.badge > 0 ? (
-                                    <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                                    <SidebarMenuBadge>
+                                        {item.badge}
+                                    </SidebarMenuBadge>
                                 ) : null}
                             </Link>
                         </SidebarMenuButton>

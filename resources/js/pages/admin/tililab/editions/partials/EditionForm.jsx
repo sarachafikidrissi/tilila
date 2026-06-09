@@ -355,7 +355,10 @@ export default function EditionForm({
                                     type="datetime-local"
                                     value={data.applications_close_at ?? ''}
                                     onChange={(e) =>
-                                        setData('applications_close_at', e.target.value)
+                                        setData(
+                                            'applications_close_at',
+                                            e.target.value,
+                                        )
                                     }
                                     className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm"
                                 />

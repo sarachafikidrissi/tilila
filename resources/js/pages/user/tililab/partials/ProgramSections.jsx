@@ -128,16 +128,44 @@ export function TililabConceptSection() {
 
 export function TililabWhyParticipateSection() {
     const items = [
-        { en: 'Develop creative skills', fr: 'Développer ses compétences créatives', ar: 'تطوير المهارات الإبداعية' },
-        { en: 'Be mentored by professionals', fr: 'Être accompagné par des professionnels', ar: 'المرافقة من قبل محترفين' },
-        { en: 'Join a unique immersive experience', fr: 'Participer à une expérience immersive unique', ar: 'تجربة غامرة فريدة' },
-        { en: 'Produce an original audiovisual work', fr: 'Produire une œuvre audiovisuelle originale', ar: 'إنتاج عمل سمعي بصري أصلي' },
+        {
+            en: 'Develop creative skills',
+            fr: 'Développer ses compétences créatives',
+            ar: 'تطوير المهارات الإبداعية',
+        },
+        {
+            en: 'Be mentored by professionals',
+            fr: 'Être accompagné par des professionnels',
+            ar: 'المرافقة من قبل محترفين',
+        },
+        {
+            en: 'Join a unique immersive experience',
+            fr: 'Participer à une expérience immersive unique',
+            ar: 'تجربة غامرة فريدة',
+        },
+        {
+            en: 'Produce an original audiovisual work',
+            fr: 'Produire une œuvre audiovisuelle originale',
+            ar: 'إنتاج عمل سمعي بصري أصلي',
+        },
     ];
     return (
-        <SectionShell id="why-participate" title={<TransText en="Why participate?" fr="Pourquoi participer ?" ar="لماذا المشاركة؟" />}>
+        <SectionShell
+            id="why-participate"
+            title={
+                <TransText
+                    en="Why participate?"
+                    fr="Pourquoi participer ?"
+                    ar="لماذا المشاركة؟"
+                />
+            }
+        >
             <ul className="grid gap-3 sm:grid-cols-2">
                 {items.map((item) => (
-                    <li key={item.en} className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray">
+                    <li
+                        key={item.en}
+                        className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray"
+                    >
                         <TransText en={item.en} fr={item.fr} ar={item.ar} />
                     </li>
                 ))}
@@ -148,20 +176,62 @@ export function TililabWhyParticipateSection() {
 
 export function TililabJourneySection() {
     const steps = [
-        { en: 'Online application', fr: 'Candidature en ligne', ar: 'الترشح عبر الإنترنت' },
-        { en: 'Pre-selection (up to 6 shortlisted)', fr: 'Pré-sélection (jusqu’à 6 présélectionné·e·s)', ar: 'فرز أولي (حتى 6 مرشحين)' },
-        { en: 'Masterclass (1 day)', fr: 'Masterclass (1 journée)', ar: 'ماستركلاس (يوم واحد)' },
-        { en: '48h creative residency', fr: 'Résidence créative 48h', ar: 'إقامة إبداعية 48 ساعة' },
-        { en: 'Audiovisual production', fr: 'Production audiovisuelle', ar: 'إنتاج سمعي بصري' },
-        { en: 'Jury evaluation', fr: 'Évaluation par le jury', ar: 'تقييم لجنة التحكيم' },
-        { en: 'Winner at Tilila Awards ceremony', fr: 'Lauréat·e lors de la cérémonie Tilila Awards', ar: 'الفائز في حفل تيليلا أووردز' },
+        {
+            en: 'Online application',
+            fr: 'Candidature en ligne',
+            ar: 'الترشح عبر الإنترنت',
+        },
+        {
+            en: 'Pre-selection (up to 6 shortlisted)',
+            fr: 'Pré-sélection (jusqu’à 6 présélectionné·e·s)',
+            ar: 'فرز أولي (حتى 6 مرشحين)',
+        },
+        {
+            en: 'Masterclass (1 day)',
+            fr: 'Masterclass (1 journée)',
+            ar: 'ماستركلاس (يوم واحد)',
+        },
+        {
+            en: '48h creative residency',
+            fr: 'Résidence créative 48h',
+            ar: 'إقامة إبداعية 48 ساعة',
+        },
+        {
+            en: 'Audiovisual production',
+            fr: 'Production audiovisuelle',
+            ar: 'إنتاج سمعي بصري',
+        },
+        {
+            en: 'Jury evaluation',
+            fr: 'Évaluation par le jury',
+            ar: 'تقييم لجنة التحكيم',
+        },
+        {
+            en: 'Winner at Tilila Awards ceremony',
+            fr: 'Lauréat·e lors de la cérémonie Tilila Awards',
+            ar: 'الفائز في حفل تيليلا أووردز',
+        },
     ];
     return (
-        <SectionShell id="journey" title={<TransText en="Tililab journey" fr="Le parcours Tililab" ar="مسار تيليلاب" />}>
+        <SectionShell
+            id="journey"
+            title={
+                <TransText
+                    en="Tililab journey"
+                    fr="Le parcours Tililab"
+                    ar="مسار تيليلاب"
+                />
+            }
+        >
             <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {steps.map((step, i) => (
-                    <li key={step.en} className="rounded-2xl border border-border bg-background p-4">
-                        <span className="text-xs font-bold text-beta-blue">{i + 1}</span>
+                    <li
+                        key={step.en}
+                        className="rounded-2xl border border-border bg-background p-4"
+                    >
+                        <span className="text-xs font-bold text-beta-blue">
+                            {i + 1}
+                        </span>
                         <p className="mt-2 text-sm font-semibold text-tblack">
                             <TransText en={step.en} fr={step.fr} ar={step.ar} />
                         </p>
@@ -174,11 +244,38 @@ export function TililabJourneySection() {
 
 export function TililabAdmissionSection() {
     return (
-        <SectionShell id="admission" title={<TransText en="Admission conditions" fr="Conditions d’admission" ar="شروط القبول" />}>
+        <SectionShell
+            id="admission"
+            title={
+                <TransText
+                    en="Admission conditions"
+                    fr="Conditions d’admission"
+                    ar="شروط القبول"
+                />
+            }
+        >
             <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-tgray">
-                <li><TransText en="Residents of Morocco under 30 at the deadline." fr="Résident·e·s du Maroc de moins de 30 ans à la clôture." ar="مقيمون في المغرب دون 30 سنة عند الأجل." /></li>
-                <li><TransText en="No diploma or professional experience required." fr="Aucune condition de diplôme ou d’expérience professionnelle." ar="لا يلزم دبلوم أو خبرة مهنية." /></li>
-                <li><TransText en="Portfolio, prior audiovisual work or personal video project required." fr="Portfolio, réalisation antérieure ou projet vidéo personnel requis." ar="مطلوب ملف أعمال أو عمل سابق أو مشروع فيديو شخصي." /></li>
+                <li>
+                    <TransText
+                        en="Residents of Morocco under 30 at the deadline."
+                        fr="Résident·e·s du Maroc de moins de 30 ans à la clôture."
+                        ar="مقيمون في المغرب دون 30 سنة عند الأجل."
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="No diploma or professional experience required."
+                        fr="Aucune condition de diplôme ou d’expérience professionnelle."
+                        ar="لا يلزم دبلوم أو خبرة مهنية."
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="Portfolio, prior audiovisual work or personal video project required."
+                        fr="Portfolio, réalisation antérieure ou projet vidéo personnel requis."
+                        ar="مطلوب ملف أعمال أو عمل سابق أو مشروع فيديو شخصي."
+                    />
+                </li>
             </ul>
         </SectionShell>
     );

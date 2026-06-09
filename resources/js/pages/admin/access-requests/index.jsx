@@ -91,11 +91,10 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
     const activeStatus = filters?.status ?? '';
 
     const setStatusFilter = (status) => {
-        router.get(
-            '/admin/access-requests',
-            status ? { status } : {},
-            { preserveState: true, replace: true },
-        );
+        router.get('/admin/access-requests', status ? { status } : {}, {
+            preserveState: true,
+            replace: true,
+        });
     };
 
     const openDetails = (row) => {
@@ -116,9 +115,7 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                 onFinish: () => {
                     setProcessing(false);
                     setConfirmAction(null);
-                    if (
-                        selectedRequest?.id === confirmAction.id
-                    ) {
+                    if (selectedRequest?.id === confirmAction.id) {
                         setSelectedRequest(null);
                     }
                 },
@@ -243,7 +240,9 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                         <button
                             key={tab.value || 'all'}
                             type="button"
-                            className={tabButtonClass(activeStatus === tab.value)}
+                            className={tabButtonClass(
+                                activeStatus === tab.value,
+                            )}
                             onClick={() => setStatusFilter(tab.value)}
                         >
                             {t(tab.labelKey)}
@@ -262,10 +261,14 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                     {t('accessRequest.admin.columns.email')}
                                 </TableHead>
                                 <TableHead className="text-tgray uppercase">
-                                    {t('accessRequest.admin.columns.organization')}
+                                    {t(
+                                        'accessRequest.admin.columns.organization',
+                                    )}
                                 </TableHead>
                                 <TableHead className="text-tgray uppercase">
-                                    {t('accessRequest.admin.columns.profession')}
+                                    {t(
+                                        'accessRequest.admin.columns.profession',
+                                    )}
                                 </TableHead>
                                 <TableHead className="text-tgray uppercase">
                                     {t('accessRequest.admin.columns.reason')}
@@ -325,7 +328,9 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                     variant="outline"
                                                     className={cn(
                                                         'text-xs',
-                                                        statusBadgeClass(row.status),
+                                                        statusBadgeClass(
+                                                            row.status,
+                                                        ),
                                                     )}
                                                 >
                                                     {t(
@@ -348,13 +353,17 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                     {t(
                                                         'accessRequest.admin.resubmittedAt',
                                                     )}{' '}
-                                                    {formatDate(row.resubmitted_at)}
+                                                    {formatDate(
+                                                        row.resubmitted_at,
+                                                    )}
                                                 </p>
                                             ) : null}
                                             {row.reviewer?.name ? (
                                                 <p className="mt-1 text-xs text-tgray">
                                                     {row.reviewer.name} ·{' '}
-                                                    {formatDate(row.reviewed_at)}
+                                                    {formatDate(
+                                                        row.reviewed_at,
+                                                    )}
                                                 </p>
                                             ) : null}
                                         </TableCell>
@@ -368,12 +377,16 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                         <Button
                                                             type="button"
                                                             size="sm"
-                                                            className={approveButtonClass}
+                                                            className={
+                                                                approveButtonClass
+                                                            }
                                                             onClick={() =>
-                                                                setConfirmAction({
-                                                                    id: row.id,
-                                                                    type: 'approve',
-                                                                })
+                                                                setConfirmAction(
+                                                                    {
+                                                                        id: row.id,
+                                                                        type: 'approve',
+                                                                    },
+                                                                )
                                                             }
                                                         >
                                                             {t(
@@ -388,10 +401,12 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                                 rejectButtonClass
                                                             }
                                                             onClick={() =>
-                                                                setConfirmAction({
-                                                                    id: row.id,
-                                                                    type: 'reject',
-                                                                })
+                                                                setConfirmAction(
+                                                                    {
+                                                                        id: row.id,
+                                                                        type: 'reject',
+                                                                    },
+                                                                )
                                                             }
                                                         >
                                                             {t(
@@ -399,12 +414,15 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                             )}
                                                         </Button>
                                                     </>
-                                                ) : row.status === 'rejected' ? (
+                                                ) : row.status ===
+                                                  'rejected' ? (
                                                     <Button
                                                         type="button"
                                                         size="sm"
                                                         variant="outline"
-                                                        className={reacceptButtonClass}
+                                                        className={
+                                                            reacceptButtonClass
+                                                        }
                                                         onClick={() =>
                                                             setConfirmAction({
                                                                 id: row.id,
@@ -412,7 +430,9 @@ export default function AdminAccessRequestsIndex({ requests, filters }) {
                                                             })
                                                         }
                                                     >
-                                                        {t('accessRequest.admin.reaccept')}
+                                                        {t(
+                                                            'accessRequest.admin.reaccept',
+                                                        )}
                                                     </Button>
                                                 ) : null}
                                             </div>

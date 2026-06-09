@@ -93,8 +93,7 @@ export function editionRowFromHistory(entry) {
         edition_label: entry.title,
         theme: entry.focus ?? { en: '', fr: '', ar: '' },
         cover_image_path: null,
-        cover_image_src:
-            entry.posterSrc || TILILAB_DEFAULT_EDITION_BANNER,
+        cover_image_src: entry.posterSrc || TILILAB_DEFAULT_EDITION_BANNER,
         ceremony_video_url: entry.videoUrl ?? null,
         ceremony_video_path: null,
         has_archive_video: editionHasArchiveVideo({

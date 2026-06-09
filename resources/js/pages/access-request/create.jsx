@@ -21,7 +21,10 @@ const textareaClass = cn(
 const submitButtonClass =
     'w-full rounded-full bg-beta-blue text-sm font-semibold text-twhite shadow-sm transition hover:bg-beta-blue/90 focus-visible:ring-2 focus-visible:ring-beta-blue/40 focus-visible:ring-offset-2';
 
-export default function AccessRequestCreate({ prefill = null, isReapplication = false }) {
+export default function AccessRequestCreate({
+    prefill = null,
+    isReapplication = false,
+}) {
     const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         reason: prefill?.reason ?? '',
@@ -74,7 +77,9 @@ export default function AccessRequestCreate({ prefill = null, isReapplication = 
                                 rows={5}
                                 className={textareaClass}
                                 value={data.reason}
-                                onChange={(e) => setData('reason', e.target.value)}
+                                onChange={(e) =>
+                                    setData('reason', e.target.value)
+                                }
                                 placeholder={t(
                                     'accessRequest.create.reasonPlaceholder',
                                 )}
@@ -83,7 +88,10 @@ export default function AccessRequestCreate({ prefill = null, isReapplication = 
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="organization" className="text-tblack">
+                            <Label
+                                htmlFor="organization"
+                                className="text-tblack"
+                            >
                                 {t('accessRequest.create.organizationLabel')}
                             </Label>
                             <Input

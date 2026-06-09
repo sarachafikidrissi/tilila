@@ -59,7 +59,9 @@ export default function AccessRequestDetailsView({ request }) {
                     <p className="text-lg font-semibold text-tblack">
                         {request.user?.name ?? '—'}
                     </p>
-                    <p className="text-sm text-tgray">{request.user?.email ?? '—'}</p>
+                    <p className="text-sm text-tgray">
+                        {request.user?.email ?? '—'}
+                    </p>
                 </div>
                 <Badge
                     variant="outline"
@@ -84,7 +86,8 @@ export default function AccessRequestDetailsView({ request }) {
                             {t('accessRequest.admin.detailsReviewed')}
                         </p>
                         <p className="text-sm text-tblack">
-                            {request.reviewer.name} · {formatDate(request.reviewed_at)}
+                            {request.reviewer.name} ·{' '}
+                            {formatDate(request.reviewed_at)}
                         </p>
                     </div>
                 ) : null}

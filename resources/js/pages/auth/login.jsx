@@ -75,7 +75,10 @@ export default function Login({
                         <>
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email" className="text-tblack">
+                                    <Label
+                                        htmlFor="email"
+                                        className="text-tblack"
+                                    >
                                         {t('auth.login.emailLabel')}
                                     </Label>
                                     <Input

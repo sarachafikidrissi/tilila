@@ -19,7 +19,10 @@ export default function ProgramNewsShow({ article, program }) {
         <>
             <Head title={textFor(article.title)} />
             <article className="mx-auto max-w-3xl px-4 py-12">
-                <Link href={backHref} className="text-sm font-semibold text-beta-blue hover:underline">
+                <Link
+                    href={backHref}
+                    className="text-sm font-semibold text-beta-blue hover:underline"
+                >
                     <TransText en="← Back" fr="← Retour" ar="← رجوع" />
                 </Link>
                 <h1 className="mt-6 text-3xl font-bold text-tblack">
@@ -33,7 +36,9 @@ export default function ProgramNewsShow({ article, program }) {
                     />
                 ) : null}
                 <div className="prose prose-sm mt-8 max-w-none text-tgray">
-                    <p className="whitespace-pre-line">{textFor(article.body)}</p>
+                    <p className="whitespace-pre-line">
+                        {textFor(article.body)}
+                    </p>
                 </div>
             </article>
         </>

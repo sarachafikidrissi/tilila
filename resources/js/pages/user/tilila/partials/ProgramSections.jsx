@@ -31,7 +31,13 @@ export function TililaConceptSection() {
     return (
         <SectionShell
             id="concept"
-            title={<TransText en="Tilila Awards" fr="Tilila Awards" ar="تيليلا أووردز" />}
+            title={
+                <TransText
+                    en="Tilila Awards"
+                    fr="Tilila Awards"
+                    ar="تيليلا أووردز"
+                />
+            }
             subtitle={
                 <TransText
                     en="Rewarding campaigns, brands and personalities that promote equity, diversity and inclusion."
@@ -53,19 +59,44 @@ export function TililaConceptSection() {
 
 export function TililaWhyParticipateSection() {
     const items = [
-        { en: 'Highlight your societal commitment', fr: 'Valoriser son engagement sociétal', ar: 'إبراز الالتزام المجتمعي' },
-        { en: 'Gain recognition from an independent jury', fr: 'Faire reconnaître ses campagnes par un jury indépendant', ar: 'الحصول على اعتراف من لجنة تحكيم مستقلة' },
-        { en: 'Benefit from national visibility', fr: 'Bénéficier d’une visibilité nationale', ar: 'الاستفادة من ظهور وطني' },
-        { en: 'Join a community of engaged actors', fr: 'Rejoindre une communauté d’acteurs engagés', ar: 'الانضمام إلى مجتمع من الفاعلين الملتزمين' },
+        {
+            en: 'Highlight your societal commitment',
+            fr: 'Valoriser son engagement sociétal',
+            ar: 'إبراز الالتزام المجتمعي',
+        },
+        {
+            en: 'Gain recognition from an independent jury',
+            fr: 'Faire reconnaître ses campagnes par un jury indépendant',
+            ar: 'الحصول على اعتراف من لجنة تحكيم مستقلة',
+        },
+        {
+            en: 'Benefit from national visibility',
+            fr: 'Bénéficier d’une visibilité nationale',
+            ar: 'الاستفادة من ظهور وطني',
+        },
+        {
+            en: 'Join a community of engaged actors',
+            fr: 'Rejoindre une communauté d’acteurs engagés',
+            ar: 'الانضمام إلى مجتمع من الفاعلين الملتزمين',
+        },
     ];
     return (
         <SectionShell
             id="why-participate"
-            title={<TransText en="Why participate?" fr="Pourquoi participer ?" ar="لماذا المشاركة؟" />}
+            title={
+                <TransText
+                    en="Why participate?"
+                    fr="Pourquoi participer ?"
+                    ar="لماذا المشاركة؟"
+                />
+            }
         >
             <ul className="grid gap-3 sm:grid-cols-2">
                 {items.map((item) => (
-                    <li key={item.en} className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray">
+                    <li
+                        key={item.en}
+                        className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray"
+                    >
                         <TransText en={item.en} fr={item.fr} ar={item.ar} />
                     </li>
                 ))}
@@ -75,22 +106,56 @@ export function TililaWhyParticipateSection() {
 }
 
 const TILILA_PRIZES = [
-    { fr: 'Hommage Tilila', en: 'Hommage Tilila', ar: 'تكريم تيليلا', reward: 'Distinction honorifique — trophée' },
-    { fr: 'Prix du Jury', en: 'Jury Prize', ar: 'جائزة لجنة التحكيم', reward: 'Trophée + espace pub 2M — 1 000 000 DH brut' },
-    { fr: 'Prix d’Honneur', en: 'Honour Prize', ar: 'جائزة الشرف', reward: 'Trophée + espace pub 2M — 500 000 DH brut' },
-    { fr: 'Communication Engagée — ONLINE', en: 'Engaged Communication — ONLINE', ar: 'تواصل ملتزم — رقمي', reward: 'Trophée + espace pub 2M — 250 000 DH brut' },
-    { fr: 'Communication Engagée — OFFLINE', en: 'Engaged Communication — OFFLINE', ar: 'تواصل ملتزم — تقليدي', reward: 'Trophée + espace pub 2M — 250 000 DH brut' },
+    {
+        fr: 'Hommage Tilila',
+        en: 'Hommage Tilila',
+        ar: 'تكريم تيليلا',
+        reward: 'Distinction honorifique — trophée',
+    },
+    {
+        fr: 'Prix du Jury',
+        en: 'Jury Prize',
+        ar: 'جائزة لجنة التحكيم',
+        reward: 'Trophée + espace pub 2M — 1 000 000 DH brut',
+    },
+    {
+        fr: 'Prix d’Honneur',
+        en: 'Honour Prize',
+        ar: 'جائزة الشرف',
+        reward: 'Trophée + espace pub 2M — 500 000 DH brut',
+    },
+    {
+        fr: 'Communication Engagée — ONLINE',
+        en: 'Engaged Communication — ONLINE',
+        ar: 'تواصل ملتزم — رقمي',
+        reward: 'Trophée + espace pub 2M — 250 000 DH brut',
+    },
+    {
+        fr: 'Communication Engagée — OFFLINE',
+        en: 'Engaged Communication — OFFLINE',
+        ar: 'تواصل ملتزم — تقليدي',
+        reward: 'Trophée + espace pub 2M — 250 000 DH brut',
+    },
 ];
 
 export function TililaPrizesSection() {
     return (
         <SectionShell
             id="prizes"
-            title={<TransText en="Categories & rewards" fr="Les catégories" ar="الفئات والمكافآت" />}
+            title={
+                <TransText
+                    en="Categories & rewards"
+                    fr="Les catégories"
+                    ar="الفئات والمكافآت"
+                />
+            }
         >
             <div className="grid gap-4 sm:grid-cols-2">
                 {TILILA_PRIZES.map((p) => (
-                    <div key={p.fr} className="rounded-2xl border border-border bg-secondary p-5">
+                    <div
+                        key={p.fr}
+                        className="rounded-2xl border border-border bg-secondary p-5"
+                    >
                         <div className="text-sm font-semibold text-tblack">
                             <TransText en={p.en} fr={p.fr} ar={p.ar} />
                         </div>
@@ -109,7 +174,13 @@ export function TililaAdmissionSection() {
     return (
         <SectionShell
             id="admission"
-            title={<TransText en="Admission conditions" fr="Conditions d’admission" ar="شروط القبول" />}
+            title={
+                <TransText
+                    en="Admission conditions"
+                    fr="Conditions d’admission"
+                    ar="شروط القبول"
+                />
+            }
         >
             <div className="space-y-4 text-sm leading-7 text-tgray">
                 <TransText
@@ -133,7 +204,6 @@ Submitted campaigns must reflect the values promoted by the Tilila program and c
 `}
                 />
             </div>
-      
         </SectionShell>
     );
 }
@@ -254,7 +324,11 @@ export function TililaApplySection({ onOpenForm }) {
                         href="/tilila/reglement"
                         className="inline-flex items-center justify-center rounded-full border border-border px-5 py-2 text-sm font-semibold text-tblack hover:bg-muted"
                     >
-                        <TransText en="Regulations" fr="Règlement" ar="النظام" />
+                        <TransText
+                            en="Regulations"
+                            fr="Règlement"
+                            ar="النظام"
+                        />
                     </Link>
                     <a
                         href="#past-editions"
@@ -295,7 +369,11 @@ function TililaFaqAnswer({ item }) {
     }
 
     if (item.link) {
-        const label = item.linkLabel ?? { en: 'Learn more', fr: 'En savoir plus', ar: 'المزيد' };
+        const label = item.linkLabel ?? {
+            en: 'Learn more',
+            fr: 'En savoir plus',
+            ar: 'المزيد',
+        };
         return (
             <div className={bodyClass}>
                 <TransText en={item.a.en} fr={item.a.fr} ar={item.a.ar} />{' '}

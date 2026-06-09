@@ -73,7 +73,9 @@ export default function ContactExpertModal({
     };
 
     const purposes =
-        contactPurposes.length > 0 ? contactPurposes : Object.keys(PURPOSE_LABELS);
+        contactPurposes.length > 0
+            ? contactPurposes
+            : Object.keys(PURPOSE_LABELS);
 
     const { data, setData, post, processing, errors, clearErrors, reset } =
         useForm({

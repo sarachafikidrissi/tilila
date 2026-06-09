@@ -25,101 +25,124 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
+// Route::get('/', function () {
+//     $tililaEdition = TililaEdition::query()
+//         ->orderByDesc('year')
+//         ->orderBy('sort')
+//         ->orderByDesc('id')
+//         ->first();
+
+//     $tililabEdition = TililabEdition::query()
+//         ->orderByDesc('year')
+//         ->orderBy('sort')
+//         ->orderByDesc('id')
+//         ->first();
+
+//     return Inertia::render('home/index', [
+//         'canRegister' => Features::enabled(Features::registration()),
+//         'tililaEdition' => $tililaEdition,
+//         'tililabEdition' => $tililabEdition,
+//         'stats' => [
+//             'experts_published' => Expert::query()->where('status', 'published')->count(),
+//             'countries_represented' => Expert::query()
+//                 ->where('status', 'published')
+//                 ->whereNotNull('country')
+//                 ->where('country', '!=', '')
+//                 ->distinct()
+//                 ->count('country'),
+//             'events_and_editions' => Event::query()
+//                 ->where('visibility', 'public')
+//                 ->where('status', '!=', 'draft')
+//                 ->count()
+//                 + TililaEdition::query()->count()
+//                 + TililabEdition::query()->count(),
+//         ],
+//         'featuredExperts' => Expert::query()
+//             ->where('status', 'published')
+//             ->orderByDesc('last_activity_at')
+//             ->orderByDesc('id')
+//             ->limit(3)
+//             ->get()
+//             ->map(fn (Expert $e) => $e->toDirectoryArray()),
+//         'latestMedia' => MediaItem::query()
+//             ->where('visibility', 'public')
+//             ->where('status', 'published')
+//             ->orderByDesc('updated_at')
+//             ->limit(6)
+//             ->get()
+//             ->map(fn (MediaItem $m) => [
+//                 'id' => (string) $m->slug,
+//                 'badge' => $m->badge ?? ['en' => '', 'fr' => '', 'ar' => ''],
+//                 'title' => $m->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
+//                 'excerpt' => $m->excerpt ?? ['en' => '', 'fr' => '', 'ar' => ''],
+//                 'meta' => is_array($m->meta) ? $m->meta : ['en' => '', 'fr' => '', 'ar' => ''],
+//                 'cta' => MediaItem::defaultCta(),
+//                 'imageSrc' => $m->image_url,
+//             ]),
+//         'quickAgenda' => Event::query()
+//             ->where('visibility', 'public')
+//             ->where('status', '!=', 'draft')
+//             ->where(function ($q) {
+//                 $q->where('status', 'live')
+//                     ->orWhere(function ($q2) {
+//                         $q2->whereIn('status', ['upcoming'])
+//                             ->whereNotNull('date')
+//                             ->whereDate('date', '>=', now()->toDateString());
+//                     });
+//             })
+//             ->orderByRaw("CASE WHEN status = 'live' THEN 0 ELSE 1 END")
+//             ->orderBy('date')
+//             ->orderBy('time')
+//             ->limit(3)
+//             ->get()
+//             ->map(function (Event $e) {
+//                 $loc = $e->location ?? [];
+//                 $locationLabel = trim((string) ($loc['en'] ?? ''));
+//                 if ($locationLabel === '') {
+//                     $locationLabel = trim((string) ($loc['fr'] ?? $loc['ar'] ?? ''));
+//                 }
+
+//                 return [
+//                     'id' => $e->id,
+//                     'title' => $e->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
+//                     'date' => $e->date?->format('Y-m-d') ?? '',
+//                     'time' => $e->time ? substr((string) $e->time, 0, 5) : null,
+//                     'timezone' => $e->timezone,
+//                     'status' => $e->status,
+//                     'type' => $e->type,
+//                     'locationLabel' => $locationLabel,
+//                     'href' => route('events.show', $e->id),
+//                 ];
+//             }),
+//         'partners' => [
+//             ['name' => 'SOREAD 2M', 'href' => null],
+//             ['name' => 'Programme EDI Tilila', 'href' => null],
+//         ],
+//     ]);
+// })->name('home');
+
+
 Route::get('/', function () {
-    $tililaEdition = TililaEdition::query()
+    $currentEdition = TililaEdition::current();
+
+    $pastEditions = TililaEdition::query()
+        ->where('is_current', false)
+        ->when(
+            $currentEdition,
+            fn ($q) => $q->where('id', '!=', $currentEdition->id),
+        )
         ->orderByDesc('year')
         ->orderBy('sort')
         ->orderByDesc('id')
-        ->first();
+        ->get();
 
-    $tililabEdition = TililabEdition::query()
-        ->orderByDesc('year')
-        ->orderBy('sort')
-        ->orderByDesc('id')
-        ->first();
-
-    return Inertia::render('home/index', [
-        'canRegister' => Features::enabled(Features::registration()),
-        'tililaEdition' => $tililaEdition,
-        'tililabEdition' => $tililabEdition,
-        'stats' => [
-            'experts_published' => Expert::query()->where('status', 'published')->count(),
-            'countries_represented' => Expert::query()
-                ->where('status', 'published')
-                ->whereNotNull('country')
-                ->where('country', '!=', '')
-                ->distinct()
-                ->count('country'),
-            'events_and_editions' => Event::query()
-                ->where('visibility', 'public')
-                ->where('status', '!=', 'draft')
-                ->count()
-                + TililaEdition::query()->count()
-                + TililabEdition::query()->count(),
-        ],
-        'featuredExperts' => Expert::query()
-            ->where('status', 'published')
-            ->orderByDesc('last_activity_at')
-            ->orderByDesc('id')
-            ->limit(3)
-            ->get()
-            ->map(fn (Expert $e) => $e->toDirectoryArray()),
-        'latestMedia' => MediaItem::query()
-            ->where('visibility', 'public')
-            ->where('status', 'published')
-            ->orderByDesc('updated_at')
-            ->limit(6)
-            ->get()
-            ->map(fn (MediaItem $m) => [
-                'id' => (string) $m->slug,
-                'badge' => $m->badge ?? ['en' => '', 'fr' => '', 'ar' => ''],
-                'title' => $m->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
-                'excerpt' => $m->excerpt ?? ['en' => '', 'fr' => '', 'ar' => ''],
-                'meta' => is_array($m->meta) ? $m->meta : ['en' => '', 'fr' => '', 'ar' => ''],
-                'cta' => MediaItem::defaultCta(),
-                'imageSrc' => $m->image_url,
-            ]),
-        'quickAgenda' => Event::query()
-            ->where('visibility', 'public')
-            ->where('status', '!=', 'draft')
-            ->where(function ($q) {
-                $q->where('status', 'live')
-                    ->orWhere(function ($q2) {
-                        $q2->whereIn('status', ['upcoming'])
-                            ->whereNotNull('date')
-                            ->whereDate('date', '>=', now()->toDateString());
-                    });
-            })
-            ->orderByRaw("CASE WHEN status = 'live' THEN 0 ELSE 1 END")
-            ->orderBy('date')
-            ->orderBy('time')
-            ->limit(3)
-            ->get()
-            ->map(function (Event $e) {
-                $loc = $e->location ?? [];
-                $locationLabel = trim((string) ($loc['en'] ?? ''));
-                if ($locationLabel === '') {
-                    $locationLabel = trim((string) ($loc['fr'] ?? $loc['ar'] ?? ''));
-                }
-
-                return [
-                    'id' => $e->id,
-                    'title' => $e->title ?? ['en' => '', 'fr' => '', 'ar' => ''],
-                    'date' => $e->date?->format('Y-m-d') ?? '',
-                    'time' => $e->time ? substr((string) $e->time, 0, 5) : null,
-                    'timezone' => $e->timezone,
-                    'status' => $e->status,
-                    'type' => $e->type,
-                    'locationLabel' => $locationLabel,
-                    'href' => route('events.show', $e->id),
-                ];
-            }),
-        'partners' => [
-            ['name' => 'SOREAD 2M', 'href' => null],
-            ['name' => 'Programme EDI Tilila', 'href' => null],
-        ],
+    return Inertia::render('user/tilila/index', [
+        'currentEdition' => $currentEdition,
+        'editions' => $pastEditions,
+        ...ProgramPageProps::forProgram('tilila'),
     ]);
 })->name('home');
+
 
 Route::permanentRedirect('/expertes', '/experts');
 

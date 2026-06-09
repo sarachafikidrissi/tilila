@@ -236,33 +236,29 @@ export default function HeroSlideForm({
                         <InputError message={errors?.path_prefix} />
                     </div>
 
-                    {normalizedPathPrefix &&
-                        normalizedPathPrefix !== '/' && (
-                            <div className="flex items-center gap-3">
-                                <input
-                                    type="checkbox"
-                                    id="also_on_home"
-                                    checked={Boolean(data.also_on_home)}
-                                    onChange={(e) =>
-                                        setData(
-                                            'also_on_home',
-                                            e.target.checked,
-                                        )
-                                    }
-                                    className="h-4 w-4 rounded border-input accent-beta-blue"
-                                />
-                                <div className="space-y-0.5">
-                                    <Label htmlFor="also_on_home">
-                                        Also show on home page
-                                    </Label>
-                                    <p className="text-xs text-muted-foreground">
-                                        Include this slide in the home carousel
-                                        in addition to its assigned page. Home
-                                        slide order follows sort order.
-                                    </p>
-                                </div>
+                    {normalizedPathPrefix && normalizedPathPrefix !== '/' && (
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                id="also_on_home"
+                                checked={Boolean(data.also_on_home)}
+                                onChange={(e) =>
+                                    setData('also_on_home', e.target.checked)
+                                }
+                                className="h-4 w-4 rounded border-input accent-beta-blue"
+                            />
+                            <div className="space-y-0.5">
+                                <Label htmlFor="also_on_home">
+                                    Also show on home page
+                                </Label>
+                                <p className="text-xs text-muted-foreground">
+                                    Include this slide in the home carousel in
+                                    addition to its assigned page. Home slide
+                                    order follows sort order.
+                                </p>
                             </div>
-                        )}
+                        </div>
+                    )}
 
                     <div className="space-y-2">
                         <Label>Page display</Label>
@@ -275,16 +271,10 @@ export default function HeroSlideForm({
                             }}
                             className="justify-start"
                         >
-                            <ToggleGroupItem
-                                value="banner"
-                                className="px-4"
-                            >
+                            <ToggleGroupItem value="banner" className="px-4">
                                 Banner
                             </ToggleGroupItem>
-                            <ToggleGroupItem
-                                value="carousel"
-                                className="px-4"
-                            >
+                            <ToggleGroupItem value="carousel" className="px-4">
                                 Carousel
                             </ToggleGroupItem>
                         </ToggleGroup>

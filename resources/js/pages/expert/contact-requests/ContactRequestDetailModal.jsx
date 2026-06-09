@@ -15,7 +15,11 @@ import { useTranslation } from '@/contexts/TranslationContext';
 
 const PURPOSE_LABELS = {
     interview: { en: 'Interview', fr: 'Interview', ar: 'مقابلة' },
-    speaker_panel: { en: 'Speaker / panel', fr: 'Speaker / panel', ar: 'متحدثة' },
+    speaker_panel: {
+        en: 'Speaker / panel',
+        fr: 'Speaker / panel',
+        ar: 'متحدثة',
+    },
     collaboration: { en: 'Collaboration', fr: 'Collaboration', ar: 'تعاون' },
     media: { en: 'Media', fr: 'Médias', ar: 'إعلام' },
     other: { en: 'Other', fr: 'Autre', ar: 'أخرى' },
@@ -136,11 +140,7 @@ export default function ContactRequestDetailModal({
                 <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-4">
                     <div className="rounded-2xl border border-border bg-card p-5">
                         <div className="text-sm font-extrabold text-beta-blue">
-                            <TransText
-                                en="Request"
-                                fr="Demande"
-                                ar="الطلب"
-                            />
+                            <TransText en="Request" fr="Demande" ar="الطلب" />
                         </div>
                         <div className="mt-4 space-y-3">
                             <DetailRow
@@ -193,11 +193,7 @@ export default function ContactRequestDetailModal({
                         <div className="mt-4 space-y-3">
                             <DetailRow
                                 label={
-                                    <TransText
-                                        en="Name"
-                                        fr="Nom"
-                                        ar="الاسم"
-                                    />
+                                    <TransText en="Name" fr="Nom" ar="الاسم" />
                                 }
                                 value={r?.requester_name}
                             />
@@ -276,11 +272,7 @@ export default function ContactRequestDetailModal({
 
                     <div className="rounded-2xl border border-border bg-card p-5">
                         <div className="text-sm font-extrabold text-beta-blue">
-                            <TransText
-                                en="Message"
-                                fr="Message"
-                                ar="الرسالة"
-                            />
+                            <TransText en="Message" fr="Message" ar="الرسالة" />
                         </div>
                         <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
                             {r?.message || '—'}
@@ -298,11 +290,7 @@ export default function ContactRequestDetailModal({
                                 onClick={() => updateStatus('declined')}
                             >
                                 <X className="size-4" />
-                                <TransText
-                                    en="Decline"
-                                    fr="Refuser"
-                                    ar="رفض"
-                                />
+                                <TransText en="Decline" fr="Refuser" ar="رفض" />
                             </Button>
                             <Button
                                 type="button"

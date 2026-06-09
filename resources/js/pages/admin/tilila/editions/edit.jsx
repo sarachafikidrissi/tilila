@@ -29,7 +29,8 @@ export default function AdminTililaEditionsEdit({ edition }) {
         remove_gallery_images: [],
         has_gallery: Boolean(edition?.has_gallery),
         is_current: Boolean(edition?.is_current),
-        applications_close_at: edition?.applications_close_at?.slice(0, 16) ?? '',
+        applications_close_at:
+            edition?.applications_close_at?.slice(0, 16) ?? '',
     });
 
     const [processing, setProcessing] = useState(false);

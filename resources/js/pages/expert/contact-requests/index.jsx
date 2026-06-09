@@ -20,7 +20,11 @@ import ContactRequestDetailModal from './ContactRequestDetailModal';
 
 const PURPOSE_LABELS = {
     interview: { en: 'Interview', fr: 'Interview', ar: 'مقابلة' },
-    speaker_panel: { en: 'Speaker / panel', fr: 'Speaker / panel', ar: 'متحدثة' },
+    speaker_panel: {
+        en: 'Speaker / panel',
+        fr: 'Speaker / panel',
+        ar: 'متحدثة',
+    },
     collaboration: { en: 'Collaboration', fr: 'Collaboration', ar: 'تعاون' },
     media: { en: 'Media', fr: 'Médias', ar: 'إعلام' },
     other: { en: 'Other', fr: 'Autre', ar: 'أخرى' },
@@ -82,9 +86,13 @@ export default function ExpertContactRequestsIndex({
     const [selected, setSelected] = useState(null);
 
     const updateStatus = (id, status) => {
-        router.patch(`/expert/contact-requests/${id}`, { status }, {
-            preserveScroll: true,
-        });
+        router.patch(
+            `/expert/contact-requests/${id}`,
+            { status },
+            {
+                preserveScroll: true,
+            },
+        );
     };
 
     return (
@@ -119,10 +127,18 @@ export default function ExpertContactRequestsIndex({
                         <TableHeader>
                             <TableRow>
                                 <TableHead>
-                                    <TransText en="Date" fr="Date" ar="التاريخ" />
+                                    <TransText
+                                        en="Date"
+                                        fr="Date"
+                                        ar="التاريخ"
+                                    />
                                 </TableHead>
                                 <TableHead>
-                                    <TransText en="Purpose" fr="Objet" ar="الغرض" />
+                                    <TransText
+                                        en="Purpose"
+                                        fr="Objet"
+                                        ar="الغرض"
+                                    />
                                 </TableHead>
                                 <TableHead>
                                     <TransText
@@ -139,7 +155,11 @@ export default function ExpertContactRequestsIndex({
                                     />
                                 </TableHead>
                                 <TableHead>
-                                    <TransText en="Status" fr="Statut" ar="الحالة" />
+                                    <TransText
+                                        en="Status"
+                                        fr="Statut"
+                                        ar="الحالة"
+                                    />
                                 </TableHead>
                                 <TableHead className="text-right">
                                     <TransText
@@ -285,6 +305,4 @@ export default function ExpertContactRequestsIndex({
     );
 }
 
-ExpertContactRequestsIndex.layout = (page) => (
-    <AppLayout>{page}</AppLayout>
-);
+ExpertContactRequestsIndex.layout = (page) => <AppLayout>{page}</AppLayout>;

@@ -33,7 +33,11 @@ export default function ParticipateModal({ open, onOpenChange }) {
                     onClick={() => onOpenChange?.(false)}
                     className="inline-flex w-full items-center justify-center rounded-full bg-beta-blue px-5 py-2.5 text-sm font-semibold text-twhite hover:opacity-90"
                 >
-                    <TransText en="Open application form" fr="Ouvrir le formulaire" ar="فتح الاستمارة" />
+                    <TransText
+                        en="Open application form"
+                        fr="Ouvrir le formulaire"
+                        ar="فتح الاستمارة"
+                    />
                 </Link>
             </DialogContent>
         </Dialog>

@@ -8,13 +8,18 @@ import { useTranslation } from '@/contexts/TranslationContext';
 
 function SectionShell({ id, title, subtitle, children, className = '' }) {
     return (
-        <section id={id} className={`mx-auto max-w-7xl px-4 py-10 ${className}`}>
+        <section
+            id={id}
+            className={`mx-auto max-w-7xl px-4 py-10 ${className}`}
+        >
             <div className="max-w-3xl">
                 <h2 className="text-2xl font-semibold tracking-tight text-tblack sm:text-3xl">
                     {title}
                 </h2>
                 {subtitle ? (
-                    <p className="mt-3 text-sm leading-6 text-tgray">{subtitle}</p>
+                    <p className="mt-3 text-sm leading-6 text-tgray">
+                        {subtitle}
+                    </p>
                 ) : null}
             </div>
             <div className="mt-7">{children}</div>
@@ -62,12 +67,26 @@ export function ProgramHeroSection({ program }) {
                         className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-tblack hover:bg-muted"
                     >
                         {isTilila ? (
-                            <TransText en="Discover Tililab" fr="Découvrir Tililab" ar="اكتشف تيليلاب" />
+                            <TransText
+                                en="Discover Tililab"
+                                fr="Découvrir Tililab"
+                                ar="اكتشف تيليلاب"
+                            />
                         ) : (
-                            <TransText en="Discover Tilila Awards" fr="Découvrir Tilila Awards" ar="اكتشف تيليلا أووردز" />
+                            <TransText
+                                en="Discover Tilila Awards"
+                                fr="Découvrir Tilila Awards"
+                                ar="اكتشف تيليلا أووردز"
+                            />
                         )}
                     </Link>
-                    <RegulationCta href={isTilila ? '/tilila/reglement' : '/tililab/reglement'} />
+                    <RegulationCta
+                        href={
+                            isTilila
+                                ? '/tilila/reglement'
+                                : '/tililab/reglement'
+                        }
+                    />
                 </div>
             </div>
         </section>
@@ -79,12 +98,44 @@ function TililaStatsCard() {
         <div className="rounded-2xl border border-border bg-card p-6">
             <h3 className="text-lg font-bold text-tblack">Tilila Awards</h3>
             <ul className="mt-4 space-y-2 text-sm text-tgray">
-                <li>7 <TransText en="editions" fr="éditions" ar="دورات" /></li>
-                <li><TransText en="250+ candidate campaigns" fr="Plus de 250 campagnes candidates" ar="أكثر من 250 حملة مرشحة" /></li>
-                <li><TransText en="50+ shortlisted campaigns" fr="Plus de 50 campagnes shortlistées" ar="أكثر من 50 حملة في القائمة القصيرة" /></li>
-                <li><TransText en="13 awarded campaigns" fr="13 campagnes primées" ar="13 حملة فائزة" /></li>
-                <li><TransText en="26 jury members mobilized" fr="26 membres de jury mobilisés" ar="26 عضوًا في لجنة التحكيم" /></li>
-                <li><TransText en="7 Hommage Tilila awards" fr="7 Hommages Tilila décernés" ar="7 تكريمات تيليلا" /></li>
+                <li>
+                    7 <TransText en="editions" fr="éditions" ar="دورات" />
+                </li>
+                <li>
+                    <TransText
+                        en="250+ candidate campaigns"
+                        fr="Plus de 250 campagnes candidates"
+                        ar="أكثر من 250 حملة مرشحة"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="50+ shortlisted campaigns"
+                        fr="Plus de 50 campagnes shortlistées"
+                        ar="أكثر من 50 حملة في القائمة القصيرة"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="13 awarded campaigns"
+                        fr="13 campagnes primées"
+                        ar="13 حملة فائزة"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="26 jury members mobilized"
+                        fr="26 membres de jury mobilisés"
+                        ar="26 عضوًا في لجنة التحكيم"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="7 Hommage Tilila awards"
+                        fr="7 Hommages Tilila décernés"
+                        ar="7 تكريمات تيليلا"
+                    />
+                </li>
             </ul>
         </div>
     );
@@ -95,10 +146,30 @@ function TililabStatsCard() {
         <div className="rounded-2xl border border-border bg-card p-6">
             <h3 className="text-lg font-bold text-tblack">Tililab</h3>
             <ul className="mt-4 space-y-2 text-sm text-tgray">
-                <li>5 <TransText en="editions" fr="éditions" ar="دورات" /></li>
-                <li><TransText en="Dozens of young creators supported" fr="Plusieurs dizaines de jeunes créateurs accompagnés" ar="عشرات المبدعين الشباب المرافقين" /></li>
-                <li><TransText en="30+ projects produced" fr="Plus de 30 projets produits" ar="أكثر من 30 مشروعًا منتجًا" /></li>
-                <li><TransText en="Hundreds of hours of training and mentoring" fr="Des centaines d'heures de formation et de mentorat" ar="مئات الساعات من التدريب والإرشاد" /></li>
+                <li>
+                    5 <TransText en="editions" fr="éditions" ar="دورات" />
+                </li>
+                <li>
+                    <TransText
+                        en="Dozens of young creators supported"
+                        fr="Plusieurs dizaines de jeunes créateurs accompagnés"
+                        ar="عشرات المبدعين الشباب المرافقين"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="30+ projects produced"
+                        fr="Plus de 30 projets produits"
+                        ar="أكثر من 30 مشروعًا منتجًا"
+                    />
+                </li>
+                <li>
+                    <TransText
+                        en="Hundreds of hours of training and mentoring"
+                        fr="Des centaines d'heures de formation et de mentorat"
+                        ar="مئات الساعات من التدريب والإرشاد"
+                    />
+                </li>
             </ul>
         </div>
     );
@@ -111,13 +182,15 @@ export function ProgramStatsSection({ program }) {
         <SectionShell
             id="stats"
             title={
-                <TransText en="Key figures" fr="Nos chiffres clés" ar="أرقام أساسية" />
+                <TransText
+                    en="Key figures"
+                    fr="Nos chiffres clés"
+                    ar="أرقام أساسية"
+                />
             }
             className="bg-background"
         >
-            <div >
-                {isTilila ? <TililaStatsCard /> : <TililabStatsCard />}
-            </div>
+            <div>{isTilila ? <TililaStatsCard /> : <TililabStatsCard />}</div>
         </SectionShell>
     );
 }
@@ -135,9 +208,7 @@ export function ProgramTestimonialsSection({ testimonials = [], program }) {
     return (
         <SectionShell
             id="testimonials"
-            title={
-                <TransText en="Testimonials" fr="Témoignages" ar="شهادات" />
-            }
+            title={<TransText en="Testimonials" fr="Témoignages" ar="شهادات" />}
             className="bg-twhite"
         >
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -226,10 +297,18 @@ export function ProgramNewsSection({ news = [], program }) {
             )}
             <div className="mt-6">
                 <Link
-                    href={program ? `/actualites?program=${program}` : '/actualites'}
+                    href={
+                        program
+                            ? `/actualites?program=${program}`
+                            : '/actualites'
+                    }
                     className="text-sm font-semibold text-beta-blue hover:underline"
                 >
-                    <TransText en="View all news" fr="Voir toutes les actualités" ar="عرض كل الأخبار" />
+                    <TransText
+                        en="View all news"
+                        fr="Voir toutes les actualités"
+                        ar="عرض كل الأخبار"
+                    />
                 </Link>
             </div>
         </SectionShell>
@@ -280,10 +359,17 @@ export function ProgramContactSection({ program }) {
                         comiteparitediversité@2m.ma
                     </a>
                 </div>
-                <form onSubmit={submit} className="space-y-4 rounded-2xl border border-border bg-background p-6">
+                <form
+                    onSubmit={submit}
+                    className="space-y-4 rounded-2xl border border-border bg-background p-6"
+                >
                     {recentlySuccessful ? (
                         <p className="text-sm font-medium text-emerald-700">
-                            <TransText en="Message sent." fr="Message envoyé." ar="تم إرسال الرسالة." />
+                            <TransText
+                                en="Message sent."
+                                fr="Message envoyé."
+                                ar="تم إرسال الرسالة."
+                            />
                         </p>
                     ) : null}
                     <input type="hidden" name="program" value={data.program} />
@@ -295,23 +381,36 @@ export function ProgramContactSection({ program }) {
                             <input
                                 className="mt-1 w-full rounded-md border border-border px-3 py-2"
                                 value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 required
                             />
-                            {errors.name ? <span className="text-xs text-red-600">{errors.name}</span> : null}
+                            {errors.name ? (
+                                <span className="text-xs text-red-600">
+                                    {errors.name}
+                                </span>
+                            ) : null}
                         </label>
                         <label className="block text-sm">
                             <span className="font-semibold text-tblack">
-                                <TransText en="Email" fr="E-mail" ar="البريد" /> *
+                                <TransText en="Email" fr="E-mail" ar="البريد" />{' '}
+                                *
                             </span>
                             <input
                                 type="email"
                                 className="mt-1 w-full rounded-md border border-border px-3 py-2"
                                 value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
+                                onChange={(e) =>
+                                    setData('email', e.target.value)
+                                }
                                 required
                             />
-                            {errors.email ? <span className="text-xs text-red-600">{errors.email}</span> : null}
+                            {errors.email ? (
+                                <span className="text-xs text-red-600">
+                                    {errors.email}
+                                </span>
+                            ) : null}
                         </label>
                     </div>
                     <label className="block text-sm">
@@ -326,7 +425,8 @@ export function ProgramContactSection({ program }) {
                     </label>
                     <label className="block text-sm">
                         <span className="font-semibold text-tblack">
-                            <TransText en="Message" fr="Message" ar="الرسالة" /> *
+                            <TransText en="Message" fr="Message" ar="الرسالة" />{' '}
+                            *
                         </span>
                         <textarea
                             rows={4}
@@ -335,7 +435,11 @@ export function ProgramContactSection({ program }) {
                             onChange={(e) => setData('message', e.target.value)}
                             required
                         />
-                        {errors.message ? <span className="text-xs text-red-600">{errors.message}</span> : null}
+                        {errors.message ? (
+                            <span className="text-xs text-red-600">
+                                {errors.message}
+                            </span>
+                        ) : null}
                     </label>
                     <button
                         type="submit"
@@ -354,9 +458,7 @@ export function ProgramPartnersSection() {
     return (
         <SectionShell
             id="partners"
-            title={
-                <TransText en="Partners" fr="Partenaires" ar="الشركاء" />
-            }
+            title={<TransText en="Partners" fr="Partenaires" ar="الشركاء" />}
             subtitle={
                 <TransText
                     en="A dedicated space for institutional, media and technical partners associated with Tilila Awards and Tililab."

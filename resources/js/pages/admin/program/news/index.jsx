@@ -10,25 +10,42 @@ export default function AdminNewsIndex({ news }) {
                 <div className="mb-6 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Program news</h1>
                     <Button asChild>
-                        <Link href="/admin/program/news/create">Add article</Link>
+                        <Link href="/admin/program/news/create">
+                            Add article
+                        </Link>
                     </Button>
                 </div>
                 <div className="space-y-3">
                     {news.data.map((row) => (
-                        <div key={row.id} className="flex items-center justify-between rounded-lg border p-4">
+                        <div
+                            key={row.id}
+                            className="flex items-center justify-between rounded-lg border p-4"
+                        >
                             <div>
                                 <p className="font-semibold">{row.title?.fr}</p>
-                                <p className="text-sm text-muted-foreground">{row.program ?? 'all'} — {row.slug}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {row.program ?? 'all'} — {row.slug}
+                                </p>
                             </div>
                             <div className="flex gap-2">
                                 <Button variant="outline" asChild>
-                                    <Link href={`/admin/program/news/${row.id}/edit`}>Edit</Link>
+                                    <Link
+                                        href={`/admin/program/news/${row.id}/edit`}
+                                    >
+                                        Edit
+                                    </Link>
                                 </Button>
                                 <Button
                                     variant="destructive"
                                     onClick={() => {
-                                        if (window.confirm('Delete this article?')) {
-                                            router.delete(`/admin/program/news/${row.id}`);
+                                        if (
+                                            window.confirm(
+                                                'Delete this article?',
+                                            )
+                                        ) {
+                                            router.delete(
+                                                `/admin/program/news/${row.id}`,
+                                            );
                                         }
                                     }}
                                 >

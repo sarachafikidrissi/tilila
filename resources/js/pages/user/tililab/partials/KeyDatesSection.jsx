@@ -23,17 +23,22 @@ const keyDates = [
         enTitle: 'Applications open',
         frTitle: 'Ouverture des candidatures',
         arTitle: 'فتح باب التقديم',
-        enDescription: 'Submit your application via the online form before the edition deadline.',
-        frDescription: 'Déposez votre candidature via le formulaire en ligne avant la date limite de l’édition.',
-        arDescription: 'قدّموا ترشحكم عبر الاستمارة الإلكترونية قبل الموعد النهائي للدورة.',
+        enDescription:
+            'Submit your application via the online form before the edition deadline.',
+        frDescription:
+            'Déposez votre candidature via le formulaire en ligne avant la date limite de l’édition.',
+        arDescription:
+            'قدّموا ترشحكم عبر الاستمارة الإلكترونية قبل الموعد النهائي للدورة.',
     },
     {
         date: 'PHASE 2',
         enTitle: 'Pre-selection',
         frTitle: 'Pré-sélection',
         arTitle: 'الفرز الأولي',
-        enDescription: 'Up to six candidates are shortlisted for the masterclass and residency.',
-        frDescription: 'Jusqu’à six candidat·e·s sont présélectionné·e·s pour la masterclass et la résidence.',
+        enDescription:
+            'Up to six candidates are shortlisted for the masterclass and residency.',
+        frDescription:
+            'Jusqu’à six candidat·e·s sont présélectionné·e·s pour la masterclass et la résidence.',
         arDescription: 'يتم اختيار ما يصل إلى ستة مرشحين للماستركلاس والإقامة.',
     },
     {
@@ -41,18 +46,24 @@ const keyDates = [
         enTitle: 'Masterclass + 48h residency',
         frTitle: 'Masterclass + résidence 48h',
         arTitle: 'ماستركلاس + إقامة 48 ساعة',
-        enDescription: 'One-day masterclass followed by an intensive 48-hour creative residency.',
-        frDescription: 'Masterclass d’une journée suivie d’une résidence créative intensive de 48 heures.',
-        arDescription: 'ماستركلاس ليوم واحد يليه إقامة إبداعية مكثفة لمدة 48 ساعة.',
+        enDescription:
+            'One-day masterclass followed by an intensive 48-hour creative residency.',
+        frDescription:
+            'Masterclass d’une journée suivie d’une résidence créative intensive de 48 heures.',
+        arDescription:
+            'ماستركلاس ليوم واحد يليه إقامة إبداعية مكثفة لمدة 48 ساعة.',
     },
     {
         date: 'PHASE 4',
         enTitle: 'Jury & ceremony',
         frTitle: 'Jury & cérémonie',
         arTitle: 'لجنة التحكيم والحفل',
-        enDescription: 'The jury evaluates produced works; the winner is announced at the Tilila Awards ceremony.',
-        frDescription: 'Le jury évalue les œuvres produites ; le·la lauréat·e est annoncé·e lors de la cérémonie Tilila Awards.',
-        arDescription: 'تقيّم لجنة التحكيم الأعمال المنتجة؛ يُعلَن الفائز في حفل تيليلا أووردز.',
+        enDescription:
+            'The jury evaluates produced works; the winner is announced at the Tilila Awards ceremony.',
+        frDescription:
+            'Le jury évalue les œuvres produites ; le·la lauréat·e est annoncé·e lors de la cérémonie Tilila Awards.',
+        arDescription:
+            'تقيّم لجنة التحكيم الأعمال المنتجة؛ يُعلَن الفائز في حفل تيليلا أووردز.',
     },
 ];
 
@@ -67,7 +78,11 @@ export default function KeyDatesSection({ edition = null }) {
                         <CalendarDays className="size-4" />
                     </span>
                     <span>
-                        <TransText en="Key dates" fr="Dates clés" ar="التواريخ الرئيسية" />
+                        <TransText
+                            en="Key dates"
+                            fr="Dates clés"
+                            ar="التواريخ الرئيسية"
+                        />
                     </span>
                 </div>
 

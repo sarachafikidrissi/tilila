@@ -4,7 +4,10 @@ import { TILILA_AWARDS_PARTNERS } from '@/data/tilila-awards-partners';
 
 function SectionShell({ id, title, subtitle, children, className = '' }) {
     return (
-        <section id={id} className={`mx-auto max-w-7xl px-4 py-10 ${className}`}>
+        <section
+            id={id}
+            className={`mx-auto max-w-7xl px-4 py-10 ${className}`}
+        >
             <div className="max-w-3xl">
                 <h2 className="text-2xl font-semibold tracking-tight text-tblack sm:text-3xl">
                     {title}
@@ -24,9 +27,7 @@ export default function TililaPartnersSection() {
     return (
         <SectionShell
             id="partners"
-            title={
-                <TransText en="Partners" fr="Partenaires" ar="الشركاء" />
-            }
+            title={<TransText en="Partners" fr="Partenaires" ar="الشركاء" />}
             subtitle={
                 <TransText
                     en="A dedicated space for institutional, media and technical partners associated with Tilila Awards."

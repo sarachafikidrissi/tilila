@@ -26,7 +26,8 @@ export default function AdminTililabEditionsEdit({ edition }) {
         cover_image_path: edition?.cover_image_path ?? null,
         has_gallery: Boolean(edition?.has_gallery),
         is_current: Boolean(edition?.is_current),
-        applications_close_at: edition?.applications_close_at?.slice(0, 16) ?? '',
+        applications_close_at:
+            edition?.applications_close_at?.slice(0, 16) ?? '',
         gallery_images: Array.isArray(edition?.gallery_images)
             ? edition.gallery_images
             : [],

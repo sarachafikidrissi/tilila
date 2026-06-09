@@ -310,17 +310,21 @@ export default function AdminHeroSlidesIndex({ slides: initialSlides = [] }) {
             ),
         );
 
-        router.patch(url, {}, {
-            preserveScroll: true,
-            onError: () =>
-                setSlides((prev) =>
-                    prev.map((s) =>
-                        s.id === slide.id
-                            ? { ...s, [field]: priorValue }
-                            : s,
+        router.patch(
+            url,
+            {},
+            {
+                preserveScroll: true,
+                onError: () =>
+                    setSlides((prev) =>
+                        prev.map((s) =>
+                            s.id === slide.id
+                                ? { ...s, [field]: priorValue }
+                                : s,
+                        ),
                     ),
-                ),
-        });
+            },
+        );
     }
 
     const handleToggle = (slide) =>

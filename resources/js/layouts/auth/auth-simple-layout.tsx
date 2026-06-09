@@ -9,7 +9,7 @@ export default function AuthSimpleLayout({
 }: AuthLayoutProps) {
     return (
         <div className="relative min-h-svh overflow-hidden bg-beta-white">
-            <div className="absolute inset-0 bg-brand-subtle" />
+            <div className="bg-brand-subtle absolute inset-0" />
 
             <div className="relative mx-auto flex min-h-svh max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
                 <div className="w-full max-w-md">
