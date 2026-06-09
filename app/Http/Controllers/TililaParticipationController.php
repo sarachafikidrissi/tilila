@@ -51,7 +51,7 @@ class TililaParticipationController extends Controller
             'campaign_title' => ['required', 'string', 'max:255'],
             'first_broadcast_date' => ['required', 'date'],
             'submission_link' => ['nullable', 'url', 'max:2048'],
-            'category' => ['required', 'string', Rule::in(self::CATEGORIES)],
+            'category' => ['nullable', 'string', Rule::in(self::CATEGORIES)],
             'creative_concept' => ['required', 'string', 'max:5000'],
             'edi_contribution' => ['required', 'string', 'max:5000'],
             'submission_video' => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/quicktime,video/x-matroska', 'max:204800'],
@@ -65,7 +65,7 @@ class TililaParticipationController extends Controller
             'locale' => ['nullable', 'string', 'max:8'],
         ]);
 
-        if ($data['category'] === 'hommage') {
+        if (($data['category'] ?? null) === 'hommage') {
             throw ValidationException::withMessages([
                 'category' => 'Hommage Tilila is not submitted through this form.',
             ]);
@@ -105,7 +105,7 @@ class TililaParticipationController extends Controller
             'first_broadcast_date' => $data['first_broadcast_date'],
             'submission_title' => $data['campaign_title'],
             'submission_link' => $data['submission_link'] ?? null,
-            'category' => $data['category'],
+            'category' => $data['category'] ?? null,
             'creative_concept' => $data['creative_concept'],
             'edi_contribution' => $data['edi_contribution'],
             'submission_description' => $data['creative_concept'],

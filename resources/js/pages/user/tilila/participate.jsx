@@ -1,21 +1,35 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
 import RegulationCta from '@/components/program/RegulationCta';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-
-const CATEGORIES = [
-    { value: 'prix_jury', en: 'Jury Prize', fr: 'Prix du Jury', ar: 'جائزة لجنة التحكيم' },
-    { value: 'prix_honneur', en: 'Honour Prize', fr: 'Prix d’Honneur', ar: 'جائزة الشرف' },
-    { value: 'communication_online', en: 'Engaged Communication — ONLINE', fr: 'Communication Engagée — ONLINE', ar: 'التواصل الملتزم — رقمي' },
-    { value: 'communication_offline', en: 'Engaged Communication — OFFLINE', fr: 'Communication Engagée — OFFLINE', ar: 'التواصل الملتزم — تقليدي' },
-];
+import { Spinner } from '@/components/ui/spinner';
 
 const inputClass = 'w-full rounded-md border border-border bg-background px-3 py-2 text-sm';
 
+function firstFormError(errors) {
+    const values = Object.values(errors ?? {});
+    const flat = values.flat().filter(Boolean);
+    return flat[0] ?? null;
+}
+
 export default function TililaParticipate() {
-    const { data, setData, post, processing, errors } = useForm({
+    const [resultModal, setResultModal] = useState(null);
+    const [errorSummary, setErrorSummary] = useState('');
+
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         first_name: '',
         last_name: '',
         representative_role: '',
@@ -29,7 +43,6 @@ export default function TililaParticipate() {
         campaign_title: '',
         first_broadcast_date: '',
         submission_link: '',
-        category: 'prix_jury',
         creative_concept: '',
         edi_contribution: '',
         submission_video: null,
@@ -43,12 +56,128 @@ export default function TililaParticipate() {
 
     const submit = (e) => {
         e.preventDefault();
-        post('/tilila/participate', { forceFormData: true, preserveScroll: true });
+        clearErrors();
+        setResultModal(null);
+        setErrorSummary('');
+
+        post('/tilila/participate', {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+                setResultModal('success');
+            },
+            onError: (serverErrors) => {
+                setErrorSummary(firstFormError(serverErrors) ?? '');
+                setResultModal('error');
+            },
+        });
+    };
+
+    const closeResultModal = (open) => {
+        if (!open) {
+            setResultModal(null);
+        }
     };
 
     return (
         <>
             <Head title="Tilila Awards — Candidature" />
+
+            {processing ? (
+                <div
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/50 px-4 backdrop-blur-[2px]"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                >
+                    <Spinner className="size-10 text-twhite" />
+                    <p className="text-center text-sm font-semibold text-twhite">
+                        <TransText
+                            en="Submitting your application…"
+                            fr="Envoi de votre candidature en cours…"
+                            ar="جاري إرسال ترشحكم…"
+                        />
+                    </p>
+                </div>
+            ) : null}
+
+            <Dialog open={resultModal !== null} onOpenChange={closeResultModal}>
+                <DialogContent className="sm:max-w-md">
+                    {resultModal === 'success' ? (
+                        <>
+                            <DialogHeader>
+                                <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+                                    <CheckCircle2 className="size-7" aria-hidden />
+                                </div>
+                                <DialogTitle className="text-center">
+                                    <TransText
+                                        en="Application submitted"
+                                        fr="Candidature envoyée"
+                                        ar="تم إرسال الترشح"
+                                    />
+                                </DialogTitle>
+                                <DialogDescription className="text-center">
+                                    <TransText
+                                        en="Thank you. We received your Tilila Awards application and sent a confirmation email when possible."
+                                        fr="Merci. Nous avons bien reçu votre candidature Tilila Awards et un e-mail de confirmation vous a été envoyé lorsque possible."
+                                        ar="شكراً. استلمنا ترشحكم لتيليلا أووردز وأرسلنا بريداً تأكيدياً عند الإمكان."
+                                    />
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="sm:justify-center">
+                                <Button asChild className="rounded-full bg-beta-blue text-twhite hover:bg-beta-blue/90">
+                                    <Link href="/tilila">
+                                        <TransText
+                                            en="Back to Tilila Awards"
+                                            fr="Retour aux Tilila Awards"
+                                            ar="العودة إلى تيليلا أووردز"
+                                        />
+                                    </Link>
+                                </Button>
+                            </DialogFooter>
+                        </>
+                    ) : null}
+
+                    {resultModal === 'error' ? (
+                        <>
+                            <DialogHeader>
+                                <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-red-500/10 text-red-600">
+                                    <XCircle className="size-7" aria-hidden />
+                                </div>
+                                <DialogTitle className="text-center">
+                                    <TransText
+                                        en="Submission failed"
+                                        fr="Échec de l’envoi"
+                                        ar="تعذّر الإرسال"
+                                    />
+                                </DialogTitle>
+                                <DialogDescription className="text-center">
+                                    {errorSummary ? (
+                                        errorSummary
+                                    ) : (
+                                        <TransText
+                                            en="Please check the highlighted fields and try again."
+                                            fr="Veuillez vérifier les champs signalés et réessayer."
+                                            ar="يرجى التحقق من الحقول المحددة والمحاولة مرة أخرى."
+                                        />
+                                    )}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="sm:justify-center">
+                                <Button
+                                    type="button"
+                                    className="rounded-full bg-beta-blue text-twhite hover:bg-beta-blue/90"
+                                    onClick={() => setResultModal(null)}
+                                >
+                                    <TransText en="Close" fr="Fermer" ar="إغلاق" />
+                                </Button>
+                            </DialogFooter>
+                        </>
+                    ) : null}
+                </DialogContent>
+            </Dialog>
+
             <div className="mx-auto max-w-3xl px-4 py-10">
                 <Link href="/tilila" className="text-sm font-semibold text-beta-blue hover:underline">
                     <TransText en="← Back to Tilila Awards" fr="← Retour aux Tilila Awards" ar="← العودة إلى تيليلا أووردز" />
@@ -59,7 +188,11 @@ export default function TililaParticipate() {
                 <div className="mt-4">
                     <RegulationCta href="/tilila/reglement" />
                 </div>
-                <form onSubmit={submit} className="mt-8 space-y-8">
+                <form
+                    onSubmit={submit}
+                    className="mt-8 space-y-8"
+                    aria-busy={processing}
+                >
                     <fieldset className="space-y-4 rounded-2xl border border-border p-6">
                         <legend className="px-2 text-lg font-semibold text-tblack">
                             <TransText en="General information" fr="Informations générales" ar="معلومات عامة" />
@@ -107,13 +240,6 @@ export default function TililaParticipate() {
                         <Field label="Lien de consultation" error={errors.submission_link}>
                             <input type="url" className={inputClass} value={data.submission_link} onChange={(e) => setData('submission_link', e.target.value)} />
                         </Field>
-                        <Field label="Catégorie" error={errors.category} required>
-                            <select className={inputClass} value={data.category} onChange={(e) => setData('category', e.target.value)} required>
-                                {CATEGORIES.map((c) => (
-                                    <option key={c.value} value={c.value}>{c.fr}</option>
-                                ))}
-                            </select>
-                        </Field>
                         <Field label="Vidéo" error={errors.submission_video}>
                             <input type="file" accept="video/*" onChange={(e) => setData('submission_video', e.target.files[0])} />
                         </Field>
@@ -146,8 +272,17 @@ export default function TililaParticipate() {
                         <CheckRow id="rules" checked={data.accepted_rules} onChange={(v) => setData('accepted_rules', v)} label="J'accepte le règlement Tilila Awards" error={errors.accepted_rules} required />
                     </fieldset>
 
-                    <button type="submit" disabled={processing} className="w-full rounded-full bg-beta-blue py-3 text-sm font-semibold text-twhite hover:opacity-90 disabled:opacity-60">
-                        <TransText en="Submit application" fr="Envoyer ma candidature" ar="إرسال الترشح" />
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="flex w-full items-center justify-center gap-2 rounded-full bg-beta-blue py-3 text-sm font-semibold text-twhite hover:opacity-90 disabled:opacity-60"
+                    >
+                        {processing ? <Spinner className="size-4 text-twhite" /> : null}
+                        <TransText
+                            en={processing ? 'Submitting…' : 'Submit application'}
+                            fr={processing ? 'Envoi en cours…' : 'Envoyer ma candidature'}
+                            ar={processing ? 'جاري الإرسال…' : 'إرسال الترشح'}
+                        />
                     </button>
                 </form>
             </div>

@@ -4,6 +4,8 @@ import { ExternalLink, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import {
+    formatParticipantDate,
+    formatParticipantDateTime,
     ParticipantFileLink,
     ParticipantRow,
 } from '@/pages/admin/shared/ParticipantShowRows';
@@ -94,7 +96,10 @@ export default function AdminTililabParticipantShow({ participant }) {
                     <ParticipantRow label="Phone" value={p.phone} />
                     <ParticipantRow label="City" value={p.city} />
                     <ParticipantRow label="Country" value={p.country} />
-                    <ParticipantRow label="Birth date" value={p.birth_date} />
+                    <ParticipantRow
+                        label="Birth date"
+                        value={formatParticipantDate(p.birth_date)}
+                    />
                     <ParticipantRow label="CIN" value={p.cin} />
                     <ParticipantRow label="Education" value={p.education_level} />
                     <ParticipantRow label="Profession" value={p.profession} />
@@ -104,7 +109,6 @@ export default function AdminTililabParticipantShow({ participant }) {
                     <ParticipantRow label="Project presentation" value={p.project_presentation} />
                     <ParticipantRow label="Main message" value={p.main_message} />
                     <ParticipantRow label="Motivation" value={p.motivation} />
-                    <ParticipantRow label="Bio" value={p.bio} />
                     <ParticipantFileLink label="Uploaded video" url={p.original_video_url} />
                     <ParticipantFileLink label="Portfolio" url={p.portfolio_url} />
                     <ParticipantFileLink label="PDF dossier" url={p.pdf_dossier_url} />
@@ -112,9 +116,10 @@ export default function AdminTililabParticipantShow({ participant }) {
                         label="Declarations"
                         value={`Under 30: ${p.declared_under_30 ? 'yes' : 'no'} | Accuracy: ${p.declared_accuracy ? 'yes' : 'no'} | Rights: ${p.declared_rights ? 'yes' : 'no'} | Rules: ${p.accepted_rules ? 'yes' : 'no'}`}
                     />
-                    <ParticipantRow label="Submitted at" value={p.created_at} />
-                    <ParticipantRow label="Locale" value={p.locale} />
-                    <ParticipantRow label="IP" value={p.ip} />
+                    <ParticipantRow
+                        label="Submitted at"
+                        value={formatParticipantDateTime(p.created_at)}
+                    />
                 </div>
             </div>
         </>

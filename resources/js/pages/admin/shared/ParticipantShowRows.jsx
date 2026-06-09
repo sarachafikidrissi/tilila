@@ -1,3 +1,39 @@
+function parseParticipantDate(value) {
+    if (!value) {
+        return null;
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date;
+}
+
+export function formatParticipantDate(value) {
+    const date = parseParticipantDate(value);
+    if (!date) {
+        return value ?? '—';
+    }
+
+    return date.toLocaleDateString('fr-FR', {
+        dateStyle: 'long',
+    });
+}
+
+export function formatParticipantDateTime(value) {
+    const date = parseParticipantDate(value);
+    if (!date) {
+        return value ?? '—';
+    }
+
+    return date.toLocaleString('fr-FR', {
+        dateStyle: 'long',
+        timeStyle: 'short',
+    });
+}
+
 export function ParticipantRow({ label, value }) {
     return (
         <div className="grid grid-cols-1 gap-1 sm:grid-cols-4 sm:gap-4">

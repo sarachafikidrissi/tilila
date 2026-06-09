@@ -1,14 +1,35 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import TransText from '@/components/TransText';
 import RegulationCta from '@/components/program/RegulationCta';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 const inputClass = 'w-full rounded-md border border-border bg-background px-3 py-2 text-sm';
 
+function firstFormError(errors) {
+    const values = Object.values(errors ?? {});
+    const flat = values.flat().filter(Boolean);
+    return flat[0] ?? null;
+}
+
 export default function TililabParticipate() {
-    const { data, setData, post, processing, errors } = useForm({
+    const [resultModal, setResultModal] = useState(null);
+    const [errorSummary, setErrorSummary] = useState('');
+
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         first_name: '',
         last_name: '',
         email: '',
@@ -38,12 +59,128 @@ export default function TililabParticipate() {
 
     const submit = (e) => {
         e.preventDefault();
-        post('/tililab/form', { forceFormData: true, preserveScroll: true });
+        clearErrors();
+        setResultModal(null);
+        setErrorSummary('');
+
+        post('/tililab/form', {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+                setResultModal('success');
+            },
+            onError: (serverErrors) => {
+                setErrorSummary(firstFormError(serverErrors) ?? '');
+                setResultModal('error');
+            },
+        });
+    };
+
+    const closeResultModal = (open) => {
+        if (!open) {
+            setResultModal(null);
+        }
     };
 
     return (
         <>
             <Head title="Tililab — Candidature" />
+
+            {processing ? (
+                <div
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/50 px-4 backdrop-blur-[2px]"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                >
+                    <Spinner className="size-10 text-twhite" />
+                    <p className="text-center text-sm font-semibold text-twhite">
+                        <TransText
+                            en="Submitting your application…"
+                            fr="Envoi de votre candidature en cours…"
+                            ar="جاري إرسال ترشحكم…"
+                        />
+                    </p>
+                </div>
+            ) : null}
+
+            <Dialog open={resultModal !== null} onOpenChange={closeResultModal}>
+                <DialogContent className="sm:max-w-md">
+                    {resultModal === 'success' ? (
+                        <>
+                            <DialogHeader>
+                                <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+                                    <CheckCircle2 className="size-7" aria-hidden />
+                                </div>
+                                <DialogTitle className="text-center">
+                                    <TransText
+                                        en="Application submitted"
+                                        fr="Candidature envoyée"
+                                        ar="تم إرسال الترشح"
+                                    />
+                                </DialogTitle>
+                                <DialogDescription className="text-center">
+                                    <TransText
+                                        en="Thank you. We received your Tililab application."
+                                        fr="Merci. Nous avons bien reçu votre candidature Tililab."
+                                        ar="شكراً. استلمنا ترشحكم لتيليلاب."
+                                    />
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="sm:justify-center">
+                                <Button asChild className="rounded-full bg-beta-blue text-twhite hover:bg-beta-blue/90">
+                                    <Link href="/tililab">
+                                        <TransText
+                                            en="Back to Tililab"
+                                            fr="Retour à Tililab"
+                                            ar="العودة إلى تيليلاب"
+                                        />
+                                    </Link>
+                                </Button>
+                            </DialogFooter>
+                        </>
+                    ) : null}
+
+                    {resultModal === 'error' ? (
+                        <>
+                            <DialogHeader>
+                                <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-red-500/10 text-red-600">
+                                    <XCircle className="size-7" aria-hidden />
+                                </div>
+                                <DialogTitle className="text-center">
+                                    <TransText
+                                        en="Submission failed"
+                                        fr="Échec de l’envoi"
+                                        ar="تعذّر الإرسال"
+                                    />
+                                </DialogTitle>
+                                <DialogDescription className="text-center">
+                                    {errorSummary ? (
+                                        errorSummary
+                                    ) : (
+                                        <TransText
+                                            en="Please check the highlighted fields and try again."
+                                            fr="Veuillez vérifier les champs signalés et réessayer."
+                                            ar="يرجى التحقق من الحقول المحددة والمحاولة مرة أخرى."
+                                        />
+                                    )}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="sm:justify-center">
+                                <Button
+                                    type="button"
+                                    className="rounded-full bg-beta-blue text-twhite hover:bg-beta-blue/90"
+                                    onClick={() => setResultModal(null)}
+                                >
+                                    <TransText en="Close" fr="Fermer" ar="إغلاق" />
+                                </Button>
+                            </DialogFooter>
+                        </>
+                    ) : null}
+                </DialogContent>
+            </Dialog>
+
             <div className="mx-auto max-w-3xl px-4 py-10">
                 <Link href="/tililab" className="text-sm font-semibold text-beta-blue hover:underline">
                     <TransText en="← Back to Tililab" fr="← Retour à Tililab" ar="← العودة إلى تيليلاب" />
@@ -61,7 +198,11 @@ export default function TililabParticipate() {
                 <div className="mt-4">
                     <RegulationCta href="/tililab/reglement" />
                 </div>
-                <form onSubmit={submit} className="mt-8 space-y-8">
+                <form
+                    onSubmit={submit}
+                    className="mt-8 space-y-8"
+                    aria-busy={processing}
+                >
                     <fieldset className="space-y-4 rounded-2xl border border-border p-6">
                         <legend className="px-2 text-lg font-semibold text-tblack">
                             <TransText en="Personal information" fr="Informations personnelles" ar="معلومات شخصية" />
@@ -148,8 +289,17 @@ export default function TililabParticipate() {
                         <CheckRow id="rules" checked={data.accepted_rules} onChange={(v) => setData('accepted_rules', v)} label="J'accepte le règlement Tililab" error={errors.accepted_rules} />
                     </fieldset>
 
-                    <button type="submit" disabled={processing} className="w-full rounded-full bg-beta-blue py-3 text-sm font-semibold text-twhite hover:opacity-90 disabled:opacity-60">
-                        <TransText en="Submit application" fr="Envoyer ma candidature" ar="إرسال الترشح" />
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="flex w-full items-center justify-center gap-2 rounded-full bg-beta-blue py-3 text-sm font-semibold text-twhite hover:opacity-90 disabled:opacity-60"
+                    >
+                        {processing ? <Spinner className="size-4 text-twhite" /> : null}
+                        <TransText
+                            en={processing ? 'Submitting…' : 'Submit application'}
+                            fr={processing ? 'Envoi en cours…' : 'Envoyer ma candidature'}
+                            ar={processing ? 'جاري الإرسال…' : 'إرسال الترشح'}
+                        />
                     </button>
                 </form>
             </div>
