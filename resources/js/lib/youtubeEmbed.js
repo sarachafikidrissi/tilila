@@ -45,9 +45,11 @@ export function withYoutubeAutoplay(embedUrl) {
         const url = new URL(embedUrl);
         url.searchParams.set('autoplay', '1');
         url.searchParams.set('mute', '1');
+
         return url.toString();
     } catch {
         const separator = embedUrl.includes('?') ? '&' : '?';
+
         return `${embedUrl}${separator}autoplay=1&mute=1`;
     }
 }

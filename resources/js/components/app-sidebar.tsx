@@ -5,7 +5,6 @@ import {
     KeyRound,
     LayoutGrid,
     Mail,
-    Megaphone,
     Newspaper,
     Trophy,
     Users,

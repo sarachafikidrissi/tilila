@@ -38,6 +38,7 @@ function resolveStorageOrAssetPath(path) {
 
 export function coverImageSrc(coverPath, galleryImages, winners) {
     const fromCover = resolveStorageOrAssetPath(coverPath);
+
     if (fromCover) {
         return fromCover;
     }

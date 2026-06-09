@@ -54,6 +54,7 @@ export function resolveTililabHeroMedia({
     }
 
     const embedUrl = url ? getYoutubeEmbedUrl(url) : null;
+
     if (embedUrl) {
         return {
             uploadSrc: '',
