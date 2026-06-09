@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventParticipant;
+use App\Support\TililaHighlightVideos;
 use App\Support\YoutubeVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +48,7 @@ class EventController extends Controller
             'eventStatuses' => ['upcoming', 'live', 'finished'],
             'eventsByYear' => $eventsByYear,
             'eventsInitialPanel' => $initialPanel,
-            'teaserVideoUrl' => route('tilila.media.teaser'),
+            'teaserVideoUrl' => TililaHighlightVideos::teaserUrl(),
         ]);
     }
 

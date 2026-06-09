@@ -36,7 +36,7 @@ export default function TililaBestOfVideo({ videoUrl }) {
                             playsInline
                             preload="metadata"
                         >
-                            <source src={videoUrl} type="video/quicktime" />
+                            <source src={videoUrl} type="video/mp4" />
                         </video>
                     </div>
                 </div>

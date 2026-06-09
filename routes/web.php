@@ -14,7 +14,6 @@ use App\Http\Controllers\ProgramNewsController;
 use App\Http\Controllers\ProgramRegulationController;
 use App\Http\Controllers\TililabInscriptionController;
 use App\Http\Controllers\TililaConnectController;
-use App\Http\Controllers\TililaMediaController;
 use App\Http\Controllers\TililaParticipationController;
 use App\Models\Event;
 use App\Models\Expert;
@@ -209,11 +208,6 @@ Route::get('/tilila', function () {
         ...ProgramPageProps::forProgram('tilila'),
     ]);
 });
-
-Route::get('/tilila/media/teaser', [TililaMediaController::class, 'teaser'])
-    ->name('tilila.media.teaser');
-Route::get('/tilila/media/best-of', [TililaMediaController::class, 'bestOf'])
-    ->name('tilila.media.best-of');
 
 Route::get('/tilila/reglement', [ProgramRegulationController::class, 'tilila'])->name('program.reglement.tilila');
 Route::get('/tilila/reglement/download', [ProgramRegulationController::class, 'downloadTilila'])->name('program.reglement.tilila.download');
