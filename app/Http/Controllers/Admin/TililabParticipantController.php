@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TililabEdition;
 use App\Models\TililabParticipant;
+use App\Support\ParticipantFileStorage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -57,6 +58,7 @@ class TililabParticipantController extends Controller
 
     public function destroy(TililabParticipant $participant): RedirectResponse
     {
+        ParticipantFileStorage::deleteMany($participant->storedFilePaths());
         $participant->delete();
 
         return redirect()->route('admin.tililab.participants.index')
@@ -87,11 +89,26 @@ class TililabParticipantController extends Controller
                 'phone',
                 'city',
                 'country',
-                'bio',
+                'birth_date',
+                'cin',
+                'education_level',
+                'profession',
+                'social_links',
+                'project_title',
+                'prior_work_link',
+                'candidate_presentation',
+                'project_presentation',
+                'main_message',
+                'motivation',
                 'original_video_link',
                 'original_video_url',
+                'portfolio_url',
+                'pdf_dossier_url',
+                'declared_under_30',
+                'declared_accuracy',
+                'declared_rights',
+                'accepted_rules',
                 'locale',
-                'ip',
                 'created_at',
             ], $delimiter);
 
@@ -107,11 +124,26 @@ class TililabParticipantController extends Controller
                         (string) ($p->phone ?? ''),
                         (string) ($p->city ?? ''),
                         (string) ($p->country ?? ''),
-                        (string) ($p->bio ?? ''),
+                        optional($p->birth_date)->toDateString(),
+                        (string) ($p->cin ?? ''),
+                        (string) ($p->education_level ?? ''),
+                        (string) ($p->profession ?? ''),
+                        (string) ($p->social_links ?? ''),
+                        (string) ($p->project_title ?? ''),
+                        (string) ($p->prior_work_link ?? ''),
+                        (string) ($p->candidate_presentation ?? ''),
+                        (string) ($p->project_presentation ?? ''),
+                        (string) ($p->main_message ?? ''),
+                        (string) ($p->motivation ?? ''),
                         (string) ($p->original_video_link ?? ''),
                         (string) ($p->original_video_url ?? ''),
+                        (string) ($p->portfolio_url ?? ''),
+                        (string) ($p->pdf_dossier_url ?? ''),
+                        $p->declared_under_30 ? 'yes' : 'no',
+                        $p->declared_accuracy ? 'yes' : 'no',
+                        $p->declared_rights ? 'yes' : 'no',
+                        $p->accepted_rules ? 'yes' : 'no',
                         (string) ($p->locale ?? ''),
-                        (string) ($p->ip ?? ''),
                         optional($p->created_at)->toIso8601String(),
                     ], $delimiter);
                 }

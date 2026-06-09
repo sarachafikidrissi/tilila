@@ -24,6 +24,7 @@ export default function AdminTililaEditionsCreate() {
         remove_gallery_images: [],
         has_gallery: false,
         is_current: false,
+        applications_close_at: '',
     });
 
     const submit = (e) => {
@@ -42,7 +43,7 @@ export default function AdminTililaEditionsCreate() {
                 <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-start sm:justify-between sm:pb-8">
                     <div>
                         <p className="text-sm font-medium text-tgray">
-                            Trophée Tilila
+                            Tilila Awards
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight text-tblack">
                             Create Edition

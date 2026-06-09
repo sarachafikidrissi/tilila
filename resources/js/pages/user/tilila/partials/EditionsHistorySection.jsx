@@ -11,8 +11,8 @@ export default function EditionsHistorySection() {
             <div className="mx-auto max-w-3xl text-center">
                 <p className="text-xs font-bold tracking-[0.2em] text-beta-blue uppercase">
                     <TransText
-                        en="Trophée Tilila"
-                        fr="Trophée Tilila"
+                        en="Tilila Awards"
+                        fr="Tilila Awards"
                         ar="جائزة تيليلا"
                     />
                 </p>
@@ -25,8 +25,8 @@ export default function EditionsHistorySection() {
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-tgray sm:text-base">
                     <TransText
-                        en="From the first ceremony in 2018 to the 2025 edition honouring rural women, the Trophée has grown with 2M’s Parity and Diversity Committee—recognising advertising that respects women, diversity, and inclusion."
-                        fr="De la première cérémonie en 2018 à l’édition 2025 dédiée aux femmes rurales, le Trophée s’est imposé avec le Comité Parité et Diversité de 2M—en récompensant une publicité respectueuse des femmes, de la diversité et de l’inclusion."
+                        en="From the first ceremony in 2018 to the 2025 edition honouring rural women, Tilila Awards has grown with 2M’s Parity and Diversity Committee—recognising advertising that respects women, diversity, and inclusion."
+                        fr="De la première cérémonie en 2018 à l’édition 2025 dédiée aux femmes rurales, les Tilila Awards se sont imposés avec le Comité Parité et Diversité de 2M—en récompensant une publicité respectueuse des femmes, de la diversité et de l’inclusion."
                         ar="من أول حفل في 2018 إلى دورة 2025 المكرّسة للمرأة الريفية، رسّخت الجائزة مع لجنة المساواة والتنوع بـ2M إعلاناً يحترم المرأة والتنوع والإدماج."
                     />
                 </p>

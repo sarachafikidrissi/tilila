@@ -1,11 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ChevronLeft, GalleryHorizontal, Gavel, Trophy } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
+import EditionTopHero from '@/components/program/EditionTopHero';
 import TransText from '@/components/TransText';
-import EventReplay from '@/pages/events/Partials/Details/EventReplay';
 import TililaPeopleGrid from '@/components/TililaPeopleGrid';
-import { getYoutubeEmbedUrl } from '@/lib/youtubeEmbed';
+import { resolveTililaHeroMedia } from '@/lib/editionHeroMedia';
+import { coverImageSrc } from '@/pages/user/tilila/utils/editions';
 
 function GalleryGrid({ images }) {
     const rows = Array.isArray(images) ? images : [];
@@ -66,20 +67,28 @@ export default function TililaEditionDetails() {
     const images = Array.isArray(edition?.gallery_images)
         ? edition.gallery_images
         : [];
-    const ceremonyEmbed = getYoutubeEmbedUrl(edition?.ceremony_video_url);
+    const heroMedia = resolveTililaHeroMedia({
+        ceremonyVideoUrl: edition?.ceremony_video_url,
+        bannerSrc: coverImageSrc(
+            edition?.cover_image_path,
+            edition?.gallery_images,
+        ),
+    });
 
     return (
         <>
             <Head title={`Tilila Edition ${edition?.year ?? ''}`} />
 
             <section className="mx-auto max-w-7xl px-4 py-10">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <EditionTopHero {...heroMedia} />
+
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <div className="text-xs font-semibold tracking-widest text-tgray">
                             <TransText
-                                en="TROPHÉE TILILA"
-                                fr="TROPHÉE TILILA"
-                                ar="جائزة تيليلا"
+                                en="TILILA AWARDS"
+                                fr="TILILA AWARDS"
+                                ar="تيليلا أووردز"
                             />
                         </div>
                         <h1 className="mt-3 text-2xl font-semibold text-tblack sm:text-3xl">
@@ -105,85 +114,23 @@ export default function TililaEditionDetails() {
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Link
-                            href="/tilila#past-editions"
-                            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                        >
-                            <ChevronLeft className="size-4 text-tgray" />
-                            <TransText
-                                en="Back to archive"
-                                fr="Retour aux archives"
-                                ar="العودة للأرشيف"
-                            />
-                        </Link>
-                        {!isCurrent ? (
-                            <Link
-                                href={`/tilila/editions/${edition?.id}/winners`}
-                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                            >
-                                <Trophy className="size-4 text-tgray" />
-                                <TransText
-                                    en="Winners"
-                                    fr="Lauréats"
-                                    ar="الفائزون"
-                                />
-                            </Link>
-                        ) : null}
-                        <Link
-                            href={`/tilila/editions/${edition?.id}/jury`}
-                            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                        >
-                            <Gavel className="size-4 text-tgray" />
-                            <TransText en="Jury" fr="Jury" ar="لجنة التحكيم" />
-                        </Link>
-                        <Link
-                            href={`/tilila/editions/${edition?.id}/gallery`}
-                            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
-                        >
-                            <GalleryHorizontal className="size-4 text-tgray" />
-                            <TransText en="Gallery" fr="Galerie" ar="المعرض" />
-                        </Link>
-                    </div>
-                </div>
-
-                {ceremonyEmbed ? (
-                    <div id="ceremony" className="mt-10">
-                        <EventReplay
-                            title={
-                                <TransText
-                                    en="Awards ceremony"
-                                    fr="Cérémonie des lauréats"
-                                    ar="حفل توزيع الجوائز"
-                                />
-                            }
-                            videoTitle={
-                                edition?.edition_label?.en
-                                    ? `${edition.edition_label.en} — ceremony`
-                                    : 'Awards ceremony'
-                            }
-                            embedUrl={ceremonyEmbed}
-                            mode="replay"
+                    <Link
+                        href="/tilila#past-editions"
+                        className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-tblack hover:bg-secondary"
+                    >
+                        <ChevronLeft className="size-4 text-tgray" />
+                        <TransText
+                            en="Back to archive"
+                            fr="Retour aux archives"
+                            ar="العودة للأرشيف"
                         />
-                    </div>
-                ) : null}
+                    </Link>
+                </div>
 
                 <nav
                     className="mt-8 flex flex-wrap gap-2 text-sm font-semibold text-beta-blue"
                     aria-label="Edition sections"
                 >
-                    {ceremonyEmbed ? (
-                        <>
-                            <a href="#ceremony" className="hover:underline">
-                                <TransText
-                                    en="Ceremony"
-                                    fr="Cérémonie"
-                                    ar="الحفل"
-                                />
-                            </a>
-                            <span className="text-tgray">·</span>
-                        </>
-                    ) : null}
                     {!isCurrent ? (
                         <>
                             <a href="#winners" className="hover:underline">
@@ -201,7 +148,7 @@ export default function TililaEditionDetails() {
                     </a>
                     <span className="text-tgray">·</span>
                     <a href="#gallery" className="hover:underline">
-                        <TransText en="Gallery" fr="Galerie" ar="المعرض" />
+                        <TransText en="Photos" fr="Photos" ar="الصور" />
                     </a>
                 </nav>
 

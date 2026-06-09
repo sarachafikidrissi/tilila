@@ -343,14 +343,14 @@
     "tilila": {
         "hero": {
             "since": "Depuis 2018",
-            "title": "Trophée Tilila",
+            "title": "Tilila Awards",
             "description": "Célébrer les campagnes publicitaires qui brisent les stéréotypes et défendent l’égalité des genres. Une célébration de la créativité engagée pour la diversité au Maroc et en Afrique.",
             "ctaPrimary": "Découvrir les lauréats 2024",
             "ctaSecondary": "Participer",
             "missionLabel": "La mission",
             "missionQuote": "\"La publicité a le pouvoir de façonner les esprits. Assurons-nous qu’elle façonne un monde d’égalité.\""
         },
-        "headTitle": "Tilila"
+        "headTitle": "Tilila Awards"
     },
     "tililab": {
         "headTitle": "Tililab",

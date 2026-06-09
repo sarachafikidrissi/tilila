@@ -1,26 +1,39 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import {
+    ProgramContactSection,
+    ProgramHeroSection,
+    ProgramNewsSection,
+    ProgramPartnersSection,
+    ProgramStatsSection,
+    ProgramTestimonialsSection,
+} from '@/components/program/ProgramSharedSections';
 import TililabCurrentEditionSection from '@/pages/user/tililab/partials/CurrentEditionSection';
 import TililabHowToApply from '@/pages/user/tililab/partials/TililabHowToApply';
 import TililabPastEditionsCarousel from '@/pages/user/tililab/partials/TililabPastEditionsCarousel';
-import TransText from '@/components/TransText';
+import GuidelinesSection from '@/pages/user/tililab/partials/GuidelinesSection';
+import KeyDatesSection from '@/pages/user/tililab/partials/KeyDatesSection';
 import {
+    TililabAdmissionSection,
     TililabConceptSection,
     TililabCriteriaSection,
-    TililabJurySection,
     TililabFaqSection,
+    TililabJourneySection,
     TililabPrizesSection,
-    TililabSponsorsSection,
+    TililabWhyParticipateSection,
 } from '@/pages/user/tililab/partials/ProgramSections';
 import { useTranslation } from '@/contexts/TranslationContext';
 
 export default function TililabIndex() {
-    const { currentEdition, editions } = usePage().props;
+    const { currentEdition, editions, testimonials, news } = usePage().props;
 
     return (
         <>
             <TililabHead />
             <div>
+                <ProgramHeroSection program="tililab" />
+                <ProgramStatsSection program="tililab" />
+
                 <TililabCurrentEditionSection edition={currentEdition} />
 
                 <TililabPastEditionsCarousel
@@ -29,82 +42,33 @@ export default function TililabIndex() {
                     excludeYear={currentEdition?.year ?? null}
                 />
 
-                <nav className="bg-background/70 backdrop-blur">
-                    <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-4 text-sm font-semibold text-beta-blue">
-                        {currentEdition ? (
-                            <>
-                                <a
-                                    href="#current-edition"
-                                    className="hover:underline"
-                                >
-                                    <TransText
-                                        en="Current edition"
-                                        fr="Édition en cours"
-                                        ar="الدورة الحالية"
-                                    />
-                                </a>
-                                <span className="text-tgray">·</span>
-                            </>
-                        ) : null}
-                        <a href="#past-editions" className="hover:underline">
-                            Éditions
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#how-to-apply" className="hover:underline">
-                            Candidature
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#concept" className="hover:underline">
-                            Concept
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#prizes" className="hover:underline">
-                            Prix
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#criteria" className="hover:underline">
-                            Critères
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a
-                            href={
-                                currentEdition
-                                    ? '#current-edition-jury'
-                                    : '#jury'
-                            }
-                            className="hover:underline"
-                        >
-                            Jury
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#sponsors" className="hover:underline">
-                            Partenaires
-                        </a>
-                        <span className="text-tgray">·</span>
-                        <a href="#faq" className="hover:underline">
-                            FAQ
-                        </a>
-                    </div>
-                </nav>
-
                 <div className="bg-beta-white">
                     <TililabConceptSection />
+                    <TililabWhyParticipateSection />
+                    <TililabJourneySection />
                     <TililabPrizesSection />
+                    <TililabAdmissionSection />
                     <TililabCriteriaSection />
-                    {/* <TililabJurySection editions={editions ?? []} /> */}
                 </div>
 
                 <div className="bg-background">
+                    <KeyDatesSection edition={currentEdition} />
+                    <div className="mx-auto max-w-7xl px-4 pb-10">
+                        <GuidelinesSection />
+                    </div>
                     <TililabHowToApply />
                 </div>
 
-                <div className="bg-twhite">
-                    <TililabSponsorsSection />
-                </div>
+                {/* <ProgramTestimonialsSection testimonials={testimonials ?? []} program="tililab" /> */}
+                {/* <ProgramNewsSection news={news ?? []} program="tililab" /> */}
+
+                <ProgramPartnersSection />
 
                 <div className="border-t border-border bg-background">
                     <TililabFaqSection />
                 </div>
+
+                <ProgramContactSection program="tililab" />
             </div>
         </>
     );

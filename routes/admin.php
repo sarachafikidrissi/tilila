@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaSidebarController;
 use App\Http\Controllers\Admin\OpportunityController;
+use App\Http\Controllers\Admin\ProgramNewsController;
+use App\Http\Controllers\Admin\ProgramParticipantFileController;
+use App\Http\Controllers\Admin\ProgramTestimonialController;
 use App\Http\Controllers\Admin\TililabAnalyticsController;
 use App\Http\Controllers\Admin\TililabEditionController;
 use App\Http\Controllers\Admin\TililabParticipantController;
@@ -56,6 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('tililab/participants/export.csv', [TililabParticipantController::class, 'exportCsv'])->name('tililab.participants.export');
     Route::get('tililab/participants', [TililabParticipantController::class, 'index'])->name('tililab.participants.index');
+    Route::get('tililab/participants/{participant}/files/{type}', [ProgramParticipantFileController::class, 'tililab'])
+        ->name('tililab.participants.file');
     Route::get('tililab/participants/{participant}', [TililabParticipantController::class, 'show'])->name('tililab.participants.show');
     Route::delete('tililab/participants/{participant}', [TililabParticipantController::class, 'destroy'])->name('tililab.participants.destroy');
 
@@ -79,10 +84,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('tilila.participants.export');
     Route::get('tilila/participants', [TililaContestParticipantController::class, 'index'])
         ->name('tilila.participants.index');
+    Route::get('tilila/participants/{participant}/files/{type}', [ProgramParticipantFileController::class, 'tilila'])
+        ->name('tilila.participants.file');
     Route::get('tilila/participants/{participant}', [TililaContestParticipantController::class, 'show'])
         ->name('tilila.participants.show');
     Route::delete('tilila/participants/{participant}', [TililaContestParticipantController::class, 'destroy'])
         ->name('tilila.participants.destroy');
+
+    Route::resource('program/testimonials', ProgramTestimonialController::class)
+        ->except(['show'])
+        ->names('program.testimonials');
+    Route::resource('program/news', ProgramNewsController::class)
+        ->except(['show'])
+        ->parameters(['news' => 'news'])
+        ->names('program.news');
 
     require __DIR__.'/newsletter.php';
 });

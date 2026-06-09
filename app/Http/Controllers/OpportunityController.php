@@ -45,7 +45,16 @@ class OpportunityController extends Controller
 
     public function apply(Request $request, Opportunity $opportunity)
     {
-        // dd($request->all());
+        abort_unless(
+            in_array($opportunity->status, ['open', 'closing_soon'], true),
+            422,
+            'Applications are closed for this opportunity.',
+        );
+
+        if ($opportunity->applications_limit !== null && $opportunity->applications_limit <= 0) {
+            abort(422, 'Applications are closed for this opportunity.');
+        }
+
         $data = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',

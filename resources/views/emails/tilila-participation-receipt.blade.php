@@ -2,10 +2,10 @@
 
 @section('lang', 'fr')
 
-@section('title', 'Accusé de réception — Trophée Tilila')
+@section('title', 'Accusé de réception — Tilila Awards')
 
 @section('preheader')
-    Nous confirmons la bonne réception de votre participation au Trophée Tilila.
+    Nous confirmons la bonne réception de votre participation au Tilila Awards.
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
     @endphp
 
     <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 700; color: #0f172a;">
-        Accusé de réception — Trophée Tilila
+        Accusé de réception — Tilila Awards
     </h2>
 
     <p style="margin: 0 0 14px; color: #334155;">
@@ -22,7 +22,7 @@
     </p>
     <p style="margin: 0 0 20px; color: #334155;">
         Nous confirmons la bonne réception de votre formulaire de participation au
-        <strong style="color: #0f172a;">Trophée Tilila</strong>.
+        <strong style="color: #0f172a;">Tilila Awards</strong>.
     </p>
 
     <table

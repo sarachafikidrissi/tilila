@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import RegulationCta from '@/components/program/RegulationCta';
 import { PartnerLogoTile, PartnerTier } from '@/components/PartnerSection';
 import { TILILAB_FAQ_ITEMS } from '@/data/tililab-faq';
 import { TILILAB_JURY_EDITION_NOTES } from '@/data/tililab-jury';
@@ -35,9 +36,9 @@ export function TililabConceptSection() {
             title={<TransText en="Concept" fr="Concept" ar="المفهوم" />}
             subtitle={
                 <TransText
-                    en="A creative bootcamp by 2M for young talents, alongside Trophée Tilila."
-                    fr="Un bootcamp créatif par 2M pour les jeunes talents, en marge du Trophée Tilila."
-                    ar="معسكر إبداعي من 2M للشباب، إلى جانب تروفي تيليلا."
+                    en="A program to detect, train and support young Moroccan creative talents."
+                    fr="Un programme de détection, de formation et d’accompagnement des jeunes talents créatifs marocains."
+                    ar="برنامج لاكتشاف وتدريب ومرافقة المواهب الإبداعية الشابة في المغرب."
                 />
             }
         >
@@ -125,6 +126,64 @@ export function TililabConceptSection() {
     );
 }
 
+export function TililabWhyParticipateSection() {
+    const items = [
+        { en: 'Develop creative skills', fr: 'Développer ses compétences créatives', ar: 'تطوير المهارات الإبداعية' },
+        { en: 'Be mentored by professionals', fr: 'Être accompagné par des professionnels', ar: 'المرافقة من قبل محترفين' },
+        { en: 'Join a unique immersive experience', fr: 'Participer à une expérience immersive unique', ar: 'تجربة غامرة فريدة' },
+        { en: 'Produce an original audiovisual work', fr: 'Produire une œuvre audiovisuelle originale', ar: 'إنتاج عمل سمعي بصري أصلي' },
+    ];
+    return (
+        <SectionShell id="why-participate" title={<TransText en="Why participate?" fr="Pourquoi participer ?" ar="لماذا المشاركة؟" />}>
+            <ul className="grid gap-3 sm:grid-cols-2">
+                {items.map((item) => (
+                    <li key={item.en} className="rounded-2xl border border-border bg-background p-4 text-sm text-tgray">
+                        <TransText en={item.en} fr={item.fr} ar={item.ar} />
+                    </li>
+                ))}
+            </ul>
+        </SectionShell>
+    );
+}
+
+export function TililabJourneySection() {
+    const steps = [
+        { en: 'Online application', fr: 'Candidature en ligne', ar: 'الترشح عبر الإنترنت' },
+        { en: 'Pre-selection (up to 6 shortlisted)', fr: 'Pré-sélection (jusqu’à 6 présélectionné·e·s)', ar: 'فرز أولي (حتى 6 مرشحين)' },
+        { en: 'Masterclass (1 day)', fr: 'Masterclass (1 journée)', ar: 'ماستركلاس (يوم واحد)' },
+        { en: '48h creative residency', fr: 'Résidence créative 48h', ar: 'إقامة إبداعية 48 ساعة' },
+        { en: 'Audiovisual production', fr: 'Production audiovisuelle', ar: 'إنتاج سمعي بصري' },
+        { en: 'Jury evaluation', fr: 'Évaluation par le jury', ar: 'تقييم لجنة التحكيم' },
+        { en: 'Winner at Tilila Awards ceremony', fr: 'Lauréat·e lors de la cérémonie Tilila Awards', ar: 'الفائز في حفل تيليلا أووردز' },
+    ];
+    return (
+        <SectionShell id="journey" title={<TransText en="Tililab journey" fr="Le parcours Tililab" ar="مسار تيليلاب" />}>
+            <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {steps.map((step, i) => (
+                    <li key={step.en} className="rounded-2xl border border-border bg-background p-4">
+                        <span className="text-xs font-bold text-beta-blue">{i + 1}</span>
+                        <p className="mt-2 text-sm font-semibold text-tblack">
+                            <TransText en={step.en} fr={step.fr} ar={step.ar} />
+                        </p>
+                    </li>
+                ))}
+            </ol>
+        </SectionShell>
+    );
+}
+
+export function TililabAdmissionSection() {
+    return (
+        <SectionShell id="admission" title={<TransText en="Admission conditions" fr="Conditions d’admission" ar="شروط القبول" />}>
+            <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-tgray">
+                <li><TransText en="Residents of Morocco under 30 at the deadline." fr="Résident·e·s du Maroc de moins de 30 ans à la clôture." ar="مقيمون في المغرب دون 30 سنة عند الأجل." /></li>
+                <li><TransText en="No diploma or professional experience required." fr="Aucune condition de diplôme ou d’expérience professionnelle." ar="لا يلزم دبلوم أو خبرة مهنية." /></li>
+                <li><TransText en="Portfolio, prior audiovisual work or personal video project required." fr="Portfolio, réalisation antérieure ou projet vidéo personnel requis." ar="مطلوب ملف أعمال أو عمل سابق أو مشروع فيديو شخصي." /></li>
+            </ul>
+        </SectionShell>
+    );
+}
+
 export function TililabPrizesSection() {
     return (
         <SectionShell
@@ -149,20 +208,20 @@ export function TililabPrizesSection() {
                         descAr: 'تقدير رسمي للإعلان الإبداعي الفائز.',
                     },
                     {
-                        en: 'Professional equipment',
-                        fr: 'Matériel professionnel',
-                        ar: 'معدات مهنية',
-                        descEn: 'Equipment offered by 2M to support production.',
-                        descFr: 'Matériel offert par 2M pour soutenir la production.',
-                        descAr: 'معدات تقدمها 2M لدعم الإنتاج.',
+                        en: 'Work tool from SOREAD 2M',
+                        fr: 'Outil de travail offert par SOREAD 2M',
+                        ar: 'أداة عمل من SOREAD 2M',
+                        descEn: 'Professional equipment offered by SOREAD 2M.',
+                        descFr: 'Outil de travail professionnel offert par SOREAD 2M.',
+                        descAr: 'معدات مهنية تقدمها SOREAD 2M.',
                     },
                     {
-                        en: 'Jooj incubator',
-                        fr: 'Incubation Jooj',
-                        ar: 'حاضنة Jooj',
-                        descEn: 'Incubation in Jooj, 2M’s creative incubator.',
-                        descFr: 'Incubation dans Jooj, l’incubateur créatif de 2M.',
-                        descAr: 'احتضان في Jooj، حاضنة 2M الإبداعية.',
+                        en: 'LionsGeek support',
+                        fr: 'Accompagnement LionsGeek',
+                        ar: 'مرافقة LionsGeek',
+                        descEn: 'Professional mentoring through LionsGeek.',
+                        descFr: 'Accompagnement professionnel assuré par LionsGeek.',
+                        descAr: 'مرافقة مهنية عبر LionsGeek.',
                     },
                     {
                         en: 'Broadcast & visibility',
@@ -189,6 +248,9 @@ export function TililabPrizesSection() {
                         </div>
                     </div>
                 ))}
+            </div>
+            <div className="mt-6">
+                <RegulationCta href="/tililab/reglement" />
             </div>
         </SectionShell>
     );
@@ -259,16 +321,16 @@ export function TililabJurySection({ editions = [] }) {
             title={<TransText en="Jury" fr="Jury" ar="لجنة التحكيم" />}
             subtitle={
                 <TransText
-                    en="Main jury members by Tililab edition. The final winner is chosen by the Trophée Tilila jury during the awards ceremony."
-                    fr="Principaux membres du jury par édition Tililab. Le lauréat final est choisi par le jury du Trophée Tilila lors de la cérémonie."
+                    en="Main jury members by Tililab edition. The final winner is chosen by the Tilila Awards jury during the awards ceremony."
+                    fr="Principaux membres du jury par édition Tililab. Le lauréat final est choisi par le jury des Tilila Awards lors de la cérémonie."
                     ar="أعضاء لجنة التحكيم الرئيسيون حسب دورة تيليلاب. يُختار الفائز النهائي من لجنة تروفي تيليلا خلال الحفل."
                 />
             }
         >
             <div className="max-w-3xl rounded-2xl border border-gold/25 bg-linear-to-br from-gold/5 to-beta-blue/5 p-6 text-sm leading-relaxed text-tgray">
                 <TransText
-                    en="Tililab editions often share the Trophée Tilila jury for the final decision. Below are the main names mentioned in official communications, edition by edition."
-                    fr="Les éditions Tililab partagent souvent le jury du Trophée Tilila pour la décision finale. Ci-dessous, les principaux noms cités dans les communications officielles, édition par édition."
+                    en="Tililab editions often share the Tilila Awards jury for the final decision. Below are the main names mentioned in official communications, edition by edition."
+                    fr="Les éditions Tililab partagent souvent le jury des Tilila Awards pour la décision finale. Ci-dessous, les principaux noms cités dans les communications officielles, édition par édition."
                     ar="غالباً ما تشترك دورات تيليلاب في لجنة تروفي تيليلا للقرار النهائي. فيما يلي الأسماء الرئيسية الواردة في التواصل الرسمي، دورة بدورة."
                 />
             </div>
@@ -330,35 +392,66 @@ export function TililabJurySection({ editions = [] }) {
                                     </p>
                                 ) : (
                                     <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                        {jury.map((person, idx) => (
-                                            <li
-                                                key={`${person?.full_name ?? 'juror'}-${idx}`}
-                                                className="rounded-xl border border-border bg-white px-4 py-3 shadow-sm"
-                                            >
-                                                <div className="text-sm font-semibold text-tblack">
-                                                    {person?.full_name ?? ''}
-                                                </div>
-                                                {(person?.bio?.en ||
-                                                    person?.bio?.fr) && (
-                                                    <div className="mt-1 text-xs text-tgray">
-                                                        <TransText
-                                                            en={
-                                                                person.bio
-                                                                    ?.en ?? ''
-                                                            }
-                                                            fr={
-                                                                person.bio
-                                                                    ?.fr ?? ''
-                                                            }
-                                                            ar={
-                                                                person.bio
-                                                                    ?.ar ?? ''
-                                                            }
-                                                        />
+                                        {jury.map((person, idx) => {
+                                            const photoSrc = person?.photo_path
+                                                ? `/storage/${person.photo_path}`
+                                                : '';
+
+                                            return (
+                                                <li
+                                                    key={`${person?.full_name ?? 'juror'}-${idx}`}
+                                                    className="rounded-xl border border-border bg-white px-4 py-3 shadow-sm"
+                                                >
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="size-14 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                                                            {photoSrc ? (
+                                                                <img
+                                                                    src={
+                                                                        photoSrc
+                                                                    }
+                                                                    alt=""
+                                                                    className="h-full w-full object-cover"
+                                                                    loading="lazy"
+                                                                    decoding="async"
+                                                                />
+                                                            ) : null}
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <div className="text-sm font-semibold text-tblack">
+                                                                {person?.full_name ??
+                                                                    ''}
+                                                            </div>
+                                                            {(person?.bio?.en ||
+                                                                person?.bio
+                                                                    ?.fr) && (
+                                                                <div className="mt-1 text-xs text-tgray">
+                                                                    <TransText
+                                                                        en={
+                                                                            person
+                                                                                .bio
+                                                                                ?.en ??
+                                                                            ''
+                                                                        }
+                                                                        fr={
+                                                                            person
+                                                                                .bio
+                                                                                ?.fr ??
+                                                                            ''
+                                                                        }
+                                                                        ar={
+                                                                            person
+                                                                                .bio
+                                                                                ?.ar ??
+                                                                            ''
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                )}
-                                            </li>
-                                        ))}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 )}
 
@@ -397,7 +490,7 @@ function TililabFaqAnswer({ item }) {
             {item.link ? (
                 <>
                     {' '}
-                    <a
+                    <Link
                         href={item.link}
                         className="font-semibold text-beta-blue hover:underline"
                     >
@@ -406,7 +499,7 @@ function TililabFaqAnswer({ item }) {
                             fr={item.linkLabel?.fr ?? 'Formulaire'}
                             ar={item.linkLabel?.ar ?? 'الاستمارة'}
                         />
-                    </a>
+                    </Link>
                 </>
             ) : null}
             {item.externalLink ? (
@@ -487,9 +580,9 @@ export function TililabSponsorsSection() {
             id="sponsors"
             title={
                 <TransText
-                    en="Complete list of sponsors & partners"
-                    fr="Liste complète des sponsors & partenaires"
-                    ar="القائمة الكاملة للرعاة والشركاء"
+                    en=" Sponsors & partners"
+                    fr="Sponsors & partenaires"
+                    ar="الرعاة والشركاء"
                 />
             }
             subtitle={

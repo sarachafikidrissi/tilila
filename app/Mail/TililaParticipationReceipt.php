@@ -13,14 +13,12 @@ class TililaParticipationReceipt extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public TililaContestParticipant $participant)
-    {
-    }
+    public function __construct(public TililaContestParticipant $participant) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Accusé de réception — Trophée Tilila',
+            subject: 'Accusé de réception — Tilila Awards',
         );
     }
 
@@ -31,4 +29,3 @@ class TililaParticipationReceipt extends Mailable
         );
     }
 }
-

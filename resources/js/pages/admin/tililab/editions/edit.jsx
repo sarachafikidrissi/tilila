@@ -18,8 +18,15 @@ export default function AdminTililabEditionsEdit({ edition }) {
             fr: edition?.theme?.fr ?? '',
             ar: edition?.theme?.ar ?? '',
         },
+        ceremony_video_url: edition?.ceremony_video_url ?? '',
+        ceremony_video: null,
+        ceremony_video_path: edition?.ceremony_video_path ?? null,
+        remove_ceremony_video: false,
+        cover_image: null,
+        cover_image_path: edition?.cover_image_path ?? null,
         has_gallery: Boolean(edition?.has_gallery),
         is_current: Boolean(edition?.is_current),
+        applications_close_at: edition?.applications_close_at?.slice(0, 16) ?? '',
         gallery_images: Array.isArray(edition?.gallery_images)
             ? edition.gallery_images
             : [],

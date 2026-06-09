@@ -83,4 +83,3 @@ class OpportunitySeeder extends Seeder
         }
     }
 }
-

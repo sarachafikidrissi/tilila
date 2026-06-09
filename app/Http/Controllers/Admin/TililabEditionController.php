@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TililabEdition;
+use App\Support\YoutubeVideo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,6 +53,15 @@ class TililabEditionController extends Controller
         $data = $this->validated($request);
         $data['sort'] = (int) (TililabEdition::query()->max('sort') ?? 0) + 1;
 
+        $cover = $request->file('cover_image');
+        if ($cover instanceof UploadedFile && $cover->isValid()) {
+            $data['cover_image_path'] = $cover->store('tililab-editions/covers', 'public');
+        } else {
+            $data['cover_image_path'] = ($data['cover_image_path'] ?? null) ?: null;
+        }
+
+        $data = $this->applyCeremonyVideoUpload($request, $data, null);
+
         $edition = TililabEdition::query()->create($data);
 
         $edition->winners = $this->applyPeopleUploads($request, 'winners', 'tililab-editions/winners', []);
@@ -68,6 +79,8 @@ class TililabEditionController extends Controller
 
     public function edit(TililabEdition $edition): Response
     {
+        $edition->withArchiveEnrichment();
+
         return Inertia::render('admin/tililab/editions/edit', [
             'edition' => $edition,
         ]);
@@ -76,6 +89,20 @@ class TililabEditionController extends Controller
     public function update(Request $request, TililabEdition $edition): RedirectResponse
     {
         $data = $this->validated($request);
+
+        $cover = $request->file('cover_image');
+        if ($cover instanceof UploadedFile && $cover->isValid()) {
+            $old = $edition->cover_image_path;
+            if (is_string($old) && $old !== '') {
+                Storage::disk('public')->delete($old);
+            }
+            $data['cover_image_path'] = $cover->store('tililab-editions/covers', 'public');
+        } else {
+            $data['cover_image_path'] = ($data['cover_image_path'] ?? null) ?: $edition->cover_image_path;
+        }
+
+        $data = $this->applyCeremonyVideoUpload($request, $data, $edition);
+
         $edition->update($data);
 
         $existingWinners = is_array($edition->winners) ? $edition->winners : [];
@@ -109,6 +136,14 @@ class TililabEditionController extends Controller
 
     public function destroy(TililabEdition $edition): RedirectResponse
     {
+        if (is_string($edition->cover_image_path) && $edition->cover_image_path !== '') {
+            Storage::disk('public')->delete($edition->cover_image_path);
+        }
+
+        if (is_string($edition->ceremony_video_path) && $edition->ceremony_video_path !== '') {
+            Storage::disk('public')->delete($edition->ceremony_video_path);
+        }
+
         $winners = is_array($edition->winners) ? $edition->winners : [];
         foreach ($winners as $row) {
             if (! is_array($row)) {
@@ -157,6 +192,10 @@ class TililabEditionController extends Controller
             'theme.en' => ['nullable', 'string', 'max:255'],
             'theme.fr' => ['nullable', 'string', 'max:255'],
             'theme.ar' => ['nullable', 'string', 'max:255'],
+            'ceremony_video_url' => ['nullable', 'string', 'max:2048'],
+            'ceremony_video_path' => ['nullable', 'string', 'max:500'],
+            'remove_ceremony_video' => ['sometimes', 'boolean'],
+            'cover_image_path' => ['nullable', 'string', 'max:500'],
             'winners' => ['nullable', 'array'],
             'winners.*.full_name' => ['nullable', 'string', 'max:255'],
             'winners.*.bio' => ['nullable', 'array'],
@@ -176,9 +215,26 @@ class TililabEditionController extends Controller
             'gallery_url' => ['nullable', 'url', 'max:2048'],
             'has_gallery' => ['sometimes', 'boolean'],
             'is_current' => ['sometimes', 'boolean'],
+            'applications_close_at' => ['nullable', 'date'],
             'remove_gallery_images' => ['nullable', 'array'],
             'remove_gallery_images.*' => ['string', 'max:500'],
         ]);
+
+        if ($request->hasFile('cover_image')) {
+            $request->validate([
+                'cover_image' => ['file', 'image', 'max:10240'],
+            ]);
+        }
+
+        if ($request->hasFile('ceremony_video')) {
+            $request->validate([
+                'ceremony_video' => [
+                    'file',
+                    'mimetypes:video/mp4,video/webm,video/quicktime,video/x-matroska',
+                    'max:204800',
+                ],
+            ]);
+        }
 
         if ($request->hasFile('gallery_images_files')) {
             $request->validate([
@@ -210,6 +266,14 @@ class TililabEditionController extends Controller
         $data['jury_url'] = ($data['jury_url'] ?? null) ?: null;
         $data['gallery_url'] = ($data['gallery_url'] ?? null) ?: null;
 
+        $ceremonyUrl = trim((string) ($data['ceremony_video_url'] ?? ''));
+        if ($ceremonyUrl !== '' && YoutubeVideo::embedUrlFromInput($ceremonyUrl) === null) {
+            throw ValidationException::withMessages([
+                'ceremony_video_url' => 'Enter a valid YouTube link (watch, live, shorts, youtu.be, or embed).',
+            ]);
+        }
+        $data['ceremony_video_url'] = $ceremonyUrl === '' ? null : $ceremonyUrl;
+
         $data['has_gallery'] = (bool) ($data['has_gallery'] ?? false);
         $data['is_current'] = (bool) ($data['is_current'] ?? false);
 
@@ -231,6 +295,7 @@ class TililabEditionController extends Controller
             }
             if (in_array($path, $toRemove, true)) {
                 Storage::disk('public')->delete($path);
+
                 continue;
             }
             $kept[] = $path;
@@ -332,5 +397,43 @@ class TililabEditionController extends Controller
 
         return $next;
     }
-}
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function applyCeremonyVideoUpload(
+        Request $request,
+        array $data,
+        ?TililabEdition $edition,
+    ): array {
+        $video = $request->file('ceremony_video');
+
+        if ($video instanceof UploadedFile && $video->isValid()) {
+            $old = $edition?->ceremony_video_path;
+            if (is_string($old) && $old !== '') {
+                Storage::disk('public')->delete($old);
+            }
+
+            $data['ceremony_video_path'] = $video->store('tililab-editions/videos', 'public');
+
+            return $data;
+        }
+
+        if ($request->boolean('remove_ceremony_video')) {
+            $old = $edition?->ceremony_video_path;
+            if (is_string($old) && $old !== '') {
+                Storage::disk('public')->delete($old);
+            }
+
+            $data['ceremony_video_path'] = null;
+
+            return $data;
+        }
+
+        $data['ceremony_video_path'] = ($data['ceremony_video_path'] ?? null)
+            ?: $edition?->ceremony_video_path;
+
+        return $data;
+    }
+}

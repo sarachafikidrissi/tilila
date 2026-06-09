@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\TililaEdition;
+use Database\Seeders\Concerns\SeedsTililaJury;
 use Illuminate\Database\Seeder;
 
 class TililaEditionSeeder extends Seeder
 {
+    use SeedsTililaJury;
+
     public function run(): void
     {
         TililaEdition::query()->where('year', '2020')->delete();
@@ -105,7 +108,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: RAPP.',
                     ),
                 ],
-                'jury' => [],
+                'jury' => $this->juryForYear('2018'),
             ],
             [
                 'year' => '2019',
@@ -145,7 +148,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: Klem.',
                     ),
                 ],
-                'jury' => [],
+                'jury' => $this->juryForYear('2019'),
             ],
             [
                 'year' => '2021',
@@ -185,7 +188,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: RAPP.',
                     ),
                 ],
-                'jury' => [],
+                'jury' => $this->juryForYear('2021'),
             ],
             [
                 'year' => '2022',
@@ -225,13 +228,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: Initiative Digital.',
                     ),
                 ],
-                'jury' => [
-                    $this->juror('Nadia Ghalia Lamhaidi', 'Expert on women’s image in media', 'Experte de l’image des femmes dans les médias', 'خبيرة في صورة المرأة في الإعلام'),
-                    $this->juror('Mohamed Beyoud', 'FICAM', 'FICAM', 'FICAM'),
-                    $this->juror('Zakia Tahiri', 'Director', 'Réalisatrice', 'مخرجة'),
-                    $this->juror('Lamia Chraïbi', 'Producer', 'Productrice', 'منتجة'),
-                    $this->juror('Noureddine Lakhmari', 'Director', 'Réalisateur', 'مخرج'),
-                ],
+                'jury' => $this->juryForYear('2022'),
             ],
             [
                 'year' => '2023',
@@ -271,14 +268,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: Shem’s.',
                     ),
                 ],
-                'jury' => [
-                    $this->juror('Nabil Ayouch', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                    $this->juror('Latefa Ahrrare', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                    $this->juror('Amal Chafai', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                    $this->juror('Basma El Hijri', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                    $this->juror('Nawal El Aidaoui', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                    $this->juror('Nawfel Bensari', 'Jury member', 'Membre du jury', 'عضو لجنة التحكيم'),
-                ],
+                'jury' => $this->juryForYear('2023'),
             ],
             [
                 'year' => '2024',
@@ -327,14 +317,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: The Next Click.',
                     ),
                 ],
-                'jury' => [
-                    $this->juror('Sanaa Akroud', 'Producer, director, actress', 'Productrice, réalisatrice, actrice', 'منتجة، مخرجة، ممثلة'),
-                    $this->juror('Rabii Kati', 'Actor', 'Acteur', 'ممثل'),
-                    $this->juror('Zhor Fassi Fihri', 'Director, producer', 'Réalisatrice, productrice', 'مخرجة، منتجة'),
-                    $this->juror('Mohamed Achaour', 'Director, screenwriter, producer', 'Réalisateur, scénariste, producteur', 'مخرج، كاتب سيناريو، منتج'),
-                    $this->juror('Siham El Mechtani El Idrissi', 'Marketing & innovation expert', 'Experte marketing & innovation', 'خبيرة تسويق وابتكار'),
-                    $this->juror('Ali Boujena', 'Marketing & communication expert', 'Expert marketing & communication', 'خبير تسويق واتصال'),
-                ],
+                'jury' => $this->juryForYear('2024'),
             ],
             [
                 'year' => '2025',
@@ -383,14 +366,7 @@ class TililaEditionSeeder extends Seeder
                         'الوكالة: ID36.',
                     ),
                 ],
-                'jury' => [
-                    $this->juror('Hind Bensari', 'Director', 'Réalisatrice', 'مخرجة'),
-                    $this->juror('Fihr Kettani', 'Cultural entrepreneur', 'Entrepreneur culturel', 'رائد أعمال ثقافي'),
-                    $this->juror('Idir Ouguindi', 'Associative activist & inclusive development consultant', 'Militant associatif & consultant développement inclusif', 'ناشط جمعوي ومستشار تنمية شاملة'),
-                    $this->juror('Samira Rafi / Ghita El Kholti', 'Creative director', 'Directrice de création', 'مديرة إبداعية'),
-                    $this->juror('Mounia Lamkimel', 'Actress', 'Actrice', 'ممثلة'),
-                    $this->juror('Abdellah Tourabi', 'Journalist & TV presenter', 'Journaliste & présentateur TV', 'صحفي ومقدم تلفزيوني'),
-                ],
+                'jury' => $this->juryForYear('2025'),
             ],
             [
                 'year' => '2026',

@@ -33,18 +33,18 @@ class ExpertSeeder extends Seeder
     {
         return [
             [
-                "name" => ["fr" => "Test Expert", "ar" => "", "en" => ""],
-                "title" => [
-                    "fr" => "Test Title",
-                    "ar" => "",
-                    "en" => "",
+                'name' => ['fr' => 'Test Expert', 'ar' => '', 'en' => ''],
+                'title' => [
+                    'fr' => 'Test Title',
+                    'ar' => '',
+                    'en' => '',
                 ],
-                "email" => "test.expert@example.com",
-                "last_activity_at" => now(),
-                "status" => "published",
-                "expertise" => [],
+                'email' => 'test.expert@example.com',
+                'last_activity_at' => now(),
+                'status' => 'published',
+                'expertise' => [],
             ],
-            
+
         ];
     }
 }

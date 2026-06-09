@@ -234,7 +234,7 @@ export default function TililaPastEditionsCarousel({
                                             <img
                                                 src={edition.cover_image_src}
                                                 alt=""
-                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                                                className="h-[265px] w-full object-fill transition duration-500 group-hover:scale-[1.03]"
                                                 loading="lazy"
                                                 decoding="async"
                                             />

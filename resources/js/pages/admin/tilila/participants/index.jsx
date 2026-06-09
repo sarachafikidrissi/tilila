@@ -110,7 +110,7 @@ export default function AdminTililaSubmissionsIndex({
                 <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:pb-8 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                         <p className="text-sm font-medium text-tgray">
-                            Trophée Tilila
+                            Tilila Awards
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight text-tblack">
                             Participation Submissions

@@ -50,8 +50,8 @@ export default function CommitteeSection() {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-tgray">
                     <TransText
-                        en="The Committee steers 2M’s commitments on equality, representation, and non-discrimination. Trophée Tilila is one of its flagship programmes—recognising advertising that advances inclusion and respect in Morocco."
-                        fr="Le Comité porte les engagements de 2M en matière d’égalité, de représentation et de non-discrimination. Le Trophée Tilila est l’une de ses initiatives phares—récompensant une publicité qui fait progresser l’inclusion et le respect au Maroc."
+                        en="The Committee steers 2M’s commitments on equality, representation, and non-discrimination. Tilila Awards is one of its flagship programmes—recognising advertising that advances inclusion and respect in Morocco."
+                        fr="Le Comité porte les engagements de 2M en matière d’égalité, de représentation et de non-discrimination. Les Tilila Awards sont l’une de ses initiatives phares—récompensant une publicité qui fait progresser l’inclusion et le respect au Maroc."
                         ar="توجّه اللجنة التزامات 2M بالمساواة والتمثيل ومكافحة التمييز. جائزة تيليلا من أبرز برامجها—تُكرّم إعلاناً يرسّخ الإدماج والاحترام في المغرب."
                     />
                 </p>

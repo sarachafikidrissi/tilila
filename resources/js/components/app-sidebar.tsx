@@ -5,7 +5,6 @@ import {
     KeyRound,
     LayoutGrid,
     Mail,
-    Megaphone,
     Newspaper,
     Trophy,
     Users,
@@ -33,11 +32,11 @@ const adminModuleItems: NavItem[] = [
     //     href: '/admin/media',
     //     icon: FileText,
     // },
-    {
-        title: 'Opportunities',
-        href: '/admin/opportunities',
-        icon: Megaphone,
-    },
+    // {
+    //     title: 'Opportunities',
+    //     href: '/admin/opportunities',
+    //     icon: Megaphone,
+    // },
     {
         title: 'Events',
         href: '/admin/events',

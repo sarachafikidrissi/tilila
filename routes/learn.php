@@ -13,4 +13,5 @@ Route::get('/learn/agenda', [LearnController::class, 'agenda'])->name('learn.age
 Route::get('/learn/opportunities', [OpportunityController::class, 'index'])->name('learn.opportunities.index');
 Route::get('/learn/opportunities/{opportunity}', [OpportunityController::class, 'show'])->name('learn.opportunities.show');
 Route::post('/learn/opportunities/{opportunity}/apply', [OpportunityController::class, 'apply'])
+    ->middleware('throttle:public-uploads')
     ->name('learn.opportunities.apply');

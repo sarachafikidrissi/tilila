@@ -209,7 +209,7 @@ class EventSeeder extends Seeder
                 'registration' => [
                     'badge' => 'Upcoming',
                     'title' => "Don't Miss the Next TiliTalk",
-                    'description' => "Join the next edition to learn, network and get inspired. Capacity is limited — register today to secure your seat.",
+                    'description' => 'Join the next edition to learn, network and get inspired. Capacity is limited — register today to secure your seat.',
                     'submitLabel' => 'Complete Registration',
                 ],
             ],

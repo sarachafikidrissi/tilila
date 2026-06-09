@@ -96,7 +96,7 @@ export default function PartnersSection() {
                 ))}
             </div>
 
-            <div className="mt-10 flex items-end justify-between gap-4">
+            {/* <div className="mt-10 flex items-end justify-between gap-4">
                 <h3 className="text-lg font-semibold text-tblack">
                     <TransText
                         en="Media Partners"
@@ -124,7 +124,7 @@ export default function PartnersSection() {
                         />
                     </div>
                 ))}
-            </div>
+            </div> */}
         </section>
     );
 }
