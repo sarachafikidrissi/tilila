@@ -22,6 +22,7 @@ import {
     TililaWhyParticipateSection,
 } from '@/pages/user/tilila/partials/ProgramSections';
 import { useTranslation } from '@/contexts/TranslationContext';
+import TililaTeaserHero from './partials/TililaTeaserHero';
 
 export default function TililaIndex() {
     const { currentEdition, editions, flash, testimonials, news } =
@@ -37,24 +38,22 @@ export default function TililaIndex() {
                         {flash.success}
                     </div>
                 ) : null}
+                <TililaTeaserHero videoUrl={usePage().props.teaserVideoUrl} />
+
 
                 <CurrentEditionSection
                     edition={currentEdition}
                     onOpenParticipate={() => setFormOpen(true)}
                 />
 
-                <TililaPastEditionsCarousel
-                    editions={editions ?? []}
-                    excludeEditionId={currentEdition?.id ?? null}
-                    excludeYear={currentEdition?.year ?? null}
-                />
+
 
                 <div className="bg-beta-white">
                     <TililaConceptSection />
                     <TililaWhyParticipateSection />
                     <TililaPrizesSection />
                     <TililaAdmissionSection />
-                    <TililaJurySection />
+                    <TililaJurySection jury={currentEdition?.jury} />
                     {/* <TililaCriteriaSection /> */}
                 </div>
 
@@ -65,7 +64,11 @@ export default function TililaIndex() {
 
                 {/* <ProgramTestimonialsSection testimonials={testimonials ?? []} program="tilila" /> */}
                 {/* <ProgramNewsSection news={news ?? []} program="tilila" /> */}
-
+                <TililaPastEditionsCarousel
+                    editions={editions ?? []}
+                    excludeEditionId={currentEdition?.id ?? null}
+                    excludeYear={currentEdition?.year ?? null}
+                />
                 <TililaPartnersSection />
 
                 <div className="border-t border-border bg-background">

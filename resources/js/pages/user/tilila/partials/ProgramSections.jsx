@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import TransText from '@/components/TransText';
+import TililaPeopleGrid from '@/components/TililaPeopleGrid';
 import RegulationCta from '@/components/program/RegulationCta';
 import { PartnerLogoTile, PartnerTier } from '@/components/PartnerSection';
 import { TILILA_FAQ_ITEMS } from '@/data/tilila-faq';
@@ -105,6 +106,8 @@ export function TililaWhyParticipateSection() {
     );
 }
 
+const TILILA_TROPHEE_SRC = '/assets/tilila/trophee-tilila.png';
+
 const TILILA_PRIZES = [
     {
         fr: 'Hommage Tilila',
@@ -154,12 +157,25 @@ export function TililaPrizesSection() {
                 {TILILA_PRIZES.map((p) => (
                     <div
                         key={p.fr}
-                        className="rounded-2xl border border-border bg-secondary p-5"
+                        className="flex gap-4 rounded-2xl border border-border bg-secondary p-5"
                     >
-                        <div className="text-sm font-semibold text-tblack">
-                            <TransText en={p.en} fr={p.fr} ar={p.ar} />
+                        <div className="size-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white sm:size-24">
+                            <img
+                                src={TILILA_TROPHEE_SRC}
+                                alt=""
+                                className="h-full w-full object-cover object-center"
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </div>
-                        <p className="mt-2 text-sm text-tgray">{p.reward}</p>
+                        <div className="min-w-0">
+                            <div className="text-sm font-semibold text-tblack">
+                                <TransText en={p.en} fr={p.fr} ar={p.ar} />
+                            </div>
+                            <p className="mt-2 text-sm text-tgray">
+                                {p.reward}
+                            </p>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -208,7 +224,9 @@ Submitted campaigns must reflect the values promoted by the Tilila program and c
     );
 }
 
-export function TililaJurySection() {
+export function TililaJurySection({ jury = [] }) {
+    const members = Array.isArray(jury) ? jury : [];
+
     return (
         <SectionShell
             id="jury"
@@ -221,6 +239,9 @@ export function TililaJurySection() {
                     ar="تضم لجنة تحكيم تيليلا أووردز شخصيات معروفة من الإعلام والاتصال والإبداع والمؤسسات والبحث والمجتمع المدني. تقيّم الترشحات من حيث الجودة الإبداعية والملاءمة والأثر والمساهمة في قيم الإنصاف والتنوع والإدماج."
                 />
             </p>
+            {members.length > 0 ? (
+                <TililaPeopleGrid people={members} />
+            ) : null}
         </SectionShell>
     );
 }

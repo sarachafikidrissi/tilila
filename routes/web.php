@@ -21,6 +21,7 @@ use App\Models\MediaItem;
 use App\Models\TililabEdition;
 use App\Models\TililaEdition;
 use App\Support\ProgramPageProps;
+use App\Support\TililaHighlightVideos;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -140,6 +141,7 @@ Route::get('/', function () {
         'currentEdition' => $currentEdition,
         'editions' => $pastEditions,
         ...ProgramPageProps::forProgram('tilila'),
+        'teaserVideoUrl' => TililaHighlightVideos::teaserUrl()
     ]);
 })->name('home');
 

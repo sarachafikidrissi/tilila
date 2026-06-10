@@ -2,7 +2,6 @@ import { Link } from '@inertiajs/react';
 import { GalleryHorizontal, Gavel, Sparkles } from 'lucide-react';
 
 import TransText from '@/components/TransText';
-import TililaPeopleGrid from '@/components/TililaPeopleGrid';
 import EventReplay from '@/pages/events/Partials/Details/EventReplay';
 import { getYoutubeEmbedUrl } from '@/lib/youtubeEmbed';
 import { coverImageSrc } from '@/pages/user/tilila/utils/editions';
@@ -60,7 +59,6 @@ export default function CurrentEditionSection({ edition, onOpenParticipate }) {
         return null;
     }
 
-    const jury = Array.isArray(edition.jury) ? edition.jury : [];
     const images = Array.isArray(edition.gallery_images)
         ? edition.gallery_images
         : [];
@@ -192,21 +190,6 @@ export default function CurrentEditionSection({ edition, onOpenParticipate }) {
                             }
                             embedUrl={ceremonyEmbed}
                             mode="replay"
-                        />
-                    </div>
-                ) : null}
-
-                {jury.length > 0 ? (
-                    <div id="jury" className="mt-12">
-                        <TililaPeopleGrid
-                            title={
-                                <TransText
-                                    en="Jury"
-                                    fr="Jury"
-                                    ar="لجنة التحكيم"
-                                />
-                            }
-                            people={jury}
                         />
                     </div>
                 ) : null}
