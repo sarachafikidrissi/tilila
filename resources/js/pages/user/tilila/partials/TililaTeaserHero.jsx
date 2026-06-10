@@ -10,9 +10,9 @@ export default function TililaTeaserHero({ videoUrl }) {
             aria-label="Tilila Awards teaser"
         >
             <div className="mx-auto flex justify-center px-4 sm:px-6 lg:px-8">
-                <div className="relative aspect-video w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-tblack shadow-md">
+                <div className="relative aspect-video h-[80vh] w-[80vw] overflow-hidden rounded-2xl border border-border bg-tblack shadow-md">
                     <video
-                        className="absolute inset-0 h-full w-full object-contain"
+                        className="absolute inset-0  object-contain"
                         autoPlay
                         muted
                         loop
