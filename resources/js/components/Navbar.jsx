@@ -73,12 +73,12 @@ export default function Navbar() {
                 ar: 'الرئيسية',
                 href: home(),
             },
-            {
-                en: 'Tilala Events',
-                fr: 'Tilila Événements',
-                ar: 'فعاليات تيليلا',
-                href: '/events',
-            },
+            // {
+            //     en: 'Tilala Events',
+            //     fr: 'Tilila Événements',
+            //     ar: 'فعاليات تيليلا',
+            //     href: '/events',
+            // },
             // { en: 'Tilila Experts', fr: 'Tilala Expertes', ar: 'خبيرات تيليلا', href: '/experts' },
             // { en: 'Tilila Learn', fr: 'Tilila Learn', ar: 'تعلم تيليلا', href: '/learn' },
         ],
