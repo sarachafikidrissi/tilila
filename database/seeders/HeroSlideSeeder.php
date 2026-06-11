@@ -21,7 +21,7 @@ class HeroSlideSeeder extends Seeder
         foreach ($slides as $index => $data) {
             HeroSlide::query()->firstOrCreate(
                 ['slide_key' => $data['slide_key']],
-                array_merge($data, ['sort_order' => $index]),
+                array_merge($data, ['sort_order' => $index, 'media_type' => 'image']),
             );
         }
     }

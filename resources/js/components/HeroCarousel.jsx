@@ -171,9 +171,68 @@ function CtaButtons({ ctas, isActive }) {
     );
 }
 
+function HeroSlideMedia({ slide, locale, isActive, kenBurns = false }) {
+    const [videoLoaded, setVideoLoaded] = React.useState(false);
+    const alt = pickLocalizedTriple(
+        slide.imageAlt ?? { en: '', fr: '', ar: '' },
+        locale,
+    );
+    const classes = cn(
+        heroImageClasses(slide),
+        kenBurns &&
+            slide?.mediaType !== 'video' &&
+            'motion-safe:animate-[hero-ken-burns_12s_ease-out_forwards] motion-reduce:animate-none',
+    );
+
+    if (slide?.mediaType === 'video' && slide?.videoUrl) {
+        return (
+            <div className="absolute inset-0">
+                {!videoLoaded && (
+                    <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
+                )}
+                <video
+                    src={slide.videoUrl}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster={slide.imageSrc ?? undefined}
+                    onCanPlay={() => setVideoLoaded(true)}
+                    className={cn(
+                        classes,
+                        'transition-opacity duration-500',
+                        videoLoaded ? 'opacity-100' : 'opacity-0',
+                    )}
+                />
+            </div>
+        );
+    }
+
+    if (slide?.imageSrc) {
+        return (
+            <img
+                src={slide.imageSrc}
+                alt={alt}
+                className={classes}
+                loading={
+                    isActive !== undefined ? (isActive ? 'eager' : 'lazy') : 'eager'
+                }
+                decoding="async"
+            />
+        );
+    }
+
+    return null;
+}
+
 function HeroSlideLayer({ slide, isActive, locale }) {
     const imageContain = Boolean(slide?.imageContain);
     const imageBg = slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
+    const isBanner = Boolean(slide?.bannerImage);
+    const hasMedia =
+        slide?.imageSrc || (slide?.mediaType === 'video' && slide?.videoUrl);
+    const bannerBg = slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
+    const isBannerMedia = isBanner && hasMedia;
 
     return (
         <div
@@ -185,110 +244,125 @@ function HeroSlideLayer({ slide, isActive, locale }) {
             )}
             aria-hidden={!isActive}
         >
-            <div className={cn('absolute inset-0 overflow-hidden', imageBg)}>
-                {slide?.imageSrc ? (
-                    <img
-                        src={slide.imageSrc}
-                        alt={pickLocalizedTriple(
-                            slide.imageAlt ?? { en: '', fr: '', ar: '' },
-                            locale,
-                        )}
-                        className={cn(
-                            heroImageClasses(slide),
-                            isActive &&
-                                'motion-safe:animate-[hero-ken-burns_12s_ease-out_forwards] motion-reduce:animate-none',
-                        )}
-                        loading={isActive ? 'eager' : 'lazy'}
-                        decoding="async"
-                    />
-                ) : null}
+            <div
+                className={cn(
+                    'absolute inset-0 overflow-hidden',
+                    isBannerMedia ? bannerBg : imageBg,
+                )}
+            >
+                <HeroSlideMedia
+                    slide={slide}
+                    locale={locale}
+                    isActive={isActive}
+                    kenBurns={isBannerMedia ? false : isActive}
+                />
             </div>
 
-            <div
-                className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/92 via-tblack/55 to-tblack/25"
-                aria-hidden
-            />
-            <div
-                className="pointer-events-none absolute inset-0 bg-linear-to-r from-tblack/70 via-transparent to-transparent rtl:bg-linear-to-l"
-                aria-hidden
-            />
-
-            <div className="absolute inset-0 flex flex-col justify-end">
-                <div className="mx-auto w-full max-w-[min(100%,1920px)] px-5 pt-24 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
+            {isBannerMedia ? (
+                <>
                     <div
-                        className={cn(
-                            'max-w-2xl transition-all duration-700 ease-out motion-reduce:transition-none',
-                            isActive
-                                ? 'translate-y-0 opacity-100'
-                                : 'translate-y-3 opacity-0',
-                        )}
-                    >
-                        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
-                            {slide?.cardKicker ? (
-                                <TransText
-                                    tag="p"
-                                    className="text-[0.65rem] font-bold tracking-[0.2em] text-beta-blue uppercase"
-                                    en={slide.cardKicker.en}
-                                    fr={slide.cardKicker.fr}
-                                    ar={slide.cardKicker.ar}
-                                />
-                            ) : null}
-                            {slide?.badge ? (
-                                <>
-                                    <span className="text-white/40" aria-hidden>
-                                        ·
-                                    </span>
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-                                        <span
-                                            className="size-1.5 rounded-full bg-beta-blue shadow-[0_0_8px_rgba(68,25,168,0.8)]"
-                                            aria-hidden
-                                        />
-                                        <TransText
-                                            en={slide.badge.en}
-                                            fr={slide.badge.fr}
-                                            ar={slide.badge.ar}
-                                        />
-                                    </span>
-                                </>
-                            ) : null}
-                        </div>
-
-                        <h1 className="text-2xl font-bold tracking-tight text-balance text-white sm:text-3xl lg:text-4xl lg:leading-tight xl:text-[2.75rem]">
-                            <TransText
-                                en={slide?.titleBefore?.en ?? ''}
-                                fr={slide?.titleBefore?.fr ?? ''}
-                                ar={slide?.titleBefore?.ar ?? ''}
-                            />{' '}
-                            <TransText
-                                className="text-beta-blue"
-                                en={slide?.titleAccent?.en ?? ''}
-                                fr={slide?.titleAccent?.fr ?? ''}
-                                ar={slide?.titleAccent?.ar ?? ''}
-                            />
-                        </h1>
-
-                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/85 sm:mt-4 sm:text-base lg:text-lg">
-                            <TransText
-                                en={slide?.description?.en ?? ''}
-                                fr={slide?.description?.fr ?? ''}
-                                ar={slide?.description?.ar ?? ''}
-                            />
-                        </p>
-
-                        {slide?.cardLine ? (
-                            <p className="mt-2 max-w-xl text-xs text-white/65 sm:text-sm">
-                                <TransText
-                                    en={slide.cardLine.en}
-                                    fr={slide.cardLine.fr}
-                                    ar={slide.cardLine.ar}
-                                />
-                            </p>
-                        ) : null}
-
+                        className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/50 via-tblack/10 to-transparent"
+                        aria-hidden
+                    />
+                    <div className="absolute inset-x-0 bottom-0 flex justify-end px-5 pb-5 sm:px-8 sm:pb-6 lg:px-12">
                         <CtaButtons ctas={slide?.ctas} isActive={isActive} />
                     </div>
-                </div>
-            </div>
+                </>
+            ) : (
+                <>
+                    <div
+                        className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/92 via-tblack/55 to-tblack/25"
+                        aria-hidden
+                    />
+                    <div
+                        className="pointer-events-none absolute inset-0 bg-linear-to-r from-tblack/70 via-transparent to-transparent rtl:bg-linear-to-l"
+                        aria-hidden
+                    />
+
+                    <div className="absolute inset-0 flex flex-col justify-end">
+                        <div className="mx-auto w-full max-w-[min(100%,1920px)] px-5 pt-24 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
+                            <div
+                                className={cn(
+                                    'max-w-2xl transition-all duration-700 ease-out motion-reduce:transition-none',
+                                    isActive
+                                        ? 'translate-y-0 opacity-100'
+                                        : 'translate-y-3 opacity-0',
+                                )}
+                            >
+                                <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
+                                    {slide?.cardKicker ? (
+                                        <TransText
+                                            tag="p"
+                                            className="text-[0.65rem] font-bold tracking-[0.2em] text-beta-blue uppercase"
+                                            en={slide.cardKicker.en}
+                                            fr={slide.cardKicker.fr}
+                                            ar={slide.cardKicker.ar}
+                                        />
+                                    ) : null}
+                                    {slide?.badge ? (
+                                        <>
+                                            <span
+                                                className="text-white/40"
+                                                aria-hidden
+                                            >
+                                                ·
+                                            </span>
+                                            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                                                <span
+                                                    className="size-1.5 rounded-full bg-beta-blue shadow-[0_0_8px_rgba(68,25,168,0.8)]"
+                                                    aria-hidden
+                                                />
+                                                <TransText
+                                                    en={slide.badge.en}
+                                                    fr={slide.badge.fr}
+                                                    ar={slide.badge.ar}
+                                                />
+                                            </span>
+                                        </>
+                                    ) : null}
+                                </div>
+
+                                <h1 className="text-2xl font-bold tracking-tight text-balance text-white sm:text-3xl lg:text-4xl lg:leading-tight xl:text-[2.75rem]">
+                                    <TransText
+                                        en={slide?.titleBefore?.en ?? ''}
+                                        fr={slide?.titleBefore?.fr ?? ''}
+                                        ar={slide?.titleBefore?.ar ?? ''}
+                                    />{' '}
+                                    <TransText
+                                        className="text-beta-blue"
+                                        en={slide?.titleAccent?.en ?? ''}
+                                        fr={slide?.titleAccent?.fr ?? ''}
+                                        ar={slide?.titleAccent?.ar ?? ''}
+                                    />
+                                </h1>
+
+                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/85 sm:mt-4 sm:text-base lg:text-lg">
+                                    <TransText
+                                        en={slide?.description?.en ?? ''}
+                                        fr={slide?.description?.fr ?? ''}
+                                        ar={slide?.description?.ar ?? ''}
+                                    />
+                                </p>
+
+                                {slide?.cardLine ? (
+                                    <p className="mt-2 max-w-xl text-xs text-white/65 sm:text-sm">
+                                        <TransText
+                                            en={slide.cardLine.en}
+                                            fr={slide.cardLine.fr}
+                                            ar={slide.cardLine.ar}
+                                        />
+                                    </p>
+                                ) : null}
+
+                                <CtaButtons
+                                    ctas={slide?.ctas}
+                                    isActive={isActive}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
@@ -308,7 +382,10 @@ function PageHeroBanner({ slide, locale }) {
             slide?.badge?.en,
         );
 
-    if (isBanner && slide?.imageSrc) {
+    if (
+        isBanner &&
+        (slide?.imageSrc || (slide?.mediaType === 'video' && slide?.videoUrl))
+    ) {
         const bannerBg = slide?.imageBg === 'white' ? 'bg-white' : 'bg-tblack';
 
         return (
@@ -316,16 +393,7 @@ function PageHeroBanner({ slide, locale }) {
                 <div
                     className={cn('absolute inset-0 overflow-hidden', bannerBg)}
                 >
-                    <img
-                        src={slide.imageSrc}
-                        alt={pickLocalizedTriple(
-                            slide.imageAlt ?? { en: '', fr: '', ar: '' },
-                            locale,
-                        )}
-                        className={heroImageClasses(slide)}
-                        loading="eager"
-                        decoding="async"
-                    />
+                    <HeroSlideMedia slide={slide} locale={locale} />
                 </div>
                 <div
                     className="pointer-events-none absolute inset-0 bg-linear-to-t from-tblack/50 via-tblack/10 to-transparent"
@@ -341,21 +409,7 @@ function PageHeroBanner({ slide, locale }) {
     return (
         <div className="relative max-h-[42rem] min-h-[min(28rem,72vh)] overflow-hidden rounded-3xl border border-border shadow-[0_24px_60px_-12px_rgba(15,23,42,0.18)] ring-1 ring-tblack/10">
             <div className={cn('absolute inset-0 overflow-hidden', imageBg)}>
-                {slide?.imageSrc ? (
-                    <img
-                        src={slide.imageSrc}
-                        alt={pickLocalizedTriple(
-                            slide.imageAlt ?? { en: '', fr: '', ar: '' },
-                            locale,
-                        )}
-                        className={cn(
-                            heroImageClasses(slide),
-                            'motion-safe:animate-[hero-ken-burns_12s_ease-out_forwards] motion-reduce:animate-none',
-                        )}
-                        loading="eager"
-                        decoding="async"
-                    />
-                ) : null}
+                <HeroSlideMedia slide={slide} locale={locale} kenBurns />
             </div>
 
             <div

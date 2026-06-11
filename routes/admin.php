@@ -74,6 +74,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->except(['show'])
         ->names('tililab.editions');
 
+    Route::post('hero-slides/upload-video', [HeroSlideController::class, 'uploadVideo'])
+        ->name('hero-slides.upload-video');
     Route::post('hero-slides/reorder', [HeroSlideController::class, 'reorder'])->name('hero-slides.reorder');
     Route::patch('hero-slides/{heroSlide}/toggle', [HeroSlideController::class, 'toggle'])->name('hero-slides.toggle');
     Route::patch('hero-slides/{heroSlide}/toggle-also-on-home', [HeroSlideController::class, 'toggleAlsoOnHome'])
