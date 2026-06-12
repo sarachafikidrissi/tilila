@@ -23,6 +23,7 @@ import {
     Plus,
     Power,
     Trash2,
+    Video,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -136,7 +137,25 @@ function SortableRow({
                 </div>
             </TableCell>
             <TableCell>
-                {slide.image_url ? (
+                {slide.media_type === 'video' ? (
+                    <div className="relative h-10 w-14 overflow-hidden rounded-lg border border-border bg-muted">
+                        {slide.image_url ? (
+                            <img
+                                src={slide.image_url}
+                                alt=""
+                                className="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center text-[10px] font-medium text-muted-foreground">
+                                Video
+                            </div>
+                        )}
+                        <span className="absolute end-0.5 bottom-0.5 inline-flex items-center justify-center rounded bg-tblack/70 p-0.5 text-white">
+                            <Video className="size-3" aria-hidden />
+                            <span className="sr-only">Video slide</span>
+                        </span>
+                    </div>
+                ) : slide.image_url ? (
                     <div className="h-10 w-14 overflow-hidden rounded-lg border border-border bg-muted">
                         <img
                             src={slide.image_url}

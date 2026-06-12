@@ -10,6 +10,7 @@ test('admin store canonicalizes path_prefix before persisting', function () {
         'slide_key' => 'test-about-prefix',
         'path_prefix' => '  about  ',
         'display_type' => 'banner',
+        'media_type' => 'image',
         'display_mode' => 'banner_image',
         'is_active' => true,
         'sort_order' => 0,

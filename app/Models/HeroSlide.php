@@ -21,6 +21,8 @@ class HeroSlide extends Model
         'image_position',
         'image_bg',
         'image_path',
+        'media_type',
+        'video_path',
         'image_alt',
         'badge',
         'kicker',
@@ -31,7 +33,7 @@ class HeroSlide extends Model
         'ctas',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'video_url'];
 
     /**
      * @return array<string, string>
@@ -41,6 +43,7 @@ class HeroSlide extends Model
         return [
             'is_active' => 'boolean',
             'also_on_home' => 'boolean',
+            'media_type' => 'string',
             'image_contain' => 'boolean',
             'banner_image_contain' => 'boolean',
             'image_alt' => 'array',
@@ -96,6 +99,19 @@ class HeroSlide extends Model
         return Storage::url($this->image_path);
     }
 
+    public function getVideoUrlAttribute(): ?string
+    {
+        if (! $this->video_path) {
+            return null;
+        }
+
+        if (preg_match('#^https?://#', (string) $this->video_path)) {
+            return $this->video_path;
+        }
+
+        return Storage::url($this->video_path);
+    }
+
     /**
      * Returns the camelCase shape that HeroCarousel.jsx expects.
      *
@@ -110,7 +126,9 @@ class HeroSlide extends Model
             'pathPrefix' => $this->path_prefix,
             'displayType' => $this->display_type ?? 'banner',
             'alsoOnHome' => (bool) $this->also_on_home,
+            'mediaType' => $this->media_type ?? 'image',
             'imageSrc' => $this->image_url,
+            'videoUrl' => $this->video_url,
             'imageAlt' => $this->image_alt ?? ['en' => '', 'fr' => '', 'ar' => ''],
             'bannerImage' => $this->display_mode === 'banner_image',
             'bannerImageContain' => $this->banner_image_contain,
