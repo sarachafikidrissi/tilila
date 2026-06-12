@@ -173,6 +173,25 @@ function CtaButtons({ ctas, isActive }) {
 
 function HeroSlideMedia({ slide, locale, isActive, kenBurns = false }) {
     const [videoLoaded, setVideoLoaded] = React.useState(false);
+    const videoRef = React.useRef(null);
+    const shouldPlay = isActive !== false;
+
+    React.useEffect(() => {
+        const el = videoRef.current;
+        if (!el) return;
+
+        if (!shouldPlay) {
+            el.pause();
+            el.currentTime = 0;
+            return;
+        }
+
+        const playPromise = el.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    }, [shouldPlay, slide?.videoUrl]);
+
     const alt = pickLocalizedTriple(
         slide.imageAlt ?? { en: '', fr: '', ar: '' },
         locale,
@@ -187,22 +206,32 @@ function HeroSlideMedia({ slide, locale, isActive, kenBurns = false }) {
     if (slide?.mediaType === 'video' && slide?.videoUrl) {
         return (
             <div className="absolute inset-0">
-                {!videoLoaded && (
+                {/* {!videoLoaded && (
                     <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
-                )}
+                )} */}
+                 <div
+                  className={cn(
+                     'pointer-events-none absolute inset-0 animate-pulse bg-gray-200 transition-opacity duration-300 dark:bg-gray-700',
+                        videoLoaded ? 'opacity-0' : 'opacity-100',
+                    )}
+                />
                 <video
+                    ref={videoRef}
                     src={slide.videoUrl}
-                    autoPlay
+                    autoPlay={shouldPlay}
                     muted
                     loop
                     playsInline
+                    preload={shouldPlay ? 'metadata' : 'none'}
                     poster={slide.imageSrc ?? undefined}
                     onCanPlay={() => setVideoLoaded(true)}
-                    className={cn(
-                        classes,
-                        'transition-opacity duration-500',
-                        videoLoaded ? 'opacity-100' : 'opacity-0',
-                    )}
+                    // className={cn(
+                    //     classes,
+                    //     'transition-opacity duration-500',
+                    //     videoLoaded ? 'opacity-100' : 'opacity-0',
+                    // )}
+                    onError={() => setVideoLoaded(true)}
+                  className={classes}
                 />
             </div>
         );

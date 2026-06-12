@@ -1207,9 +1207,10 @@ export default function HeroSlideForm({
                                         Accepted: MP4, WebM. Recommended: under
                                         10MB, 5–15 seconds, no audio.
                                     </p>
-                                    <InputError message={errors?.video_path} />
                                 </div>
                             )}
+
+                            <InputError message={errors?.video_path} />
 
                             <input
                                 ref={posterInputRef}

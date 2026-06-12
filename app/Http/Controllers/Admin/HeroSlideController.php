@@ -17,6 +17,8 @@ use Inertia\Response;
 
 class HeroSlideController extends Controller
 {
+    private bool $wasTempFileMissing = false;
+
     public function index(): Response
     {
         $slides = HeroSlide::query()
@@ -58,7 +60,9 @@ class HeroSlideController extends Controller
             $data['image_path'] = $request->file('image')->store('hero_slides', 'public');
         }
 
+        $this->wasTempFileMissing = false;
         $this->promoteTempVideoPath($data);
+        $this->finalizeVideoPath($data);
 
         // Auto-assign sort_order to the end when the admin leaves it at the default 0.
         if (! $request->filled('sort_order') || (int) $request->input('sort_order') === 0) {
@@ -119,7 +123,9 @@ class HeroSlideController extends Controller
             $this->deleteStoredFile((string) $heroSlide->video_path);
         }
 
+        $this->wasTempFileMissing = false;
         $this->promoteTempVideoPath($data);
+        $this->finalizeVideoPath($data, $heroSlide);
 
         $heroSlide->update($data);
         $this->syncDisplayTypeForPath($heroSlide->path_prefix, (string) $data['display_type']);
@@ -208,7 +214,12 @@ class HeroSlideController extends Controller
             'image_position' => 'nullable|string|max:32',
             'image_bg' => 'nullable|string|max:64',
             'media_type' => 'required|string|in:image,video',
-            'video_path' => 'nullable|string|max:500',
+            'video_path' => [
+                'nullable',
+                'string',
+                'max:500',
+                'regex:#^hero_slides/videos/(temp/)?[A-Za-z0-9._-]+\.(mp4|webm)$#',
+            ],
             'image' => 'nullable|image|max:8192',
 
             'image_alt' => 'nullable|array',
@@ -254,7 +265,9 @@ class HeroSlideController extends Controller
             'ctas.*.url' => 'nullable|string|max:2048',
             'ctas.*.style' => 'required|string|in:primary,secondary',
             'ctas.*.is_active' => 'boolean',
-        ], [], [
+        ], [
+            'video_path.regex' => 'The video reference is invalid. Please re-upload the video.',
+        ], [
             'ctas.*.label.en' => 'CTA label (EN)',
             'ctas.*.label.fr' => 'CTA label (FR)',
             'ctas.*.label.ar' => 'CTA label (AR)',
@@ -338,6 +351,36 @@ class HeroSlideController extends Controller
     }
 
     /** @param array<string, mixed> $data */
+    private function finalizeVideoPath(array &$data, ?HeroSlide $slide = null): void
+    {
+        if (
+            ($data['media_type'] ?? 'image') === 'video'
+            && empty($data['video_path'])
+            && $slide?->video_path
+        ) {
+            $data['video_path'] = $slide->video_path;
+        }
+
+        if (($data['media_type'] ?? 'image') === 'image') {
+            $data['video_path'] = null;
+
+            return;
+        }
+
+        if ($this->wasTempFileMissing) {
+            throw ValidationException::withMessages([
+                'video_path' => ['The uploaded video is no longer available. Please re-upload the video.'],
+            ]);
+        }
+
+        if (empty($data['video_path'])) {
+            throw ValidationException::withMessages([
+                'video_path' => ['A video file is required when media type is video.'],
+            ]);
+        }
+    }
+
+    /** @param array<string, mixed> $data */
     private function promoteTempVideoPath(array &$data): void
     {
         if (
@@ -357,6 +400,7 @@ class HeroSlideController extends Controller
                 'temp_path' => $tempPath,
             ]);
             $data['video_path'] = null;
+            $this->wasTempFileMissing = true;
 
             return;
         }
